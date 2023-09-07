@@ -210,8 +210,7 @@ class Home extends CI_Controller
         $page_data['page_name'] = "training_course_calendar";
         $page_data['page_title'] = site_phrase('training_course_calendar');
         $page_data['courses'] = $this->crud_model->get_course_by_type();
-        var_dump($page_data['courses']);
-        exit;
+     
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
     }
 
