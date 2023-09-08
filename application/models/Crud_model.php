@@ -257,6 +257,7 @@ class Crud_model extends CI_Model
         $this->db->where('id', $param1);
         $this->db->delete('payment');
     }
+    
     public function delete_enrol_history($param1)
     {
         $this->db->where('id', $param1);
@@ -1015,11 +1016,10 @@ class Crud_model extends CI_Model
     
     public function get_course_by_type($type = "classroom")
     {
-        if ($type != "") {
-            $this->db->where('type', $type);
-        }
+        $sql = 'SELECT * FROM course WHERE find_in_set("'.$type.'", course.type) & status="active"';
+        $query = $this->db->query($sql);
         
-        return $this->db->get('course');
+        return $query->result_array();
     }
 
     public function delete_course($course_id = "")

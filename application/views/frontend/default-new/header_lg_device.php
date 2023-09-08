@@ -86,7 +86,15 @@
 
         <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
           <li class="nav-item">
-            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('home/course_calendar'); ?>" id="navbarDropdown4">
+            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('home/course_categories'); ?>" id="navbarDropdown4">
+              <span class="ms-2"><?php echo get_phrase('Categories'); ?></span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
+          <li class="nav-item">
+            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('home/course_calendar'); ?>" id="navbarDropdown5">
               <span class="ms-2"><?php echo get_phrase('Training Course Calendar'); ?></span>
             </a>
           </li>

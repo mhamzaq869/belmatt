@@ -200,18 +200,140 @@ class Home extends CI_Controller
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
     } 
     
+    public function course_categories()
+    {
+        $page_data['page_name'] = "course_categories";
+        $page_data['page_title'] = site_phrase('course_categories');
+        $page_data['categories'] = $this->crud_model->get_categories()->result_array();
+      
+        $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
+    }
+    
     public function course_calendar()
     {
-        $page_data['selected_category_id']   = isset($_GET['category_id']) ? $_GET['category_id'] : "all";
-        $page_data['selected_instructor_id'] = isset($_GET['instructor_id']) ? $_GET['instructor_id'] : "all";
-        $page_data['selected_price']         = isset($_GET['price']) ? $_GET['price'] : "all";
-        $page_data['selected_status']        = isset($_GET['status']) ? $_GET['status'] : "all";
+        $page_data['selected_venue']         = isset($_GET['venue']) ? $_GET['venue'] : "all";
+        $page_data['selected_title']        = isset($_GET['title']) ? $_GET['title'] : "all";
 
         $page_data['page_name'] = "training_course_calendar";
         $page_data['page_title'] = site_phrase('training_course_calendar');
-        $page_data['courses'] = $this->crud_model->get_course_by_type();
      
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
+    }
+
+    // This function is responsible for loading the course data from server side for datatable SILENTLY
+    public function get_courses()
+    {
+        $data = array();
+        //mentioned all with colum of database table that related with html table
+        $columns = array('date','title','venue','time','price','book');
+        
+        // Filter portion 
+       
+        $venue      = $this->input->post('venue');
+        if(isset($venue)){
+            $venue = explode(',',$venue);
+        }
+
+        $title     = $this->input->post('title');
+
+        $limit = htmlspecialchars_($this->input->post('length'));
+        $start = htmlspecialchars_($this->input->post('start'));
+
+        $column_index = $columns[$this->input->post('order')[0]['column']];
+
+        $dir = $this->input->post('order')[0]['dir'];
+
+        $total_number_of_row = $this->crud_model->get_courses()->num_rows();
+        // $search = $this->input->post('search')['value'];
+
+        //FILTERED DATA
+        $this->db->select('*');
+        // if(!empty($search)){
+        //     $this->db->group_start();
+        //     $this->db->like('title',$search);
+        //     $this->db->or_like('status',$search);
+        //     $this->db->or_like('price',$search);
+        //     $this->db->or_like('discounted_price',$search);
+        //     $this->db->group_end();
+        // }
+        if(!empty($venue) && count($venue) != 0){
+            $this->db->where('city', $venue[0]);
+            $this->db->where('address', $venue[1]);
+        }
+        if(!empty($title) && $title != null){
+            $this->db->where('title', $title);
+        } 
+
+        $this->db->limit($limit,$start);
+        $this->db->order_by($column_index,$dir);
+        $courses = $this->db->get('course')->result_array();
+
+        //WITHOUT FILTERED DATA
+        $this->db->select('*');
+        // if(!empty($search)){
+        //     $this->db->group_start();
+        //     $this->db->like('title',$search);
+        //     $this->db->or_like('status',$search);
+        //     $this->db->or_like('price',$search);
+        //     $this->db->or_like('discounted_price',$search);
+        //     $this->db->group_end();
+        // }
+        if(!empty($venue) && count($venue) != 0){
+            $this->db->where('city', $venue[0]);
+            $this->db->where('address', $venue[1]);
+        }
+        if(!empty($title) && $title != null){
+            $this->db->where('title', $title);
+        } 
+        $filtered_number_of_row = $this->db->get('course')->num_rows();
+
+
+        // Fetch the data and make it as JSON format and return it.
+        if (!empty($courses)) {
+            foreach ($courses as $key => $row) {
+                 
+                
+
+                $price_badge = "badge-dark-lighten";
+                $price = 0;
+                if ($row['is_free_course'] == null) {
+                    if ($row['discount_flag'] == 1) {
+                        $price = currency($row['discounted_price']);
+                    } else {
+                        $price = currency($row['price']);
+                    }
+                } elseif ($row['is_free_course'] == 1) {
+                    $price_badge = "badge-success-lighten";
+                    $price = get_phrase('free');
+                }
+
+                $price_field = '<span class="badge ' . $price_badge . '">' . $price . '</span>';
+                if($row['expiry_period'] > 0){
+                    $price_field .= '<p class="text-12">'.$row['expiry_period'] .' ' . get_phrase('Months') . '</p>';
+                }else{
+                    $price_field .= '<p class="text-12">' . get_phrase('Lifetime') . '</p>';
+                } 
+
+
+                $nestedData['date'] = date('D jS M Y' ,strtotime($row['datetime']));
+                $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . $row['title'].'/'.$row['id']) . '">' . $row['title'] . '</a></strong><br>';
+                $nestedData['venue'] = '<span>' . $row['address'] . '</span>';
+                $nestedData['datetime'] = '<span>' . date('g:i A' ,strtotime($row['datetime'])) . '</span>';
+                $nestedData['price'] = $price_field; 
+                $nestedData['book'] = $row['id'];
+
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($this->input->post('draw')),
+            "recordsTotal"    => intval($total_number_of_row),
+            "recordsFiltered" => intval($filtered_number_of_row),
+            "data"            => $data
+        );
+
+        echo json_encode($json_data);
     }
 
     public function set_layout_to_session()

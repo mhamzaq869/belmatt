@@ -856,7 +856,7 @@ class Admin extends CI_Controller
         $data = array();
         //mentioned all with colum of database table that related with html table
         $columns = array('id','title','sub_category_id','section','id','status','price','id');
-
+        
         // Filter portion
         $category_id   = $this->input->post('selected_category_id');
         $instructor_id = $this->input->post('selected_instructor_id');

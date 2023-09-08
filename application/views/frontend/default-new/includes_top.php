@@ -17,6 +17,11 @@
 <link rel="stylesheet" href="<?php echo base_url() . 'assets/global/toastr/toastr.css' ?>">
 <link rel="stylesheet" href="<?php echo base_url() . 'assets/frontend/default-new/css/custom.css'; ?>">
 
+
+<link href="<?php echo base_url('assets/backend/css/vendor/dataTables.bootstrap4.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url('assets/backend/css/vendor/responsive.bootstrap4.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url('assets/backend/css/vendor/buttons.bootstrap4.css');?>" rel="stylesheet" type="text/css" />
+
 <script src="<?php echo base_url('assets/global/js/jquery-3.6.1.min.js'); ?>"></script>
 
 
