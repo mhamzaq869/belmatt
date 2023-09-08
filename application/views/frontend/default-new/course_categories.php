@@ -101,7 +101,7 @@
 
 <?php foreach ($categories as $category) :?>
 <script>
-    $("#category_show_more_"<?php echo $category['id']; ?>).on('click', function() {
+    $("#category_show_more_<?php echo $category['id']; ?>").on('click', function() {
         $('.showMoreSubCat').toggle()
         if($("#category_show_more_<?php echo $category['id']; ?> a").text() == 'Show More Sub Categories'){
             $("#category_show_more_<?php echo $category['id']; ?> a").text('Hide Sub Categories')
