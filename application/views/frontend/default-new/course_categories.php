@@ -71,7 +71,7 @@
 
                         <?php if (count($sub_categories) > 4) : ?>
                             <ul class="list-group list-group-flush" style="border-top: 0 !important; border-bottom: 0 !important;">
-                                <li class="list-group-item on-hover-action" id="category_show_more">
+                                <li class="list-group-item on-hover-action" id="category_show_more_<?php echo $category['id']; ?>">
                                     <a class="text-dark font-italic text-decoration-underline" style="font-size: 14px;" href="#">Show More Sub Categories</a>
                                 </li>
                             </ul>
@@ -97,13 +97,17 @@
         $('#category-delete-btn-' + id).hide();
         $('#category-edit-btn-' + id).hide();
     });
+</script>
 
-    $("#category_show_more").on('click', function() {
+<?php foreach ($categories as $category) :?>
+<script>
+    $("#category_show_more_"<?php echo $category['id']; ?>).on('click', function() {
         $('.showMoreSubCat').toggle()
-        if($("#category_show_more a").text() == 'Show More Sub Categories'){
-            $("#category_show_more a").text('Hide Sub Categories')
+        if($("#category_show_more_<?php echo $category['id']; ?> a").text() == 'Show More Sub Categories'){
+            $("#category_show_more_<?php echo $category['id']; ?> a").text('Hide Sub Categories')
         }else{
-            $("#category_show_more a").text('Show More Sub Categories')
+            $("#category_show_more_<?php echo $category['id']; ?> a").text('Show More Sub Categories')
         }
     });
 </script>
+<?php endforeach; ?>
