@@ -282,7 +282,7 @@ if (!empty($course_details['type'])) {
                                         <label class="form-check-label" for="single">Single</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="purchaseType" id="Group" value="group">
+                                        <input class="form-check-input" type="radio" name="purchaseType" id="group" value="group">
                                         <label class="form-check-label font-weight-bold" for="Group">Group</label>
                                     </div>
                                 </div>
@@ -290,7 +290,7 @@ if (!empty($course_details['type'])) {
 
                             <div class="dynamic-wrap px-4 d-none">
                                 <div class="entry input-group py-1">
-                                    <input class="form-control" name="fields[]" type="text" placeholder="Enter Email" />
+                                    <input class="form-control" name="emails[]" type="email" placeholder="Enter User Email" />
                                     <span class="input-group-btn">
                                         <button class="btn btn-success btn-add" type="button">
                                             <i class="fa fa-plus"></i>
@@ -436,6 +436,7 @@ if (!empty($course_details['type'])) {
                 .removeClass('btn-add').addClass('btn-remove')
                 .removeClass('btn-success').addClass('btn-danger')
                 .html('<i class="fas fa-minus"></i>');
+
         }).on('click', '.btn-remove', function(e) {
             $(this).parents('.entry:first').remove();
 

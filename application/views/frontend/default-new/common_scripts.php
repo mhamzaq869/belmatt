@@ -46,6 +46,8 @@
 
 
 <script type="text/javascript">
+  var current_url = window.location.href;
+
   function redirectTo(url) {
     $(location).attr('href', url);
   }
@@ -59,6 +61,28 @@
       jsonFormate = '{"' + lastString.replace('=', '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","').replace("=", '":"').replace("&", '","') + '"}';
     }
     jsonFormate = JSON.parse(jsonFormate);
+   
+    if(current_url.includes('home/course/')){
+      if($("input[name='purchaseType']:checked").val() == 'group'){
+        var emails = [];
+        $("input[name='emails[]']").each(function() {
+          if($(this).val() != ''){
+            emails.push($(this).val());
+          }else{
+            toastr.error('Email field can not be empty!')
+            return false;
+          }
+        });
+
+        if(emails.length == 0){
+          toastr.error('Email fields can not be empty!')
+          return false;
+        }
+        url = url+'?user_group_emails='+emails
+      }
+    }
+
+
     //End prepare get url to post value
     $.ajax({
       type: type,

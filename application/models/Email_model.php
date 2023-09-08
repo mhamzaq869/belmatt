@@ -164,7 +164,7 @@ class Email_model extends CI_Model
 		$notification = $this->db->where('type', $type)->get('notification_settings')->row_array();
 		foreach($this->session->userdata('cart_items') as $course_id){
 			foreach(json_decode($notification['user_types'], true) as $user_type){
-				
+ 
 				//Editable
 				if($user_type == 'admin'){
 					$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
@@ -200,7 +200,15 @@ class Email_model extends CI_Model
 					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
 					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
 					$replaces['paid_amount'] = $amount_paid;
+
+						
+					$userGroupEmails = array_filter($this->session->userdata('cart_items_user_group_emails'), function($value) {
+						return $value['course_id'] == 8;
+					});
 				}
+				
+				
+				
 				//Editable
 
 				$template_data['replaces'] = isset($replaces) ? $replaces:array();
@@ -210,6 +218,28 @@ class Email_model extends CI_Model
 				$subject = json_decode($notification['subject'], true)[$user_type];
 				$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
 
+				if($user_type == 'student'){
+					$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+					$instructor_details = $this->user_model->get_all_user($course_details['creator'])->row_array();
+					$to_user = $this->user_model->get_all_user($student_id)->row_array();
+
+					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
+					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
+					$replaces['paid_amount'] = $amount_paid;
+
+						
+					$userGroupEmails = array_filter($this->session->userdata('cart_items_user_group_emails'), function($value) {
+						return $value['course_id'] == 8;
+					});
+
+					foreach($userGroupEmails as $gruopEmail){
+						if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+							$this->send_smtp_mail($email_template, $subject, $gruopEmail['email']);
+						}
+					}
+				}
+
+ 
 				if(json_decode($notification['system_notification'], true)[$user_type] == 1){
 					$this->notify($type, $to_user['id'], $subject, $email_template);
 				}

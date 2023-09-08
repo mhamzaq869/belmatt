@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-xl-12">
                 <h3 class="mb-3 header-title"><?php echo get_phrase('Book a Course'); ?></h3>
-                <form class="row justify-content-center" action="<?php echo site_url('home/get_courses'); ?>" method="get">
+                <form class="row justify-content-center" action="<?php echo site_url('home/course_calendar'); ?>" method="get">
                      <!-- Course Status -->
                      <div class="col-xl-5">
                         <div class="form-group mt-5">
@@ -88,6 +88,7 @@
                                             <?php endif; ?>
                                         </td> 
                                         <td>
+                                            <a id="added_to_cart_btn_<?php echo $course['id']; ?>" class="btn btn-outline-danger" href="#" onclick="actionTo('<?php echo site_url('home/handle_cart_items/'. $course['id']); ?>'); " style="display: none;"> Cancel Booking</a>
                                             <a id="add_to_cart_btn_<?php echo $course['id']; ?>" class="btn btn-outline-primary" href="#" onclick="actionTo('<?php echo site_url('home/handle_cart_items/'. $course['id']); ?>'); " style="display: inline-block;"> Book Now</a>
                                         </td>
                                     </tr>
