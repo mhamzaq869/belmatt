@@ -17,7 +17,7 @@ class Payment_model extends CI_Model {
 
     function configure_course_payment(){
         $items = array();
-        $total_payable_amount = 0;
+        $total_payable_amount = 0; 
 
         //item detail
         foreach ($this->session->userdata('cart_items') as $key => $cart_item):
@@ -28,9 +28,37 @@ class Payment_model extends CI_Model {
             $item_details['creator_id'] = $course_details['creator'];
             $item_details['discount_flag'] = $course_details['discount_flag'];
             $item_details['discounted_price'] = $course_details['discounted_price'];
-            $item_details['price'] = $course_details['price'];
 
-            $item_details['actual_price'] = ($course_details['discount_flag'] == 1) ? $course_details['discounted_price'] : $course_details['price'];
+            $userGroupEmails = $this->session->userdata('cart_items_user_group_emails');
+            $userGroupCount = 1;
+            $extractedEmails = [];
+
+            if (!empty($userGroupEmails)) {
+             
+              $filteredEmails = array_filter($userGroupEmails, function ($value) use ($cart_item) {
+                return $value['course_id'] == $cart_item;
+              });
+
+              if(count($filteredEmails) == 1){
+                  $userGroupCount += 1;
+              }elseif(count($filteredEmails) > 1){
+                  $userGroupCount += count($filteredEmails);
+              } 
+
+              // Extract email values from the filtered array
+              $extractedEmails = array_map(function ($value) {
+                return $value['email'];
+              }, $filteredEmails); 
+            } 
+             
+
+            $item_details['purchase_type'] = $userGroupCount > 0 ? 'group' : 'single';
+            $item_details['user_group_emails'] = json_encode($extractedEmails);
+            $item_details['quantity'] = $userGroupCount;
+
+            $item_details['price'] = $course_details['price'] * $userGroupCount;
+
+            $item_details['actual_price'] = ($course_details['discount_flag'] == 1) ? ($course_details['discounted_price'] * $userGroupCount) : ($course_details['price'] * $userGroupCount);
             $item_details['sub_items'] = array();
 
             $items[$key] = $item_details;
@@ -41,7 +69,7 @@ class Payment_model extends CI_Model {
         //if applied coupon
         $coupon_code = $this->session->userdata('applied_coupon');
         if($coupon_code){
-            $total_payable_amount = $this->crud_model->get_discounted_price_after_applying_coupon($coupon_code);
+            $total_payable_amount = $this->crud_model->get_discounted_price_after_applying_coupon($coupon_code) * $userGroupCount;
         }
         
         //included tax

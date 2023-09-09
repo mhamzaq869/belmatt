@@ -40,13 +40,14 @@ class Offline_payment extends CI_Controller
 				$cart_item = json_decode($item['item_id']);
 				$this->session->set_userdata('cart_items', $cart_item);
 				// check already enrolled student
-				foreach ($cart_item as $purchased_course) {
-					echo $already_enrolled = $this->db->get_where('enrol', array('user_id' => $user_id, 'course_id' => $purchased_course))->num_rows();
-					if (addon_status('offline_payment') == 1 && $already_enrolled > 0) :
-						$this->session->set_flashdata('error_message', get_phrase('the_request_was_already_approved'));
-						redirect(site_url('addons/offline_payment/pending'), 'refresh');
-					endif;
-				}
+				// foreach ($cart_item as $purchased_course) {
+				// 	$already_enrolled = $this->db->get_where('enrol', array('user_id' => $user_id, 'course_id' => $purchased_course))->num_rows();
+				// 	if (addon_status('offline_payment') == 1 && $already_enrolled > 0) :
+				// 		$this->session->set_flashdata('error_message', get_phrase('the_request_was_already_approved'));
+				// 		redirect(site_url('addons/offline_payment/pending'), 'refresh');
+				// 	endif;
+				// }
+				
 				//insert value
 				$this->crud_model->enrol_student($user_id);
 				$this->crud_model->course_purchase($user_id, 'offline', $amount_paid);

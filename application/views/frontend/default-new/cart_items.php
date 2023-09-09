@@ -1,7 +1,26 @@
-<?php $cart_items = $this->session->userdata('cart_items'); ?>
+<?php $cart_items = $this->session->userdata('cart_items'); ?> 
 <?php foreach($cart_items as $cart_item): ?>
-	<?php $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array(); ?>
-	<?php $instructor = $this->user_model->get_all_user($course_details['creator'])->row_array(); ?>
+	<?php 
+		$course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();  
+	 	$instructor = $this->user_model->get_all_user($course_details['creator'])->row_array(); 
+
+		$userGroupEmails = $this->session->userdata('cart_items_user_group_emails');
+		$userGroupCount = 1;
+
+		if (!empty($userGroupEmails)) {
+			
+			$filteredEmails = array_filter($userGroupEmails, function ($value) use ($cart_item) {
+				return $value['course_id'] == $cart_item;
+			});
+
+			if(count($filteredEmails) == 1){
+				$userGroupCount += 1;
+			}elseif(count($filteredEmails) > 1){
+				$userGroupCount += count($filteredEmails);
+			} 
+			 
+		} 
+	?>
 	<div class="path_pos_wish-2">
 	  <div class="path_pos_wish">
 	    <div class="menu_pro_wish-f-b">
@@ -19,9 +38,9 @@
 	                    <span><?php echo get_phrase('Free'); ?></span>
 	                <?php elseif($course_details['discount_flag']): ?>
 	                    <span><?php echo currency($course_details['discounted_price']); ?></span>
-	                    <del><?php echo currency($course_details['price']); ?></del>
+	                    <del><?php echo currency($course_details['price'] * $userGroupCount); ?></del>
 	                <?php else: ?>
-	                    <span><?php echo currency($course_details['price']); ?></span>
+	                    <span><?php echo currency($course_details['price'] * $userGroupCount); ?></span>
 	                <?php endif; ?>
 	            </div>
 	          </div>

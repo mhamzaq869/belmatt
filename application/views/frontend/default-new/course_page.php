@@ -423,10 +423,25 @@ if (!empty($course_details['type'])) {
 <?php endif; ?>
 
 <script>
+    <?php if ($course_details['is_free_course']) : ?>
+        var price = <?php echo get_phrase('Free'); ?>
+    <?php elseif ($course_details['discount_flag']) : ?>
+        var price = <?php echo $course_details['discounted_price']; ?>
+    <?php else : ?>
+        var price = <?php echo $course_details['price']; ?>
+    <?php endif; ?>
+
+    var currencySymbol = '<?php echo currency_code_and_symbol(); ?>';
+    var totalInputFields = 1;
+    var totalPrice = 0;
+
     $(function() {
+       
         $(document).on('click', '.btn-add', function(e) {
             e.preventDefault();
 
+            totalInputFields += 1;
+            
             var dynaForm = $('.dynamic-wrap:first'),
                 currentEntry = $(this).parents('.entry:first'),
                 newEntry = $(currentEntry.clone()).appendTo(dynaForm);
@@ -437,9 +452,12 @@ if (!empty($course_details['type'])) {
                 .removeClass('btn-success').addClass('btn-danger')
                 .html('<i class="fas fa-minus"></i>');
 
+                changePrice()
         }).on('click', '.btn-remove', function(e) {
             $(this).parents('.entry:first').remove();
+            totalInputFields -= 1;
 
+            changePrice()
             e.preventDefault();
             return false;
         });
@@ -448,9 +466,20 @@ if (!empty($course_details['type'])) {
 
     $('input[name="purchaseType"]:radio').change(function () {
         if($("input[name='purchaseType']:checked").val() == 'group'){
+            totalInputFields += 1;
             $('.dynamic-wrap').removeClass('d-none');
+            changePrice()
         }else{
+            totalInputFields -= 1;
             $('.dynamic-wrap').addClass('d-none');
+            changePrice()
         }
     });
+
+    function changePrice(){
+        if(price != 'Free'){
+            totalPrice = price*totalInputFields; 
+            $('.ammount h1').text(`${currencySymbol+totalPrice}`)
+        }
+    }
 </script>

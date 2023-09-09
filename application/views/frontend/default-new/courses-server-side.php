@@ -32,7 +32,7 @@
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                  
                                 <?php foreach ($courses as $key => $course): ?>
-                                    <option value="<?php echo $course['title']; ?>" <?php if ($title == $course['title']) echo 'selected'; ?>><?php echo get_phrase($course['title']); ?></option>
+                                    <option value="<?php echo $course['id']; ?>" <?php if ($title == $course['id']) echo 'selected'; ?>><?php echo get_phrase($course['title']); ?></option>
                                 <?php endforeach; ?>
 
                                 

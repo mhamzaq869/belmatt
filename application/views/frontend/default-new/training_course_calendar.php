@@ -88,8 +88,7 @@
                                             <?php endif; ?>
                                         </td> 
                                         <td>
-                                            <a id="added_to_cart_btn_<?php echo $course['id']; ?>" class="btn btn-outline-danger" href="#" onclick="actionTo('<?php echo site_url('home/handle_cart_items/'. $course['id']); ?>'); " style="display: none;"> Cancel Booking</a>
-                                            <a id="add_to_cart_btn_<?php echo $course['id']; ?>" class="btn btn-outline-primary" href="#" onclick="actionTo('<?php echo site_url('home/handle_cart_items/'. $course['id']); ?>'); " style="display: inline-block;"> Book Now</a>
+                                            <a href="<?php echo site_url('home/course/' . $course['title'].'/'. $course['id']); ?>" class="btn btn-outline-danger" href="#"><?php echo ellipsis($course['title']); ?>  Book Now</a> 
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

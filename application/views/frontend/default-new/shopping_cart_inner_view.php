@@ -16,8 +16,29 @@
                     </thead>
                     <tbody>
                         <?php $total = 0; ?>
+                        
                         <?php foreach($this->session->userdata('cart_items') as $item): ?>
-                            <?php $course_details = $this->crud_model->get_course_by_id($item)->row_array(); ?>
+                            <?php 
+                                $course_details = $this->crud_model->get_course_by_id($item)->row_array();  
+                                
+                                $userGroupEmails = $this->session->userdata('cart_items_user_group_emails');
+                                $userGroupCount = 1;
+
+                                if (!empty($userGroupEmails)) {
+                                 
+                                    $filteredEmails = array_filter($userGroupEmails, function ($value) use ($item) {
+                                        return $value['course_id'] == $item;
+                                    });
+                                    
+                                    if(count($filteredEmails) == 1){
+                                        $userGroupCount += 1;
+                                    }elseif(count($filteredEmails) > 1){
+                                        $userGroupCount += count($filteredEmails);
+                                    } 
+                                    
+                                } 
+                                
+                            ?>
                           <tr>
                             <td>
                                 <div class="cart-table-image">
@@ -32,12 +53,12 @@
                                 <?php if($course_details['is_free_course']): ?>
                                     <h4><?php echo get_phrase('Free'); ?></h4>
                                 <?php elseif($course_details['discount_flag']): ?>
-                                    <?php $total += $course_details['discounted_price']; ?>
-                                    <h4><?php echo currency($course_details['discounted_price']); ?></h4>
+                                    <?php $total += $course_details['discounted_price'] * $userGroupCount; ?>
+                                    <h4><?php echo currency($course_details['discounted_price'] * $userGroupCount); ?></h4>
                                     <h6 class="mt-2 ms-2"><del><?php echo currency($course_details['price']); ?></del></h6>
                                 <?php else: ?>
-                                    <?php $total += $course_details['price']; ?>
-                                    <h4><?php echo currency($course_details['price']); ?></h4>
+                                    <?php $total += $course_details['price'] * $userGroupCount; ?>
+                                    <h4><?php echo currency($course_details['price'] * $userGroupCount); ?></h4>
                                 <?php endif; ?>
                             </td>
                             <td class="text-end">

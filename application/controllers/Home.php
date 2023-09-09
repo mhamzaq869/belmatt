@@ -239,23 +239,27 @@ class Home extends CI_Controller
 
             $dir = $this->input->post('order')[0]['dir'];
 
-            
+            $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) & status="active"';
+            $total_row_query = $this->db->query($total_row_sql);
+            $total_number_of_row = count($total_row_query->result_array());
+
             $search = $this->input->post('search')['value'];
             
             // FILTERED DATA
-            $sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) & status="active"';
-            $total_row_query = $this->db->query($sql);
-            $total_number_of_row = count($total_row_query->result_array());
+            $sql = 'SELECT * FROM course WHERE '; 
 
+            if (!empty($title) && $title != 'all') {
+                $sql .= " id = $title &"; 
+            } 
+
+            $sql .= ' find_in_set("classroom", course.type) & status="active"';
 
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
                 $sql .= " & city = '$venue[0]'";
                 $sql .= " & address = '$venue[1]'"; 
             }
-            if (!empty($title) && $title != 'all') {
-                $sql .= " & title LIKE '%$title%'"; 
-            } 
+            
             
             $sql .= " order by id desc";
             $sql .= " limit $limit";
@@ -264,19 +268,20 @@ class Home extends CI_Controller
             $courses = $query->result_array();
            
             // WITHOUT FILTERED DATA
-            $sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) & status="active"';
+            $sql = 'SELECT * FROM course WHERE ';
             
+            if (!empty($title) && $title != 'all') {
+                $sql .= " id = $title &"; 
+            } 
+
+            $sql .= '  find_in_set("classroom", course.type) & status="active"';
+
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
                 $sql .= " & city = '$venue[0]'";
                 $sql .= " & address = '$venue[1]'"; 
             }
-
-            if (!empty($title) && $title != 'all') {
-                $sql .= " & title LIKE '%$title%'"; 
-            } 
-
-           
+ 
             $query = $this->db->query($sql);
             $filtered_number_of_row = count($query->result_array()); 
            
@@ -305,8 +310,7 @@ class Home extends CI_Controller
                     $nestedData['venue'] = '<span>' . $row['address'] . '</span>';
                     $nestedData['time'] = '<span>' . date('g:i A', strtotime($row['datetime'])) . '</span>';
                     $nestedData['price'] = $price_field; 
-                    $nestedData['book'] = '<a id="added_to_cart_btn_'. $row['id'] .'" class="btn btn-outline-danger" href="#" onclick="'.$addToCartUrl.'" style="display: none;"> Cancel Booking</a>
-                    <a id="add_to_cart_btn_'. $row['id'].'" class="btn btn-outline-primary" href="#" onclick="'.$addToCartUrl.' " style="display: inline-block;"> Book Now</a>';
+                    $nestedData['book'] = '<a href="' . site_url('home/course/' . $row['title'] . '/' . $row['id']) . '" class="btn btn-outline-primary">Book Now</a>';
 
                     $data[] = $nestedData;
                 }
@@ -588,19 +592,18 @@ class Home extends CI_Controller
     {
         if (!$this->session->userdata('cart_items')) {
             $this->session->set_userdata('cart_items', array());
-        }
-
-    
+            $this->session->set_userdata('cart_items_user_group_emails', array());
+        } 
 
         $previous_cart_items = $this->session->userdata('cart_items');
         if (in_array($course_id, $previous_cart_items)) {
-            $key = array_search($course_id, $previous_cart_items);
+            $key = array_search($course_id, $previous_cart_items); 
             unset($previous_cart_items[$key]);
 
             $response['success'] = get_phrase('Item successfully removed from cart');
             $response['hide'] = '#added_to_cart_btn_'.$identifier.$course_id;
             $response['show'] = '#add_to_cart_btn_'.$identifier.$course_id;
-            
+              
         } else {
             array_push($previous_cart_items, $course_id);
 
@@ -608,22 +611,40 @@ class Home extends CI_Controller
             $response['show'] = '#added_to_cart_btn_'.$identifier.$course_id;
             $response['hide'] = '#add_to_cart_btn_'.$identifier.$course_id;
         }
-
-
         $this->session->set_userdata('cart_items', $previous_cart_items);
-        
-        $emailData = [];
-        if(isset($_GET['user_group_emails'])){
-            $user_group_emails = explode(',', $_GET['user_group_emails']);
-            foreach($user_group_emails as $email){
-                $emailData[] = [
-                    'email' => $email,
-                    'course_id' => $course_id,
-                ];
+          
+
+
+        $previous_emailData = $this->session->userdata('cart_items_user_group_emails');
+        if(!empty($previous_emailData)){
+            foreach($previous_emailData as $i => $email){
+                if (in_array($course_id, $email)) {
+                    $key = array_search($course_id, $email); 
+                    unset($previous_emailData[$key]); 
+                      
+                } else {
+                    array_push($previous_emailData, [
+                        'email' => $email,
+                        'course_id' => $course_id,
+                    ]);  
+                }
             }
+            
+        }else{
+            if (isset($_GET['user_group_emails'])) {
+                $user_group_emails = explode(',', $_GET['user_group_emails']);
+                foreach ($user_group_emails as $email) {
+                    array_push($previous_emailData, [
+                        'email' => $email,
+                        'course_id' => $course_id,
+                    ]); 
+                }
+            }  
         }
 
-        $this->session->set_userdata('cart_items_user_group_emails', $emailData);
+        // Set the updated $emailData back in the session
+        $this->session->set_userdata('cart_items_user_group_emails', $previous_emailData);
+          
        
         //Cart page start
         $response['html'] = [

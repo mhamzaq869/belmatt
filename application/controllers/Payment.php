@@ -42,11 +42,13 @@ class Payment extends CI_Controller
         if($payment_gateway['is_addon'] == 1 && $model_name != null){
             $this->load->model('addons/'.strtolower($payment_gateway['model_name']));
         }
-
+         
+       
         if($model_name != null){
             $payment_check_function = 'check_'.$payment_method.'_payment';
             $response = $this->$model_name->$payment_check_function($payment_method, 'course');
         }
+        
         //ENDED payment model and functions are dynamic here
         if ($response === true) {
             //if course is a gift purchase
@@ -55,14 +57,16 @@ class Payment extends CI_Controller
                 $this->crud_model->enrol_student($enrol_user_id, $payer_user_id);
                 $this->email_model->course_gift_notification($enrol_user_id, $payer_user_id, $payment_method, $payment_details['total_payable_amount']);
             }else{
-
+                
                 $this->crud_model->enrol_student($enrol_user_id);
+                $this->purchaseduseremail_model->add_purchased_course_user_email($payment_details);
                 $this->email_model->course_purchase_notification($enrol_user_id, $payment_method, $payment_details['total_payable_amount']);
             }
             $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
 
             $this->session->unset_userdata('gift_to_user_id');
             $this->session->set_userdata('cart_items', array());
+            $this->session->set_userdata('cart_items_user_group_emails', array());
             $this->session->set_userdata('payment_details', '');
             $this->session->set_userdata('applied_coupon', '');
 

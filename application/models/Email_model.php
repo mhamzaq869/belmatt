@@ -154,8 +154,7 @@ class Email_model extends CI_Model
 		// 	$this->course_purchase_notification_student($course_id, $student_id);
 		// }
 
-
-
+ 
 
 		//Editable
 		$type = 'course_purchase';
@@ -164,7 +163,7 @@ class Email_model extends CI_Model
 		$notification = $this->db->where('type', $type)->get('notification_settings')->row_array();
 		foreach($this->session->userdata('cart_items') as $course_id){
 			foreach(json_decode($notification['user_types'], true) as $user_type){
- 
+				
 				//Editable
 				if($user_type == 'admin'){
 					$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
@@ -200,54 +199,59 @@ class Email_model extends CI_Model
 					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
 					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
 					$replaces['paid_amount'] = $amount_paid;
-
-						
-					$userGroupEmails = array_filter($this->session->userdata('cart_items_user_group_emails'), function($value) {
-						return $value['course_id'] == 8;
-					});
 				}
+
+				
+
+ 
 				
 				
 				
-				//Editable
 
-				$template_data['replaces'] = isset($replaces) ? $replaces:array();
-				$template_data['to_user'] = $to_user;
-				$template_data['notification'] = $notification;
-				$template_data['user_type'] = $user_type;
-				$subject = json_decode($notification['subject'], true)[$user_type];
-				$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+				$this->db->where('course_id', $course_id);
+				$query = $this->db->get('purchased_course_usergroup_email');
 
-				if($user_type == 'student'){
-					$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
-					$instructor_details = $this->user_model->get_all_user($course_details['creator'])->row_array();
-					$to_user = $this->user_model->get_all_user($student_id)->row_array();
+				if($query->num_rows() > 0){
+					$emails = $query->result();
+					foreach($emails as $email){
+						if($user_type == 'student'){
+							
+							$replaces['paid_amount'] = 0; 
+							$template_data['replaces'] = isset($replaces) ? $replaces:array();
+							$template_data['to_user'] = $to_user;
+							$template_data['notification'] = $notification;
+							$template_data['user_type'] = $user_type;
+							$subject = json_decode($notification['subject'], true)[$user_type];
+							$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
 
-					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
-					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
-					$replaces['paid_amount'] = $amount_paid;
-
-						
-					$userGroupEmails = array_filter($this->session->userdata('cart_items_user_group_emails'), function($value) {
-						return $value['course_id'] == 8;
-					});
-
-					foreach($userGroupEmails as $gruopEmail){
-						if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-							$this->send_smtp_mail($email_template, $subject, $gruopEmail['email']);
+							if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+								$this->send_smtp_mail($email_template, $subject, $email->email);
+							}
 						}
+					}
+				}else{
+
+					//Editable 
+					$template_data['replaces'] = isset($replaces) ? $replaces:array();
+					$template_data['to_user'] = $to_user;
+					$template_data['notification'] = $notification;
+					$template_data['user_type'] = $user_type;
+					$subject = json_decode($notification['subject'], true)[$user_type];
+					$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+					
+					if(json_decode($notification['system_notification'], true)[$user_type] == 1){
+						$this->notify($type, $to_user['id'], $subject, $email_template);
+					}
+					
+					if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+						$this->send_smtp_mail($email_template, $subject, $to_user['email']);
 					}
 				}
 
- 
-				if(json_decode($notification['system_notification'], true)[$user_type] == 1){
-					$this->notify($type, $to_user['id'], $subject, $email_template);
-				}
-				if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-					$this->send_smtp_mail($email_template, $subject, $to_user['email']);
-				}
+				
 			}
 		}
+
 	}
 
 

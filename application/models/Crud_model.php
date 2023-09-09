@@ -138,12 +138,12 @@ class Crud_model extends CI_Model
 
     public function enrol_history($course_id = "", $distinct_data = false)
     {
-        if($distinct_data){
+        if ($distinct_data) {
             $this->db->select('user_id');
             $this->db->distinct('user_id');
             $this->db->where('course_id', $course_id);
             return $this->db->get('enrol');
-        }else{
+        } else {
             if ($course_id > 0) {
                 return $this->db->get_where('enrol', array('course_id' => $course_id));
             } else {
@@ -220,7 +220,7 @@ class Crud_model extends CI_Model
         //     $this->db->where('creator', $user_id);
         // }
 
-        
+
 
         //revenue only showing on course creator panel
         if ($user_id > 0) {
@@ -257,7 +257,7 @@ class Crud_model extends CI_Model
         $this->db->where('id', $param1);
         $this->db->delete('payment');
     }
-    
+
     public function delete_enrol_history($param1)
     {
         $this->db->where('id', $param1);
@@ -429,8 +429,9 @@ class Crud_model extends CI_Model
         $this->db->update('settings', $data);
     }
 
-    function get_payment_gateways($identifier = ""){
-        if($identifier){
+    function get_payment_gateways($identifier = "")
+    {
+        if ($identifier) {
             $this->db->where('identifier', $identifier);
         }
         return $this->db->get('payment_gateways');
@@ -445,18 +446,18 @@ class Crud_model extends CI_Model
         $data['enabled_test_mode'] = $this->input->post('enabled_test_mode');
         $data['status'] = $this->input->post('status');
 
-        foreach($_POST as $key => $post_value):
-            if(!array_key_exists($key,$data)){
+        foreach ($_POST as $key => $post_value) :
+            if (!array_key_exists($key, $data)) {
                 $keys[$key] = $post_value;
             }
         endforeach;
         $data['keys'] = json_encode($keys);
 
-        if($this->get_payment_gateways($data['identifier'])->num_rows() > 0){
+        if ($this->get_payment_gateways($data['identifier'])->num_rows() > 0) {
             $data['updated_at'] = time();
             $this->db->where('identifier', $data['identifier']);
             $this->db->update('payment_gateways', $data);
-        }else{
+        } else {
             $data['created_at'] = time();
             $this->db->insert('payment_gateways', $data);
         }
@@ -555,8 +556,8 @@ class Crud_model extends CI_Model
     public function add_course($param1 = "")
     {
         $faqs = array();
-        if(!empty($this->input->post('faqs'))):
-            foreach(array_filter($this->input->post('faqs')) as $faq_key => $faq_title){
+        if (!empty($this->input->post('faqs'))) :
+            foreach (array_filter($this->input->post('faqs')) as $faq_key => $faq_title) {
                 $faqs[$faq_title] = $this->input->post('faq_descriptions')[$faq_key];
             }
         endif;
@@ -579,29 +580,29 @@ class Crud_model extends CI_Model
         $data['discount_flag'] = $this->input->post('discount_flag');
         $data['discounted_price'] = $this->input->post('discounted_price');
         $data['level'] = $this->input->post('level');
-        $data['type'] = implode(',',$this->input->post('type'));
+        $data['type'] = implode(',', $this->input->post('type'));
         $data['is_free_course'] = $this->input->post('is_free_course');
 
         //Course type == 'classroom'
-        if(in_array('classroom',$this->input->post('type'))){
+        if (in_array('classroom', $this->input->post('type'))) {
             $data['country'] = $this->input->post('country');
             $data['state'] = $this->input->post('state');
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
             $data['datetime'] = $this->input->post('datetime');
-        }else{
+        } else {
             $data['country'] = null;
             $data['state'] = null;
             $data['city'] = null;
             $data['address'] = null;
             $data['datetime'] = null;
         }
-        
+
         //Course expiry period
-        if($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0){
+        if ($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0) {
             $data['expiry_period'] = $this->input->post('number_of_month');
-        }else{
+        } else {
             $data['expiry_period'] = null;
         }
 
@@ -642,12 +643,12 @@ class Crud_model extends CI_Model
                 $data['is_top_course'] = 1;
             }
             $status = $this->input->post('status');
-            if($status== 'active' || $status== 'private' || $status== 'upcoming'){
+            if ($status == 'active' || $status == 'private' || $status == 'upcoming') {
                 $data['status'] = $status;
-            }else{
+            } else {
                 $data['status'] = 'active';
             }
-        }else{
+        } else {
             $data['status'] = 'pending';
         }
 
@@ -700,9 +701,9 @@ class Crud_model extends CI_Model
 
 
         //Course expiry period
-        if($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0){
+        if ($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0) {
             $data['expiry_period'] = $this->input->post('number_of_month');
-        }else{
+        } else {
             $data['expiry_period'] = null;
         }
 
@@ -718,9 +719,9 @@ class Crud_model extends CI_Model
             $data['is_admin'] = 0;
         }
 
-        if($this->input->post('is_private') == 1){
+        if ($this->input->post('is_private') == 1) {
             $data['status'] = 'private';
-        }else{
+        } else {
             if ($param1 == "save_to_draft") {
                 $data['status'] = 'draft';
             } else {
@@ -748,7 +749,9 @@ class Crud_model extends CI_Model
 
     function trim_and_return_json($untrimmed_array = [])
     {
-        if(!is_array($untrimmed_array)){$untrimmed_array = [];}
+        if (!is_array($untrimmed_array)) {
+            $untrimmed_array = [];
+        }
         $trimmed_array = array();
         if (sizeof($untrimmed_array) > 0) {
             foreach ($untrimmed_array as $row) {
@@ -765,8 +768,8 @@ class Crud_model extends CI_Model
         $course_details = $this->get_course_by_id($course_id)->row_array();
 
         $faqs = array();
-        if(!empty($this->input->post('faqs'))):
-            foreach(array_filter($this->input->post('faqs')) as $faq_key => $faq_title){
+        if (!empty($this->input->post('faqs'))) :
+            foreach (array_filter($this->input->post('faqs')) as $faq_key => $faq_title) {
                 $faqs[$faq_title] = $this->input->post('faq_descriptions')[$faq_key];
             }
         endif;
@@ -784,17 +787,17 @@ class Crud_model extends CI_Model
         $data['category_id'] = $category_details['parent'];
         $data['requirements'] = $requirements;
         $data['is_free_course'] = $this->input->post('is_free_course');
-        $data['type'] = implode(',',$this->input->post('type'));
+        $data['type'] = implode(',', $this->input->post('type'));
 
         //Course type == 'classroom'
-        if(in_array('classroom',$this->input->post('type'))){
+        if (in_array('classroom', $this->input->post('type'))) {
             $data['country'] = $this->input->post('country');
             $data['state'] = $this->input->post('state');
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
             $data['datetime'] = $this->input->post('datetime');
-        }else{
+        } else {
             $data['country'] = null;
             $data['state'] = null;
             $data['city'] = null;
@@ -804,9 +807,9 @@ class Crud_model extends CI_Model
         }
 
         //Course expiry period
-        if($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0){
+        if ($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0) {
             $data['expiry_period'] = $this->input->post('number_of_month');
-        }else{
+        } else {
             $data['expiry_period'] = null;
         }
 
@@ -841,12 +844,12 @@ class Crud_model extends CI_Model
                 $data['is_top_course'] = 1;
             }
             $status = $this->input->post('status');
-            if($status== 'active' || $status== 'private' || $status== 'upcoming'){
+            if ($status == 'active' || $status == 'private' || $status == 'upcoming') {
                 $data['status'] = $status;
-            }else{
+            } else {
                 $data['status'] = 'active';
             }
-        }else{
+        } else {
             $data['status'] = $course_details['status'];
         }
 
@@ -872,18 +875,18 @@ class Crud_model extends CI_Model
         foreach ($course_media_files as $course_media => $size) {
             if ($_FILES[$course_media]['name'] != "") {
 
-                move_uploaded_file($_FILES[$course_media]['tmp_name'], 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$data['last_modified']. '.jpg');
+                move_uploaded_file($_FILES[$course_media]['tmp_name'], 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $data['last_modified'] . '.jpg');
 
-                if (file_exists('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg')) {
-                    unlink('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg');
+                if (file_exists('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg')) {
+                    unlink('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg');
                 }
 
-                if (file_exists('uploads/thumbnails/course_thumbnails/optimized/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg')) {
-                    unlink('uploads/thumbnails/course_thumbnails/optimized/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg');
+                if (file_exists('uploads/thumbnails/course_thumbnails/optimized/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg')) {
+                    unlink('uploads/thumbnails/course_thumbnails/optimized/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg');
                 }
-            }else{
-                if (file_exists('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg')) {
-                    rename('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$previous_last_modified. '.jpg', 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id .$data['last_modified']. '.jpg');
+            } else {
+                if (file_exists('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg')) {
+                    rename('uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $previous_last_modified . '.jpg', 'uploads/thumbnails/course_thumbnails/' . $course_media . '_' . get_frontend_settings('theme') . '_' . $course_id . $data['last_modified'] . '.jpg');
                 }
             }
         }
@@ -891,7 +894,7 @@ class Crud_model extends CI_Model
         $this->db->where('id', $course_id);
         $this->db->update('course', $data);
 
-        
+
 
         if ($data['status'] == 'active') {
             $this->session->set_flashdata('flash_message', get_phrase('course_updated_successfully'));
@@ -923,15 +926,15 @@ class Crud_model extends CI_Model
 
         $last_modified = $this->get_course_by_id($course_id)->row('last_modified');
 
-        if (file_exists('uploads/thumbnails/course_thumbnails/optimized/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id.$last_modified . '.jpg')) {
-            return base_url() . 'uploads/thumbnails/course_thumbnails/optimized/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id.$last_modified . '.jpg';
-        } elseif(file_exists('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id.$last_modified . '.jpg')) {
+        if (file_exists('uploads/thumbnails/course_thumbnails/optimized/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . $last_modified . '.jpg')) {
+            return base_url() . 'uploads/thumbnails/course_thumbnails/optimized/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . $last_modified . '.jpg';
+        } elseif (file_exists('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . $last_modified . '.jpg')) {
 
             //resizeImage
-            resizeImage('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id.$last_modified . '.jpg', 'uploads/thumbnails/course_thumbnails/optimized/', 400);
+            resizeImage('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . $last_modified . '.jpg', 'uploads/thumbnails/course_thumbnails/optimized/', 400);
 
-            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id.$last_modified . '.jpg';
-        }else{
+            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . $last_modified . '.jpg';
+        } else {
             return base_url() . $course_media_placeholders[$type . '_placeholder'];
         }
     }
@@ -980,25 +983,25 @@ class Crud_model extends CI_Model
         $h5p_status = addon_status('h5p');
 
         $this->db->group_start();
-            $this->db->where('course_type', 'general');
-            if ($scorm_status) {
-                $this->db->or_where('course_type', 'scorm');
-            }
-            if ($h5p_status) {
-                $this->db->or_where('course_type', 'h5p');
-            }
+        $this->db->where('course_type', 'general');
+        if ($scorm_status) {
+            $this->db->or_where('course_type', 'scorm');
+        }
+        if ($h5p_status) {
+            $this->db->or_where('course_type', 'h5p');
+        }
         $this->db->group_end();
         $this->db->where('status', 'active');
 
         $this->db->group_start();
-            $this->db->like('title', $search_string);
-            $this->db->or_like('short_description', $search_string);
-            $this->db->or_like('description', $search_string);
-            $this->db->or_like('outcomes', $search_string);
-            $this->db->or_like('language', $search_string);
-            $this->db->or_like('requirements', $search_string);
-            $this->db->or_like('meta_keywords', $search_string);
-            $this->db->or_like('meta_description', $search_string);
+        $this->db->like('title', $search_string);
+        $this->db->or_like('short_description', $search_string);
+        $this->db->or_like('description', $search_string);
+        $this->db->or_like('outcomes', $search_string);
+        $this->db->or_like('language', $search_string);
+        $this->db->or_like('requirements', $search_string);
+        $this->db->or_like('meta_keywords', $search_string);
+        $this->db->or_like('meta_description', $search_string);
         $this->db->group_end();
 
         if ($per_page != "" || $uri_segment != "") {
@@ -1013,12 +1016,12 @@ class Crud_model extends CI_Model
     {
         return $this->db->get_where('course', array('id' => $course_id));
     }
-    
+
     public function get_course_by_type($type = "classroom")
     {
-        $sql = 'SELECT * FROM course WHERE find_in_set("'.$type.'", course.type) & status="active"';
+        $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type) & status="active"';
         $query = $this->db->query($sql);
-        
+
         return $query->result_array();
     }
 
@@ -1054,7 +1057,7 @@ class Crud_model extends CI_Model
             }
         } elseif ($course_type == 'h5p') {
             $this->load->model('addons/h5p_model');
-            $this->h5p_model->deleteDir('uploads/h5p/'.$course_id);
+            $this->h5p_model->deleteDir('uploads/h5p/' . $course_id);
         }
     }
 
@@ -1077,13 +1080,13 @@ class Crud_model extends CI_Model
         $h5p_status = addon_status('h5p');
 
         $this->db->group_start();
-            $this->db->where('course_type', 'general');
-            if ($scorm_status) {
-                $this->db->or_where('course_type', 'scorm');
-            }
-            if ($h5p_status) {
-                $this->db->or_where('course_type', 'h5p');
-            }
+        $this->db->where('course_type', 'general');
+        if ($scorm_status) {
+            $this->db->or_where('course_type', 'scorm');
+        }
+        if ($h5p_status) {
+            $this->db->or_where('course_type', 'h5p');
+        }
         $this->db->group_end();
 
         $this->db->where('is_top_course', 1);
@@ -1132,81 +1135,81 @@ class Crud_model extends CI_Model
         $scorm_status = addon_status('scorm_course');
         $h5p_status = addon_status('h5p');
 
-        if($status != ""){
+        if ($status != "") {
             $this->db->where('status', $status);
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses = $this->db->get('course');
-        }else{
+        } else {
             //draft
             $this->db->where('status', 'draft');
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses['draft'] = $this->db->get('course');
 
             //pending
             $this->db->where('status', 'pending');
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses['pending'] = $this->db->get('course');
 
             //private
             $this->db->where('status', 'private');
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses['private'] = $this->db->get('course');
 
             //active
             $this->db->where('status', 'active');
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses['active'] = $this->db->get('course');
 
             //Upcoming
             $this->db->where('status', 'upcoming');
             $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
+            $this->db->where('course_type', 'general');
+            if ($scorm_status) {
+                $this->db->or_where('course_type', 'scorm');
+            }
+            if ($h5p_status) {
+                $this->db->or_where('course_type', 'h5p');
+            }
             $this->db->group_end();
             $courses['upcoming'] = $this->db->get('course');
         }
@@ -1217,10 +1220,10 @@ class Crud_model extends CI_Model
     public function get_status_wise_courses($status = "")
     {
 
-        if($status != ""){
+        if ($status != "") {
             $this->db->where('status', $status);
             $courses = $this->db->get('course');
-        }else{
+        } else {
             //draft
             $this->db->where('status', 'draft');
             $courses['draft'] = $this->db->get('course');
@@ -1446,7 +1449,7 @@ class Crud_model extends CI_Model
 
 
                 $video_upload = $this->academy_cloud_model->upload_video();
-                if($video_upload['success'] == false){
+                if ($video_upload['success'] == false) {
                     return json_encode(['error' => $video_upload['message']]);
                 }
 
@@ -1644,8 +1647,8 @@ class Crud_model extends CI_Model
 
 
         //video caption
-        if(isset($_FILES['caption']) && !empty($_FILES['caption']['name'])){
-            $data['caption'] = random(15).'.vtt';
+        if (isset($_FILES['caption']) && !empty($_FILES['caption']['name'])) {
+            $data['caption'] = random(15) . '.vtt';
             move_uploaded_file($_FILES['caption']['tmp_name'], 'uploads/lesson_files/captions/' . $data['caption']);
         }
 
@@ -1708,7 +1711,7 @@ class Crud_model extends CI_Model
 
 
                 $video_upload = $this->academy_cloud_model->update_video($previous_data['cloud_video_id']);
-                if($video_upload['success'] == false){
+                if ($video_upload['success'] == false) {
                     return json_encode(['error' => $video_upload['message']]);
                 }
 
@@ -1931,8 +1934,8 @@ class Crud_model extends CI_Model
 
 
         //video caption
-        if(isset($_FILES['caption']) && !empty($_FILES['caption']['name'])){
-            $data['caption'] = random(15).'.vtt';
+        if (isset($_FILES['caption']) && !empty($_FILES['caption']['name'])) {
+            $data['caption'] = random(15) . '.vtt';
             move_uploaded_file($_FILES['caption']['tmp_name'], 'uploads/lesson_files/captions/' . $data['caption']);
         }
 
@@ -1957,20 +1960,20 @@ class Crud_model extends CI_Model
         $user_id = $this->session->userdata('user_id');
         $previous_data = $this->db->get_where('lesson', array('id' => $lesson_id))->row_array();
 
-        if($previous_data['video_type'] == 'academy_cloud'){
+        if ($previous_data['video_type'] == 'academy_cloud') {
             $this->academy_cloud_model->delete_cloud_video($previous_data['cloud_video_id']);
         }
 
-        if($previous_data['lesson_type'] == 'video' && $previous_data['attachment_type'] == 'file' && $previous_data['video_type'] == 'system'){
+        if ($previous_data['lesson_type'] == 'video' && $previous_data['attachment_type'] == 'file' && $previous_data['video_type'] == 'system') {
             unlink(str_replace(base_url(), '', $previous_data['video_url']));
         }
 
 
         //update watch histories data
         $watch_history = $this->db->get_where('watch_histories', array('student_id' => $user_id, 'course_id' => $previous_data['course_id']));
-        if($watch_history->num_rows() > 0){
+        if ($watch_history->num_rows() > 0) {
             $data = array();
-            if($watch_history->row('watching_lesson_id') == $lesson_id){
+            if ($watch_history->row('watching_lesson_id') == $lesson_id) {
                 $data['watching_lesson_id'] = null;
             }
 
@@ -1981,12 +1984,11 @@ class Crud_model extends CI_Model
                 $data['completed_lesson'] = json_encode($completed_lesson_arr);
             }
 
-            if(count($data) > 0){
+            if (count($data) > 0) {
                 $this->db->where('student_id', $user_id);
                 $this->db->where('course_id', $previous_data['course_id']);
                 $this->db->update('watch_histories', $data);
             }
-
         }
 
         $this->db->where('id', $lesson_id);
@@ -2066,8 +2068,8 @@ class Crud_model extends CI_Model
     {
         if (isset($_FILES['banner_image']) && $_FILES['banner_image']['name'] != "") {
 
-            if(file_exists('uploads/system/' . get_current_banner('banner_image'))){
-                unlink('uploads/system/' .get_current_banner('banner_image'));
+            if (file_exists('uploads/system/' . get_current_banner('banner_image'))) {
+                unlink('uploads/system/' . get_current_banner('banner_image'));
             }
 
             $banner_images = json_decode(get_frontend_settings('banner_image'), true);
@@ -2180,15 +2182,15 @@ class Crud_model extends CI_Model
     {
         $scorm_status = addon_status('scorm_course');
         $h5p_status = addon_status('h5p');
-        
+
         $this->db->group_start();
-            $this->db->where('course_type', 'general');
-            if ($scorm_status) {
-                $this->db->or_where('course_type', 'scorm');
-            }
-            if ($h5p_status) {
-                $this->db->or_where('course_type', 'h5p');
-            }
+        $this->db->where('course_type', 'general');
+        if ($scorm_status) {
+            $this->db->or_where('course_type', 'scorm');
+        }
+        if ($h5p_status) {
+            $this->db->or_where('course_type', 'h5p');
+        }
         $this->db->group_end();
 
         $this->db->order_by("id", "desc");
@@ -2197,32 +2199,32 @@ class Crud_model extends CI_Model
         return $this->db->get('course')->result_array();
     }
 
-    public function enrol_student($enrol_user_id, $payer_user_id="")
+    public function enrol_student($enrol_user_id, $payer_user_id = "")
     {
-        
+
 
         $purchased_courses = $this->session->userdata('cart_items');
         foreach ($purchased_courses as $purchased_course) {
             $course_details = $this->get_course_by_id($purchased_course)->row_array();
-            if($course_details['expiry_period'] > 0){
+            if ($course_details['expiry_period'] > 0) {
                 $days = $course_details['expiry_period'] * 30;
-                $data['expiry_date'] = strtotime("+".$days." days");
-            }else{
+                $data['expiry_date'] = strtotime("+" . $days . " days");
+            } else {
                 $data['expiry_date'] = null;
             }
 
 
             if ($this->db->get_where('enrol', ['user_id' => $enrol_user_id, 'course_id' => $purchased_course])->num_rows() == 0) {
-                if($payer_user_id){
+                if ($payer_user_id) {
                     $data['gifted_by'] = $payer_user_id;
-                }else{
+                } else {
                     $data['gifted_by'] = 0;
                 }
                 $data['user_id'] = $enrol_user_id;
                 $data['course_id'] = $purchased_course;
                 $data['date_added'] = strtotime(date('D, d-M-Y'));
                 $this->db->insert('enrol', $data);
-            }else{
+            } else {
                 $data['last_modified'] = time();
                 $this->db->where('course_id', $purchased_course);
                 $this->db->where('user_id', $enrol_user_id);
@@ -2235,14 +2237,14 @@ class Crud_model extends CI_Model
         $courses_id = $this->input->post('course_id');
         $users_id   = $this->input->post('user_id');
 
-        foreach($users_id as $user_id){
+        foreach ($users_id as $user_id) {
 
-            foreach($courses_id as $course_id){
+            foreach ($courses_id as $course_id) {
                 $course_details = $this->get_course_by_id($course_id)->row_array();
-                if($course_details['expiry_period'] > 0){
+                if ($course_details['expiry_period'] > 0) {
                     $days = $course_details['expiry_period'] * 30;
-                    $data['expiry_date'] = strtotime("+".$days." days");
-                }else{
+                    $data['expiry_date'] = strtotime("+" . $days . " days");
+                } else {
                     $data['expiry_date'] = null;
                 }
                 $data['gifted_by'] = 0;
@@ -2253,7 +2255,7 @@ class Crud_model extends CI_Model
                     $data['course_id'] = $course_id;
                     $data['date_added'] = strtotime(date('D, d-M-Y'));
                     $this->db->insert('enrol', $data);
-                }else{
+                } else {
                     $data['last_modified'] = time();
                     $this->db->where('course_id', $course_id);
                     $this->db->where('user_id', $user_id);
@@ -2263,7 +2265,6 @@ class Crud_model extends CI_Model
         }
 
         $this->session->set_flashdata('flash_message', get_phrase('student_has_been_enrolled'));
-
     }
 
     public function shortcut_enrol_a_student_manually()
@@ -2271,10 +2272,10 @@ class Crud_model extends CI_Model
         $course_id = $this->input->post('course_id');
         $user_id   = $this->input->post('user_id');
         $course_details = $this->get_course_by_id($course_id)->row_array();
-        if($course_details['expiry_period'] > 0){
+        if ($course_details['expiry_period'] > 0) {
             $days = $course_details['expiry_period'] * 30;
-            $data['expiry_date'] = strtotime("+".$days." days");
-        }else{
+            $data['expiry_date'] = strtotime("+" . $days . " days");
+        } else {
             $data['expiry_date'] = null;
         }
 
@@ -2300,10 +2301,10 @@ class Crud_model extends CI_Model
     {
         $course_details = $this->get_course_by_id($course_id)->row_array();
         if ($course_details['is_free_course'] == 1) {
-            if($course_details['expiry_period'] > 0){
+            if ($course_details['expiry_period'] > 0) {
                 $days = $course_details['expiry_period'] * 30;
-                $data['expiry_date'] = strtotime("+".$days." days");
-            }else{
+                $data['expiry_date'] = strtotime("+" . $days . " days");
+            } else {
                 $data['expiry_date'] = null;
             }
 
@@ -2329,6 +2330,7 @@ class Crud_model extends CI_Model
     public function course_purchase($user_id, $method, $amount_paid, $param1 = "", $param2 = "")
     {
         $purchased_courses = $this->session->userdata('cart_items');
+        $userGroupEmails = $this->session->userdata('cart_items_user_group_emails');
         $applied_coupon = $this->session->userdata('applied_coupon');
 
         foreach ($purchased_courses as $purchased_course) {
@@ -2349,17 +2351,34 @@ class Crud_model extends CI_Model
             $data['course_id'] = $purchased_course;
             $course_details = $this->get_course_by_id($purchased_course)->row_array();
 
+            //Get Group User Purchase Emails 
+            $userGroupCount = 1;
+            if (!empty($userGroupEmails)) {
+                
+                $filteredEmails = array_filter($userGroupEmails, function ($value) use ($purchased_course) {
+                    return $value['course_id'] == $purchased_course;
+                });
+
+                if(count($filteredEmails) == 1){
+                    $userGroupCount += 1;
+                }elseif(count($filteredEmails) > 1){
+                    $userGroupCount += count($filteredEmails);
+                } 
+
+            }
+            $data['quantity'] = $userGroupCount;
+
+
+
             if ($course_details['discount_flag'] == 1) {
                 $data['amount'] = $course_details['discounted_price'];
-                if(addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')  )
-                {
+                if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
                     $aff['buying_amount'] = $course_details['discounted_price']; // after discount ,he paid this price 
                     $aff['note'] = "discounted";
                 }
             } else {
                 $data['amount'] = $course_details['price'];
-                if(addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id'))
-                {
+                if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
                     $aff['buying_amount'] = $course_details['price'];
                     $aff['note'] = "actual price";
                 }
@@ -2372,26 +2391,23 @@ class Crud_model extends CI_Model
                 $data['amount'] = $data['amount'] - $discount;
                 $data['coupon'] = $applied_coupon;
 
-                if(addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id'))
-                {
-                    $aff['buying_amount'] =$data['amount'];
+                if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
+                    $aff['buying_amount'] = $data['amount'];
                     $aff['note'] = "coupon";
                 }
-
             }
 
-            if(addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id'))
-            {
-                
-                $aff['affiliate_amount']=ceil(($aff['buying_amount'] *  get_settings('affiliate_addon_percentage')) / 100);
-                $data['amount']=$data['amount']-$aff['affiliate_amount'];
+            if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
+
+                $aff['affiliate_amount'] = ceil(($aff['buying_amount'] *  get_settings('affiliate_addon_percentage')) / 100);
+                $data['amount'] = $data['amount'] - $aff['affiliate_amount'];
             }
 
 
             //TAX handling
-            if(get_settings('course_selling_tax') > 0){
-                $total_tax_on_courses_price = round(($data['amount']/100) * get_settings('course_selling_tax'), 2);
-            }else{
+            if (get_settings('course_selling_tax') > 0) {
+                $total_tax_on_courses_price = round(($data['amount'] / 100) * get_settings('course_selling_tax'), 2);
+            } else {
                 $total_tax_on_courses_price = 0;
             }
             $data['tax'] = $total_tax_on_courses_price;
@@ -2426,7 +2442,7 @@ class Crud_model extends CI_Model
                     $reffre_details = $this->affiliate_course_model->get_userby_id($reffre_details_for_aff_table['user_id']);
                     $course_affiliation['payment_id'] = $data['transaction_id'];
                     $course_affiliation['type'] = "course";
-                    $course_affiliation['actual_amount'] =$aff['buying_amount'];
+                    $course_affiliation['actual_amount'] = $aff['buying_amount'];
                     $course_affiliation['amount'] = $aff['affiliate_amount'];
                     $course_affiliation['note'] = $aff['note'];
                     $course_affiliation['course_id'] = $this->session->userdata('course_reffer_id');
@@ -2438,7 +2454,6 @@ class Crud_model extends CI_Model
                     $this->db->insert('course_affiliation', $course_affiliation);
                     $this->session->unset_userdata('course_referee');
                     $this->session->unset_userdata('course_reffer_id');
-
                 }
             endif;
             // course_addon end 
@@ -2734,7 +2749,7 @@ class Crud_model extends CI_Model
             } else {
                 $category_type = 'parent_category';
             }
-        }else{
+        } else {
             $category_type = 'all';
         }
 
@@ -2749,7 +2764,7 @@ class Crud_model extends CI_Model
             $this->db->select('c.*');
             $this->db->select('AVG(r.rating) avg_rating', FALSE);
 
-            if($search_string != ""){
+            if ($search_string != "") {
                 $this->db->group_start();
                 $this->db->like('c.title', $search_string);
                 $this->db->or_like('c.short_description', $search_string);
@@ -2766,7 +2781,7 @@ class Crud_model extends CI_Model
                 $this->db->group_start();
                 $this->db->where('c.sub_category_id', $selected_category_id);
                 $this->db->group_end();
-            } elseif($category_type != "all" && $category_type == 'parent_category') {
+            } elseif ($category_type != "all" && $category_type == 'parent_category') {
                 $this->db->group_start();
                 $this->db->where('c.category_id', $selected_category_id);
                 $this->db->group_end();
@@ -2795,13 +2810,13 @@ class Crud_model extends CI_Model
             }
 
             $this->db->group_start();
-                $this->db->where('c.course_type', 'general');
-                if ($scorm_addon_status) {
-                    $this->db->or_where('c.course_type', 'scorm');
-                }
-                if ($h5p_addon_status) {
-                    $this->db->or_where('c.course_type', 'h5p');
-                }
+            $this->db->where('c.course_type', 'general');
+            if ($scorm_addon_status) {
+                $this->db->or_where('c.course_type', 'scorm');
+            }
+            if ($h5p_addon_status) {
+                $this->db->or_where('c.course_type', 'h5p');
+            }
             $this->db->group_end();
 
             $this->db->group_start();
@@ -2816,21 +2831,20 @@ class Crud_model extends CI_Model
 
             //for join query new code
             foreach ($courses as $course) {
-                if(round($course['avg_rating']) < $selected_rating) break;
+                if (round($course['avg_rating']) < $selected_rating) break;
 
                 if (round($course['avg_rating']) == $selected_rating) {
                     array_push($course_ids, $course['id']);
                 }
             }
-
         }
         //END QUERY FOR RATING'S FILTER
 
-        
+
         $this->db->select('c.*');
         $this->db->select('AVG(r.rating) avg_rating', FALSE);
 
-        if($search_string != ""){
+        if ($search_string != "") {
             $this->db->group_start();
             $this->db->like('c.title', $search_string);
             $this->db->or_like('c.short_description', $search_string);
@@ -2843,7 +2857,7 @@ class Crud_model extends CI_Model
             $this->db->group_end();
         }
 
-        if($selected_rating != "all"){
+        if ($selected_rating != "all") {
             $this->db->group_start();
             $this->db->where_in('c.id', $course_ids);
             $this->db->group_end();
@@ -2853,7 +2867,7 @@ class Crud_model extends CI_Model
             $this->db->group_start();
             $this->db->where('c.sub_category_id', $selected_category_id);
             $this->db->group_end();
-        } elseif($category_type != "all" && $category_type == 'parent_category') {
+        } elseif ($category_type != "all" && $category_type == 'parent_category') {
             $this->db->group_start();
             $this->db->where('c.category_id', $selected_category_id);
             $this->db->group_end();
@@ -2884,13 +2898,13 @@ class Crud_model extends CI_Model
 
 
         $this->db->group_start();
-            $this->db->where('c.course_type', 'general');
-            if ($scorm_addon_status) {
-                $this->db->or_where('c.course_type', 'scorm');
-            }
-            if ($h5p_addon_status) {
-                $this->db->or_where('c.course_type', 'h5p');
-            }
+        $this->db->where('c.course_type', 'general');
+        if ($scorm_addon_status) {
+            $this->db->or_where('c.course_type', 'scorm');
+        }
+        if ($h5p_addon_status) {
+            $this->db->or_where('c.course_type', 'h5p');
+        }
         $this->db->group_end();
 
         $this->db->group_start();
@@ -2902,15 +2916,15 @@ class Crud_model extends CI_Model
         $this->db->group_by('c.id');
 
         //sorting
-        if($selected_sorting != "" && $selected_sorting == 'newest'){
+        if ($selected_sorting != "" && $selected_sorting == 'newest') {
             $this->db->order_by('c.id', 'desc');
-        }elseif($selected_sorting != "" && $selected_sorting == 'lowest-price'){
+        } elseif ($selected_sorting != "" && $selected_sorting == 'lowest-price') {
             $this->db->order_by('is_free_course ASC, price ASC, discount_flag DESC, discounted_price ASC');
-        }elseif($selected_sorting != "" && $selected_sorting == 'highest-price'){
+        } elseif ($selected_sorting != "" && $selected_sorting == 'highest-price') {
             $this->db->order_by('price DESC, discount_flag ASC, discounted_price DESC');
-        }elseif($selected_sorting != "" && $selected_sorting == 'discounted'){
+        } elseif ($selected_sorting != "" && $selected_sorting == 'discounted') {
             $this->db->order_by('discount_flag DESC, price ASC');
-        }elseif($selected_sorting != "" && $selected_sorting == 'highest-rating'){
+        } elseif ($selected_sorting != "" && $selected_sorting == 'highest-rating') {
             $this->db->order_by('avg_rating', 'desc');
         }
 
@@ -3400,9 +3414,9 @@ class Crud_model extends CI_Model
                 $total_lesson = $this->db->get_where('lesson', array('course_id' => $course_id))->num_rows();
                 $course_progress = (100 / $total_lesson) * count($lesson_ids);
 
-                if($course_progress >= 100 && $query->row('completed_date') == null){
+                if ($course_progress >= 100 && $query->row('completed_date') == null) {
                     $completed_date = time();
-                }else{
+                } else {
                     $completed_date = $query->row('completed_date');
                 }
 
@@ -3416,9 +3430,9 @@ class Crud_model extends CI_Model
                 $total_lesson = $this->db->get_where('lesson', array('course_id' => $course_id))->num_rows();
                 $course_progress = (100 / $total_lesson) * count($lesson_ids);
 
-                if($course_progress >= 100 && $query->row('completed_date') == null){
+                if ($course_progress >= 100 && $query->row('completed_date') == null) {
                     $completed_date = time();
-                }else{
+                } else {
                     $completed_date = $query->row('completed_date');
                 }
 
@@ -3431,7 +3445,7 @@ class Crud_model extends CI_Model
                 $this->load->model('addons/Certificate_model', 'certificate_model');
                 $this->certificate_model->check_certificate_eligibility($course_id, $user_id);
             }
-        }else{
+        } else {
             $total_lesson = $this->db->get_where('lesson', array('course_id' => $course_id))->num_rows();
             $course_progress = (100 / $total_lesson);
 
@@ -3453,10 +3467,10 @@ class Crud_model extends CI_Model
     function enrol_to_free_course_mobile($course_id = "", $user_id = "")
     {
         $course_details = $this->get_course_by_id($course_id)->row_array();
-        if($course_details['expiry_period'] > 0){
+        if ($course_details['expiry_period'] > 0) {
             $days = $course_details['expiry_period'] * 30;
-            $data['expiry_date'] = strtotime("+".$days." days");
-        }else{
+            $data['expiry_date'] = strtotime("+" . $days . " days");
+        } else {
             $data['expiry_date'] = null;
         }
 
@@ -3467,7 +3481,7 @@ class Crud_model extends CI_Model
                 $data['user_id']   = $user_id;
                 $data['date_added'] = strtotime(date('D, d-M-Y'));
                 $this->db->insert('enrol', $data);
-            }else{
+            } else {
                 $data['last_modified'] = strtotime(date('D, d-M-Y'));
                 $this->db->where('user_id', $user_id);
                 $this->db->where('course_id', $course_id);
@@ -3593,7 +3607,7 @@ class Crud_model extends CI_Model
             $total_pending_amount = $total_pending_amount + $ebook_total_pending_amount;
         }
 
-        if(addon_status('tutor_booking')){
+        if (addon_status('tutor_booking')) {
             $this->db->select_sum('instructor_revenue');
             $this->db->where('tutor_id', $this->session->userdata('user_id'));
             $this->db->from('tutor_payment');
@@ -3869,7 +3883,7 @@ class Crud_model extends CI_Model
                     $this->db->limit(1);
                     $lesson_id = $this->db->get('lesson')->row('id');
                 }
-                if($lesson_id > 0):
+                if ($lesson_id > 0) :
                     $data['course_id'] = $course_id;
                     $data['student_id'] = $user_id;
                     $data['watching_lesson_id'] = $lesson_id;
@@ -3919,7 +3933,7 @@ class Crud_model extends CI_Model
             $this->db->insert('watched_duration', $data);
         }
 
-        if($course_details['enable_drip_content'] != true){
+        if ($course_details['enable_drip_content'] != true) {
             return json_encode(array('lesson_id' => $data['watched_lesson_id'], 'course_progress' => null, 'is_completed' => null));
         }
 
@@ -3957,10 +3971,10 @@ class Crud_model extends CI_Model
                     $total_lesson = $this->db->get_where('lesson', array('course_id' => $data['watched_course_id']))->num_rows();
                     $course_progress = (100 / $total_lesson) * count($lesson_ids);
 
-                    if($course_progress >= 100 && $query->row('completed_date') == null){
+                    if ($course_progress >= 100 && $query->row('completed_date') == null) {
                         $this->email_model->course_completion($user_id, $course_details['id']);
                         $completed_date = time();
-                    }else{
+                    } else {
                         $completed_date = $query->row('completed_date');
                     }
 
@@ -4450,31 +4464,34 @@ class Crud_model extends CI_Model
 
 
     //Notification start
-    function get_notifications($id = "", $status = null){
-        if($id > 0){
+    function get_notifications($id = "", $status = null)
+    {
+        if ($id > 0) {
             $this->db->where('id', $id);
         }
-        if($status !== null){
+        if ($status !== null) {
             $this->db->where('status', $status);
         }
         $this->db->order_by('status ASC, id desc');
         return $this->db->get('notifications');
     }
 
-    function my_notifications($user_id = "", $status = null){
-        if($user_id == ''){
+    function my_notifications($user_id = "", $status = null)
+    {
+        if ($user_id == '') {
             $user_id = $this->session->userdata('user_id');
         }
         $this->db->where('to_user', $user_id);
 
-        if($status !== null){
+        if ($status !== null) {
             $this->db->where('status', $status);
         }
         $this->db->order_by('status ASC, id desc');
         return $this->db->get('notifications');
     }
 
-    function notification_enable_diable(){
+    function notification_enable_diable()
+    {
         $id = $this->input->post('id');
         $user_type = $this->input->post('user_type');
         $notification_type = $this->input->post('notification_type');
@@ -4482,13 +4499,13 @@ class Crud_model extends CI_Model
 
         $notification_setting_row = $this->db->where('id', $id)->get('notification_settings')->row_array();
 
-        if($notification_type == 'system'){
+        if ($notification_type == 'system') {
             $json_to_arr = json_decode($notification_setting_row['system_notification'], true);
             $json_to_arr[$user_type] = $input_val;
             $data['system_notification'] = json_encode($json_to_arr);
         }
 
-        if($notification_type == 'email'){
+        if ($notification_type == 'email') {
             $json_to_arr = json_decode($notification_setting_row['email_notification'], true);
             $json_to_arr[$user_type] = $input_val;
             $data['email_notification'] = json_encode($json_to_arr);
@@ -4496,12 +4513,12 @@ class Crud_model extends CI_Model
 
         $data['date_updated'] = time();
 
-        if($notification_setting_row['is_editable'] == 1){
+        if ($notification_setting_row['is_editable'] == 1) {
             $this->db->where('id', $id)->update('notification_settings', $data);
 
-            if($input_val == 1){
+            if ($input_val == 1) {
                 echo get_phrase('Successfully enabled');
-            }else{
+            } else {
                 echo get_phrase('Successfully disabled');
             }
         }
@@ -4533,7 +4550,8 @@ class Crud_model extends CI_Model
 
 
     //Start newsletter
-    function add_newsletter(){
+    function add_newsletter()
+    {
         $data['subject'] = $this->input->post('subject');
         $data['description'] = $this->input->post('description');
         $data['created_at'] = time();
@@ -4541,7 +4559,8 @@ class Crud_model extends CI_Model
         $this->db->insert('newsletters', $data);
     }
 
-    function update_newsletter($id){
+    function update_newsletter($id)
+    {
         $data['subject'] = $this->input->post('subject');
         $data['description'] = $this->input->post('description', false);
         $data['updated_at'] = time();
@@ -4550,121 +4569,122 @@ class Crud_model extends CI_Model
         $this->db->update('newsletters', $data);
     }
 
-    function delete_newsletter($id){
+    function delete_newsletter($id)
+    {
         $this->db->where('id', $id);
         $this->db->delete('newsletters');
     }
     //End newsletter
 
-    function update_website_faq(){
+    function update_website_faq()
+    {
         $faqs = array();
-        foreach(array_filter($this->input->post('questions')) as $key => $question){
+        foreach (array_filter($this->input->post('questions')) as $key => $question) {
             $faqs[$key]['question'] = $question;
             $faqs[$key]['answer'] = $this->input->post('answers')[$key];
         }
 
         $data['value'] = json_encode($faqs);
         $this->db->where('key', 'website_faqs')->update('frontend_settings', $data);
-
     }
 
-    function update_motivational_speech(){
+    function update_motivational_speech()
+    {
         $motivations = array();
         $images = array();
-        foreach(array_filter($this->input->post('titles')) as $key => $title){
+        foreach (array_filter($this->input->post('titles')) as $key => $title) {
             $motivations[$key]['title'] = $title;
             $motivations[$key]['description'] = $this->input->post('descriptions')[$key];
 
-            if($_FILES['images']['name'][$key] != ""){
-                $image_name = random(20).'.png';
-                move_uploaded_file($_FILES['images']['tmp_name'][$key], 'uploads/system/motivations/'.$image_name);
+            if ($_FILES['images']['name'][$key] != "") {
+                $image_name = random(20) . '.png';
+                move_uploaded_file($_FILES['images']['tmp_name'][$key], 'uploads/system/motivations/' . $image_name);
                 $motivations[$key]['image'] = $image_name;
-            }else{
+            } else {
                 $motivations[$key]['image'] = $this->input->post('previous_images')[$key];
             }
             $images[$key] = $motivations[$key]['image'];
         }
 
         $files = glob('uploads/system/motivations/' . '*');
-        foreach($files as $file){
-            $file_name_arr =explode('/', $file);
+        foreach ($files as $file) {
+            $file_name_arr = explode('/', $file);
             $file_name = end($file_name_arr);
-            if(!in_array($file_name, $images)){
+            if (!in_array($file_name, $images)) {
                 unlink($file);
             }
         }
 
         $data['value'] = json_encode($motivations);
         $this->db->where('key', 'motivational_speech')->update('frontend_settings', $data);
-
     }
 
-    function get_related_courses($parent_category = "", $child_category = "", $current_course_id = "", $limit = "10"){
+    function get_related_courses($parent_category = "", $child_category = "", $current_course_id = "", $limit = "10")
+    {
         $scorm_status = addon_status('scorm_course');
         $h5p_status = addon_status('h5p');
 
         $this->db->group_start();
-            $this->db->where('id !=', $current_course_id);
+        $this->db->where('id !=', $current_course_id);
         $this->db->group_end();
 
         $this->db->group_start();
-            if($parent_category != ""){
-                $this->db->where('category_id', $parent_category);
-            }
-            if($child_category != ""){
-                $this->db->or_where('sub_category_id', $child_category);
-            }
+        if ($parent_category != "") {
+            $this->db->where('category_id', $parent_category);
+        }
+        if ($child_category != "") {
+            $this->db->or_where('sub_category_id', $child_category);
+        }
         $this->db->group_end();
 
         $this->db->group_start();
-            $this->db->where('course_type', 'general');
-            if ($scorm_status) {
-                $this->db->or_where('course_type', 'scorm');
-            }
-            if ($h5p_status) {
-                $this->db->or_where('course_type', 'h5p');
-            }
+        $this->db->where('course_type', 'general');
+        if ($scorm_status) {
+            $this->db->or_where('course_type', 'scorm');
+        }
+        if ($h5p_status) {
+            $this->db->or_where('course_type', 'h5p');
+        }
         $this->db->group_end();
 
         $this->db->group_start();
-            $this->db->where('status', 'active');
+        $this->db->where('status', 'active');
         $this->db->group_end();
 
         $this->db->limit($limit);
         return $this->db->get('course');
-
     }
 
-    function get_pepople_ratings($limit = 10){
+    function get_pepople_ratings($limit = 10)
+    {
         $this->db->where('rating', 5);
         $this->db->order_by('id', 'desc');
         $this->db->limit($limit);
         return $this->db->get('rating');
     }
 
-    function course_page_accessibility($course_id = "", $user_id = ""){
-        if($course_id == ""){
+    function course_page_accessibility($course_id = "", $user_id = "")
+    {
+        if ($course_id == "") {
             return false;
         }
 
-        if($user_id == ""){
+        if ($user_id == "") {
             $user_id = $this->session->userdata('user_id');
         }
 
         $row = $this->get_course_by_id($course_id);
-        if($row->num_rows() > 0){
+        if ($row->num_rows() > 0) {
             $course_details = $row->row_array();
-            $course_instructors = explode(',',$course_details['user_id']);
+            $course_instructors = explode(',', $course_details['user_id']);
 
-            if(in_array($user_id, $course_instructors)){
+            if (in_array($user_id, $course_instructors)) {
                 return true;
-            }elseif(enroll_status($course_id) == 'valid'){
+            } elseif (enroll_status($course_id) == 'valid') {
                 return true;
             }
         }
 
         return false;
     }
-
-    
 }

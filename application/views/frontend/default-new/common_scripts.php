@@ -196,6 +196,8 @@
           responsive: true,
           "processing": true,
           "serverSide": true,
+          searching: false,
+          ordering: false,
           "ajax": {
             "url": "<?php echo site_url('home/get_courses') ?>",
             "dataType": "json",
