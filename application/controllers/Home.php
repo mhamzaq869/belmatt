@@ -239,7 +239,7 @@ class Home extends CI_Controller
 
             $dir = $this->input->post('order')[0]['dir'];
 
-            $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) & status="active"';
+            $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
             $total_row_query = $this->db->query($total_row_sql);
             $total_number_of_row = count($total_row_query->result_array());
 
@@ -249,15 +249,15 @@ class Home extends CI_Controller
             $sql = 'SELECT * FROM course WHERE '; 
 
             if (!empty($title) && $title != 'all') {
-                $sql .= " id = $title &"; 
+                $sql .= " id = $title AND"; 
             } 
 
-            $sql .= ' find_in_set("classroom", course.type) & status="active"';
+            $sql .= ' find_in_set("classroom", course.type) & status="active" AND datetime >= CURDATE()';
 
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
-                $sql .= " & city = '$venue[0]'";
-                $sql .= " & address = '$venue[1]'"; 
+                $sql .= " AND city = '$venue[0]'";
+                $sql .= " AND address = '$venue[1]'"; 
             }
             
             
@@ -266,26 +266,27 @@ class Home extends CI_Controller
            
             $query = $this->db->query($sql);
             $courses = $query->result_array();
-           
+        
             // WITHOUT FILTERED DATA
             $sql = 'SELECT * FROM course WHERE ';
             
             if (!empty($title) && $title != 'all') {
-                $sql .= " id = $title &"; 
+                $sql .= " id = $title AND"; 
             } 
 
-            $sql .= '  find_in_set("classroom", course.type) & status="active"';
+            $sql .= '  find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
 
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
-                $sql .= " & city = '$venue[0]'";
-                $sql .= " & address = '$venue[1]'"; 
+                $sql .= " AND city = '$venue[0]'";
+                $sql .= " AND address = '$venue[1]'"; 
             }
  
             $query = $this->db->query($sql);
             $filtered_number_of_row = count($query->result_array()); 
            
-
+ 
+           
             // Fetch the data and format it as JSON
             if (!empty($courses)) {
                 foreach ($courses as $key => $row) {

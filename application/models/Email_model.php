@@ -200,36 +200,32 @@ class Email_model extends CI_Model
 					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
 					$replaces['paid_amount'] = $amount_paid;
 				}
-
-				
-
- 
 				
 				
 				
 
-				$this->db->where('course_id', $course_id);
-				$query = $this->db->get('purchased_course_usergroup_email');
+				// $this->db->where('course_id', $course_id);
+				// $query = $this->db->get('purchased_course_usergroup_email');
 
-				if($query->num_rows() > 0){
-					$emails = $query->result();
-					foreach($emails as $email){
-						if($user_type == 'student'){
+				// if($query->num_rows() > 0){
+				// 	$emails = $query->result();
+				// 	foreach($emails as $email){
+				// 		if($user_type == 'student'){
 							
-							$replaces['paid_amount'] = 0; 
-							$template_data['replaces'] = isset($replaces) ? $replaces:array();
-							$template_data['to_user'] = $to_user;
-							$template_data['notification'] = $notification;
-							$template_data['user_type'] = $user_type;
-							$subject = json_decode($notification['subject'], true)[$user_type];
-							$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+				// 			$replaces['paid_amount'] = 0; 
+				// 			$template_data['replaces'] = isset($replaces) ? $replaces:array();
+				// 			$template_data['to_user'] = $to_user;
+				// 			$template_data['notification'] = $notification;
+				// 			$template_data['user_type'] = $user_type;
+				// 			$subject = json_decode($notification['subject'], true)[$user_type];
+				// 			$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
 
-							if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-								$this->send_smtp_mail($email_template, $subject, $email->email);
-							}
-						}
-					}
-				}else{
+				// 			if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+				// 				$this->send_smtp_mail($email_template, $subject, $email->email);
+				// 			}
+				// 		}
+				// 	}
+				// }else{
 
 					//Editable 
 					$template_data['replaces'] = isset($replaces) ? $replaces:array();
@@ -246,7 +242,7 @@ class Email_model extends CI_Model
 					if(json_decode($notification['email_notification'], true)[$user_type] == 1){
 						$this->send_smtp_mail($email_template, $subject, $to_user['email']);
 					}
-				}
+				// }
 
 				
 			}

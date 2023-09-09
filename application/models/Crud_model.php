@@ -1019,7 +1019,7 @@ class Crud_model extends CI_Model
 
     public function get_course_by_type($type = "classroom")
     {
-        $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type) & status="active"';
+        $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type) & status="active" AND datetime >= CURDATE()';
         $query = $this->db->query($sql);
 
         return $query->result_array();

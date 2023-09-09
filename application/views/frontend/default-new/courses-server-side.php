@@ -15,8 +15,7 @@
                      <!-- Course Status -->
                      <div class="col-xl-5">
                         <div class="form-group mt-5">
-                            <select class="form-control select2" data-toggle="select2" name="venue" id='venue'> 
-                                
+                            <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                 <?php foreach ($courses as $key => $course): ?>
                                     <option value="<?php echo $course['city'].','.$course['address']; ?>" <?php if ($venue == $course['city'].','.$course['address']) echo 'selected'; ?>><?php echo get_phrase($course['city']).' ('.get_phrase($course['address']).')'; ?></option>
@@ -30,7 +29,6 @@
                         <div class="form-group mt-5"> 
                             <select class="form-control select2" data-toggle="select2" name="title" id='title'>
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
-                                 
                                 <?php foreach ($courses as $key => $course): ?>
                                     <option value="<?php echo $course['id']; ?>" <?php if ($title == $course['id']) echo 'selected'; ?>><?php echo get_phrase($course['title']); ?></option>
                                 <?php endforeach; ?>

@@ -28,16 +28,6 @@ class Purchaseduseremail_model extends CI_Model
             }
         } 
     }
-
-    public function get_purchased_course_user_email($course_id = "")
-    {
-        print_r($course_id); exit;
-        // $this->db->where('course_id', $course_id);
-        // $query = $this->db->get('purchased_course_usergroup_email');
-        // return $query->result();
-
-        return $this->db->get_where('purchased_course_usergroup_email', array('course_id' => $course_id));
-    }
-
+ 
     
 }

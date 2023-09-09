@@ -362,7 +362,7 @@ if($course_details['type'] != null){
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="Date Time"><?php echo get_phrase('Date Time'); ?></label>
                                                         <div class="col-md-10">
-                                                            <input type="datetime-local" class="form-control" id="course_date_time" name = "datetime" value="<?php echo $course_details['datetime']; ?>" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                            <input type="datetime-local" class="form-control" id="course_date_time" name = "datetime" value="<?php echo $course_details['datetime']; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
                                                         </div>
                                                     </div>      
                                                 </div>
@@ -910,4 +910,14 @@ if($course_details['type'] != null){
             $('.address').addClass('d-none')
         }
     });
+
+    
+    // Get the input element by its ID
+    var datetimeInput = document.getElementById('course_date_time');
+
+    // Get the current date and time as a string
+    var currentDatetime = new Date("<?php echo  date('c', strtotime($course_details['datetime'])); ?>").toISOString().slice(0, 16);
+
+    // Set the minimum value of the input to the current date and time
+    datetimeInput.min = currentDatetime;
 </script>
