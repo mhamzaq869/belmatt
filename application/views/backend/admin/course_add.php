@@ -153,7 +153,7 @@
                                             <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="Type"><?php echo get_phrase('Type'); ?></label>
                                                 <div class="col-md-10">
-                                                    <select class="form-control select2" name="type" id="type" multiple="multiple">
+                                                    <select class="form-control select2" name="type[]" id="type" multiple="multiple">
                                                         <option value="e-learning"><?php echo get_phrase('E-Learning'); ?></option>
                                                         <option value="live-webinar"><?php echo get_phrase('Live Webinar'); ?></option>
                                                         <option value="classroom"><?php echo get_phrase('Classroom'); ?></option>
