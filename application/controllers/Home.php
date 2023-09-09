@@ -303,14 +303,14 @@ class Home extends CI_Controller
                     }
 
                     $price_field = '<p class="text-12">' . $price . '</p>';
-                    $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')";
+                    $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
 
                     $nestedData['date'] = date('D jS M Y', strtotime($row['datetime']));
-                    $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . $row['title'] . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
+                    $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
                     $nestedData['venue'] = '<span>' . $row['address'] . '</span>';
                     $nestedData['time'] = '<span>' . date('g:i A', strtotime($row['datetime'])) . '</span>';
                     $nestedData['price'] = $price_field; 
-                    $nestedData['book'] = '<a href="' . site_url('home/course/' . $row['title'] . '/' . $row['id']) . '" class="btn btn-outline-primary">Book Now</a>';
+                    $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-outline-primary">Book Now</a>';
 
                     $data[] = $nestedData;
                 }

@@ -88,7 +88,7 @@
                                             <?php endif; ?>
                                         </td> 
                                         <td>
-                                            <a href="<?php echo site_url('home/course/' . $course['title'].'/'. $course['id']); ?>" class="btn btn-outline-danger" href="#"><?php echo ellipsis($course['title']); ?>  Book Now</a> 
+                                            <a href="<?php echo site_url('home/course/' . rawurlencode(slugify($course['title'])) . '/' . $course['id']); ?>" class="btn btn-outline-danger" href="#"><?php echo ellipsis($course['title']); ?>  Book Now</a> 
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
