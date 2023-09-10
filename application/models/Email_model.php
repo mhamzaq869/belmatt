@@ -5,7 +5,7 @@ class Email_model extends CI_Model
 
 	function __construct()
 	{
-		parent::__construct();
+		parent::__construct(); 
 	}
 
 	public function send_email_verification_mail($to = "", $verification_code = "")
@@ -153,9 +153,7 @@ class Email_model extends CI_Model
 		// 	$this->course_purchase_notification_instructor($course_id, $student_full_name, $student_data['email']);
 		// 	$this->course_purchase_notification_student($course_id, $student_id);
 		// }
-
  
-
 		//Editable
 		$type = 'course_purchase';
 		//End editable
@@ -174,7 +172,13 @@ class Email_model extends CI_Model
 					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
 					$replaces['student_name'] = $student_details['first_name'].' '.$student_details['last_name'];
 					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
-					$replaces['paid_amount'] = $amount_paid;
+					$replaces['paid_amount'] = currency($amount_paid);
+					$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
+					$replaces['address'] = $course_details['address'];
+					$replaces['city'] = $course_details['city'];
+					$replaces['state'] = $course_details['state'];
+					$replaces['postal_code'] = $course_details['postal_code'];
+					$replaces['country'] = $course_details['country'];
 
 					//If admin is owner of the course
 					if($to_user['id'] == $course_details['creator']){
@@ -189,7 +193,13 @@ class Email_model extends CI_Model
 					$to_user = $this->user_model->get_all_user($course_details['creator'])->row_array();
 					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
 					$replaces['student_name'] = $student_details['first_name'].' '.$student_details['last_name'];
-					$replaces['paid_amount'] = $amount_paid;
+					$replaces['paid_amount'] = currency($amount_paid);
+					$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
+					$replaces['address'] = $course_details['address'];
+					$replaces['city'] = $course_details['city'];
+					$replaces['state'] = $course_details['state'];
+					$replaces['postal_code'] = $course_details['postal_code'];
+					$replaces['country'] = $course_details['country'];
 				}
 				if($user_type == 'student'){
 					$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
@@ -198,53 +208,70 @@ class Email_model extends CI_Model
 
 					$replaces['course_title'] = '<a href="'.site_url('home/course/'.slugify($course_details['title']).'/'.$course_details['id']).'" target="_blank">'.$course_details['title'].'</a>';
 					$replaces['instructor_name'] = $instructor_details['first_name'].' '.$instructor_details['last_name'];
-					$replaces['paid_amount'] = $amount_paid;
+					$replaces['paid_amount'] = currency($amount_paid);
+					$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
+					$replaces['address'] = $course_details['address'];
+					$replaces['city'] = $course_details['city'];
+					$replaces['state'] = $course_details['state'];
+					$replaces['postal_code'] = $course_details['postal_code'];
+					$replaces['country'] = $course_details['country'];
+				} 
+
+				//Editable 
+				$template_data['replaces'] = isset($replaces) ? $replaces:array();
+				$template_data['to_user'] = $to_user;
+				$template_data['notification'] = $notification;
+				$template_data['user_type'] = $user_type;
+				$subject = json_decode($notification['subject'], true)[$user_type];
+				$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+				
+				if(json_decode($notification['system_notification'], true)[$user_type] == 1){
+					$this->notify($type, $to_user['id'], $subject, $email_template);
 				}
 				
+				if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+					$this->send_smtp_mail($email_template, $subject, $to_user['email']);
+				}
 				
+
 				
+				$this->db->where('course_id', $course_id);
+				$query = $this->db->get('purchased_course_usergroup_email'); 
 
-				// $this->db->where('course_id', $course_id);
-				// $query = $this->db->get('purchased_course_usergroup_email');
-
-				// if($query->num_rows() > 0){
-				// 	$emails = $query->result();
-				// 	foreach($emails as $email){
-				// 		if($user_type == 'student'){
-							
-				// 			$replaces['paid_amount'] = 0; 
-				// 			$template_data['replaces'] = isset($replaces) ? $replaces:array();
-				// 			$template_data['to_user'] = $to_user;
-				// 			$template_data['notification'] = $notification;
-				// 			$template_data['user_type'] = $user_type;
-				// 			$subject = json_decode($notification['subject'], true)[$user_type];
-				// 			$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
-
-				// 			if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-				// 				$this->send_smtp_mail($email_template, $subject, $email->email);
-				// 			}
-				// 		}
-				// 	}
-				// }else{
-
-					//Editable 
-					$template_data['replaces'] = isset($replaces) ? $replaces:array();
-					$template_data['to_user'] = $to_user;
-					$template_data['notification'] = $notification;
-					$template_data['user_type'] = $user_type;
-					$subject = json_decode($notification['subject'], true)[$user_type];
-					$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
-					
-					if(json_decode($notification['system_notification'], true)[$user_type] == 1){
-						$this->notify($type, $to_user['id'], $subject, $email_template);
+				if($query->num_rows() > 0){
+					$emails = $query->result(); 
+					foreach($emails as $email){
+					 
+						if($user_type == 'student'){
+							if(!$email->is_email_sent){
+								$replaces['paid_amount'] = ''; 
+								$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
+								$replaces['address'] = $course_details['address'];
+								$replaces['city'] = $course_details['city'];
+								$replaces['state'] = $course_details['state'];
+								$replaces['postal_code'] = $course_details['postal_code'];
+								$replaces['country'] = $course_details['country'];
+								
+								$template_data['replaces'] = isset($replaces) ? $replaces:array();
+								$template_data['to_user'] = $to_user;
+								$template_data['notification'] = $notification;
+								$template_data['user_type'] = $user_type;
+								
+								$subject = $to_user['first_name'].' '.$to_user['last_name'].' has purchased a course for you';
+								$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+	
+								if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+									$this->send_smtp_mail($email_template, $subject, $email->email);
+									
+									$this->db->where('course_id', $course_id);
+									$this->db->where('email', $email->email);
+									$this->db->update('purchased_course_usergroup_email', ['is_email_sent' => 1]);
+								} 
+							}
+						}
 					}
-					
-					if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-						$this->send_smtp_mail($email_template, $subject, $to_user['email']);
-					}
-				// }
+				} 
 
-				
 			}
 		}
 

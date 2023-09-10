@@ -29,5 +29,6 @@ class Purchaseduseremail_model extends CI_Model
         } 
     }
  
+ 
     
 }
