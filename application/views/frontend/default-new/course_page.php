@@ -275,7 +275,7 @@ if (!empty($course_details['type'])) {
                                         <input class="form-check-input" type="radio" name="purchaseType" id="single" value="solo" checked>
                                         <label class="form-check-label" for="single">Solo</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="form-check" style="margin-left: 14px;">
                                         <input class="form-check-input pl-3" type="radio" name="purchaseType" id="group" value="group">
                                         <label class="form-check-label font-weight-bold" for="group">Group</label>
                                     </div>

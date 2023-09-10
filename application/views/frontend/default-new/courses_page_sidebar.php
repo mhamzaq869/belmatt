@@ -10,6 +10,12 @@
     <!-- Type Filter -->
     <div class="course-price course-category mb-3">
         <h3><?php echo get_phrase('Type'); ?></h3>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" value="all" id="type_all" onchange="filterCourse()" <?php if($selected_type== 'all') echo 'checked'; ?>>
+            <label class="form-check-label" for="type_all">
+                <p class="text-radio"><?php echo get_phrase('All'); ?></p>
+            </label>
+        </div>
         <?php
         $selected_type = isset($_GET['type']) ? $_GET['type'] : array();
         $types = array('E-Learning', 'Live Webinar', 'Classroom');
@@ -73,20 +79,29 @@
     </div>
         
     <!-- Profession Filter -->
-    <div class="course-price course-category">
-        
+    <div class="course-price course-category"> 
         <h3><?php echo get_phrase('Profession'); ?></h3>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="profession" value="all" id="profession_all" onchange="filterCourse()" <?php if($selected_type== 'all') echo 'checked'; ?>>
+            <label class="form-check-label" for="profession_all">
+                <p class="text-radio"><?php echo get_phrase('All'); ?></p>
+            </label>
+        </div>
         <?php
         $selected_professions = isset($_GET['profession']) ? $_GET['profession'] : array();
         $professions = array(
             'nurses', 'doctors', 'paramedics', 'pharmacists', 'allied-healthcare-professionals',
             'healthcare-assistants', 'managers', 'admin-staff', 'physician-assistants', 'overseas-doctors'
         );
-        foreach ($professions as $profession): ?>
+        $professions_text = array(
+            'Nurses', 'Doctors', 'Paramedics', 'Pharmacists', 'Allied Healthcare Professionals',
+            'Healthcare Assistants', 'Managers', 'Admin Staff', 'Physician Assistants', 'Overseas Doctors'
+        );
+        foreach ($professions as $i => $profession): ?>
             <div class="form-check">
                 <input class="form-check-input" type="radio" value="<?php echo $profession; ?>" name="profession" id="profession_<?php echo strtolower($profession); ?>" onchange="filterCourse()" <?php if($profession == $selected_professions) echo 'checked'; ?>>
                 <label class="form-check-label" for="profession_<?php echo strtolower($profession); ?>">
-                    <p class="text-radio"><?php echo $profession; ?></p>
+                    <p class="text-radio"><?php echo $professions_text[$i]; ?></p>
                 </label>
             </div>
         <?php endforeach; ?>
