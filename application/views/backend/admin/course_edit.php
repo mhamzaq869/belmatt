@@ -1,10 +1,14 @@
 <?php
 $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
 
-$courseType = [];
+$courseType = []; $courseProfession = [];
 
 if($course_details['type'] != null){
     $courseType = explode(',', $course_details['type']);
+}
+
+if($course_details['profession'] != null){
+    $courseProfession = explode(',', $course_details['profession']);
 }
 
 ?>
@@ -318,6 +322,27 @@ if($course_details['type'] != null){
                                                         </select>
                                                     </div>
                                                 </div>
+                                                 <!-- Add "Profession" Filter -->
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="profession"><?php echo get_phrase('profession'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <select class="form-control select2" data-toggle="select2" name="profession[]" id="profession" multiple>
+                                                            <option value="nurses" <?php if (in_array('nurses',$courseProfession)) echo 'selected'; ?>>Nurses</option>
+                                                            <option value="doctors" <?php if (in_array('doctors',$courseProfession)) echo 'selected'; ?>>Doctors</option>
+                                                            <option value="paramedics" <?php if (in_array('paramedics',$courseProfession)) echo 'selected'; ?>>Paramedics</option>
+                                                            <option value="pharmacists" <?php if (in_array('pharmacists',$courseProfession)) echo 'selected'; ?>>Pharmacists</option>
+                                                            <option value="allied-healthcare-professionals" <?php if (in_array('allied-healthcare-professionals',$courseProfession)) echo 'selected'; ?>>Allied Healthcare Professionals</option>
+                                                            <option value="healthcare-assistants" <?php if (in_array('healthcare-assistants',$courseProfession)) echo 'selected'; ?>>Healthcare Assistants</option>
+                                                            <option value="managers" <?php if (in_array('managers',$courseProfession)) echo 'selected'; ?>>Managers</option>
+                                                            <option value="admin-staff" <?php if (in_array('admin-staff',$courseProfession)) echo 'selected'; ?>>Admin Staff</option>
+                                                            <option value="physician-assistants" <?php if (in_array('physician-assistants',$courseProfession)) echo 'selected'; ?>>Physician Assistants</option>
+                                                            <option value="overseas-doctors" <?php if (in_array('overseas-doctors',$courseProfession)) echo 'selected'; ?>>Overseas doctors</option>
+
+                                                            <!-- Add more profession options as needed -->
+                                                        </select>
+                                                    </div>
+                                                </div>
+
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="Type"><?php echo get_phrase('Type'); ?></label>
                                                     <div class="col-md-10">
@@ -916,7 +941,7 @@ if($course_details['type'] != null){
     var datetimeInput = document.getElementById('course_date_time');
 
     // Get the current date and time as a string
-    var currentDatetime = new Date("<?php echo  date('c', strtotime($course_details['datetime'])); ?>").toISOString().slice(0, 16);
+    var currentDatetime = new Date().toISOString().slice(0, 16);
 
     // Set the minimum value of the input to the current date and time
     datetimeInput.min = currentDatetime;

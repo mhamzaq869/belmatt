@@ -30,6 +30,17 @@ class Crud_model extends CI_Model
         return $this->db->get_where('category', array('id' => $id));
     }
 
+    public function get_type_id($type)
+    {
+        $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type)';
+        $query = $this->db->query($sql);
+
+        return $query->result_array();
+
+        $category_details = $this->db->get_where('category', array('slug' => $slug))->row_array();
+        return $category_details['id'];
+    }
+
     public function get_category_id($slug = "")
     {
         $category_details = $this->db->get_where('category', array('slug' => $slug))->row_array();
@@ -581,6 +592,7 @@ class Crud_model extends CI_Model
         $data['discounted_price'] = $this->input->post('discounted_price');
         $data['level'] = $this->input->post('level');
         $data['is_free_course'] = $this->input->post('is_free_course');
+        $data['profession'] = implode(',', $this->input->post('profession'));
         $data['type'] = implode(',', $this->input->post('type'));
 
         //Course type == 'classroom'

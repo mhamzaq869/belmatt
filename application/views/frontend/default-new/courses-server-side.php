@@ -15,6 +15,7 @@
                      <!-- Course Status -->
                      <div class="col-xl-5">
                         <div class="form-group mt-5">
+                        <label for="Select Course Title">Select Venue</label>
                             <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                 <?php foreach ($courses as $key => $course): ?>
@@ -27,6 +28,7 @@
                     <!-- Course Status -->
                     <div class="col-xl-5">
                         <div class="form-group mt-5"> 
+                            <label for="Select Course Title">Select Course</label>
                             <select class="form-control select2" data-toggle="select2" name="title" id='title'>
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                 <?php foreach ($courses as $key => $course): ?>
@@ -39,9 +41,9 @@
                     </div>
 
                     <div class="col-xl-2">
-                        <label for=".." class="text-white mt-4">..</label>
+                        <label for=".." class="text-white mt-5">..</label>
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-sm btn-primary btn-block" name="button" style="padding:8px 28px !important;"><?php echo get_phrase('filter'); ?></button>
+                            <button type="submit" class="btn btn-sm btn-primary btn-block" name="button" style="padding:8px 28px !important;"><?php echo get_phrase('search'); ?></button>
                         </div>
                     </div>
                 </form>

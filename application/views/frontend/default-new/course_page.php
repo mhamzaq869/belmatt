@@ -83,21 +83,6 @@ if (!empty($course_details['type'])) {
                                         </p>
                                     </div>
 
-
-                                    <?php if (in_array('classroom', $courseType)) : ?>
-                                        <div class="info-tag">
-                                            <i class="fas fa-address-card text-16px mt-7px"></i>
-                                            <p class="text-12px mt-5px me-1"><?php echo get_phrase('Location'); ?></p>
-                                            <p class="text-15px mt-1"><?php echo get_phrase($course_details['address']); ?></p>
-                                        </div>
-
-                                        <div class="info-tag">
-                                            <i class="fas fa-clock text-16px mt-7px"></i>
-                                            <p class="text-12px mt-5px me-1"><?php echo get_phrase('Start Date'); ?></p>
-                                            <p class="text-15px mt-1"><?php echo date('D jS M Y \a\t g:i A', strtotime($course_details['datetime'])); ?></p>
-                                        </div>
-
-                                    <?php endif; ?>
                                 </div>
 
                             </div>
@@ -270,22 +255,32 @@ if (!empty($course_details['type'])) {
                         <?php endif; ?>
 
                         <?php if (in_array('classroom', $courseType)) : ?>
+                            <div class="enrol">
+                                <div class="icon">
+                                <img src="<?php echo base_url('assets/frontend/default-new/image/icon/location.svg') ?>">
+                                    <h4><?php echo get_phrase($course_details['city']).' ('. ucfirst($course_details['address']) .')'  ?></h4>
+                                </div>
+                            </div>
+
+                            <div class="enrol">
+                                <div class="icon">
+                                <img src="<?php echo base_url('assets/frontend/default-new/image/icon/calendar-6.svg') ?>">
+                                    <h4><?php echo date('D jS M Y \a\t g:i A', strtotime($course_details['datetime'])); ?></h4>
+                                </div>
+                            </div>
+
                             <div class="enrol" style="border-bottom: none;">
                                 <div class="icon">
-                                    <img src="<?php echo base_url('assets/frontend/default-new/image/book-open-cover.png') ?>">
-                                    <h4><?php echo get_phrase('Buy For?') ?></h4>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="purchaseType" id="single" value="solo" checked>
+                                        <label class="form-check-label" for="single">Solo</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input pl-3" type="radio" name="purchaseType" id="group" value="group">
+                                        <label class="form-check-label font-weight-bold" for="group">Group</label>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="purchaseType" id="single" value="single" checked>
-                                        <label class="form-check-label" for="single">Single</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="purchaseType" id="group" value="group">
-                                        <label class="form-check-label font-weight-bold" for="Group">Group</label>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="dynamic-wrap px-4 d-none">

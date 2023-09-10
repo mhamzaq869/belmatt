@@ -5,52 +5,92 @@
     <?php endif; ?>
 
     <div class="course-all-category">
-        <div class="course-category">
-            <h3><?php echo get_phrase('Categories'); ?></h3>
-            
+        
+    
+    <!-- Type Filter -->
+    <div class="course-price course-category mb-3">
+        <h3><?php echo get_phrase('Type'); ?></h3>
+        <?php
+        $selected_types = isset($_GET['type']) ? $_GET['type'] : array();
+        $types = array('E-Learning', 'Live Webinar', 'Classroom');
+        $types_val = array('e-learning', 'live-webinar', 'classroom');
+        foreach ($types as $key => $type): ?>
             <div class="form-check">
-                <input class="form-check-input" type="radio" value="all" name="category"  id="category_all" onchange="filterCourse()" <?php if($selected_category == 'all') echo 'checked'; ?>>
-                <label class="form-check-label" for="category_all">
-                    <div class="category-heading">
-                        <p class="radio-text"><?php echo get_phrase('All category') ?></p>
-                    </div>
-                    <span>(<?php echo $this->crud_model->get_active_course()->num_rows(); ?>)</span>
+                <input class="form-check-input" type="checkbox" value="<?php echo $types_val[$key]; ?>" name="type[]" id="type_<?php echo strtolower($type); ?>" onchange="filterCourse()" <?php if(in_array($type, $selected_types)) echo 'checked'; ?>>
+                <label class="form-check-label" for="type_<?php echo strtolower($type); ?>">
+                    <p class="text-checkbox"><?php echo $type; ?></p>
                 </label>
             </div>
-            <div class="webdesign less">
-                <?php $categories = $this->crud_model->get_categories()->result_array(); ?>
-                <?php foreach($categories as $category): ?>
-                    <?php $course_number = $this->crud_model->get_active_course_by_category_id($category['id'], 'category_id')->num_rows(); ?>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" value="<?php echo $category['slug'] ?>" name="category" id="category-<?php echo $category['id']; ?>" onchange="filterCourse()" <?php if($selected_category == $category['slug']) echo 'checked'; ?>>
-                        <label class="form-check-label" for="category-<?php echo $category['id']; ?>">
-                            <div class="category-heading">
-                                <p class="radio-text"><?php echo $category['name']; ?></p>
-                            </div>
-                            <span>(<?php echo $course_number; ?>)</span>
-                        </label>
-                    </div>
-                    <ul>
-                        <?php foreach ($this->crud_model->get_sub_categories($category['id']) as $sub_category): ?>
-                            <?php $course_number = $this->crud_model->get_active_course_by_category_id($sub_category['id'], 'sub_category_id')->num_rows(); ?>
-                            <li>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="<?php echo $sub_category['slug'] ?>" name="category" id="sub_category-<?php echo $sub_category['id']; ?>" onchange="filterCourse()" <?php if($selected_category == $sub_category['slug']) echo 'checked'; ?>>
-                                    <label class="form-check-label" for="sub_category-<?php echo $sub_category['id']; ?>">
-                                        <p class="radio-text"><?php echo $sub_category['name']; ?></p>
-                                        <span>(<?php echo $course_number; ?>)</span>
-                                    </label>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endforeach; ?>
-            </div>
-            <div class="show-more">
-                <a class="show-more-less-btn" href="#" onclick="$('.course-all-category .course-category .webdesign').toggleClass('less'); $('.show-more-less-btn').toggleClass('d-none');"><?php echo get_phrase('Show More'); ?></a>
-                <a class="show-more-less-btn d-none" href="#" onclick="$('.course-all-category .course-category .webdesign').toggleClass('less'); $('.show-more-less-btn').toggleClass('d-none');"><?php echo get_phrase('Show Less'); ?></a>
-            </div>
+        <?php endforeach; ?>
+    </div>
+    
+    <div class="course-category mb-3">
+        <h3><?php echo get_phrase('Categories'); ?></h3>
+        
+        <div class="form-check">
+            <input class="form-check-input" type="radio" value="all" name="category"  id="category_all" onchange="filterCourse()" <?php if($selected_category == 'all') echo 'checked'; ?>>
+            <label class="form-check-label" for="category_all">
+                <div class="category-heading">
+                    <p class="radio-text"><?php echo get_phrase('All category') ?></p>
+                </div>
+                <span>(<?php echo $this->crud_model->get_active_course()->num_rows(); ?>)</span>
+            </label>
         </div>
+        <div class="webdesign less">
+            <?php $categories = $this->crud_model->get_categories()->result_array(); ?>
+            <?php foreach($categories as $category): ?>
+                <?php $course_number = $this->crud_model->get_active_course_by_category_id($category['id'], 'category_id')->num_rows(); ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="<?php echo $category['slug'] ?>" name="category" id="category-<?php echo $category['id']; ?>" onchange="filterCourse()" <?php if($selected_category == $category['slug']) echo 'checked'; ?>>
+                    <label class="form-check-label" for="category-<?php echo $category['id']; ?>">
+                        <div class="category-heading">
+                            <p class="radio-text"><?php echo $category['name']; ?></p>
+                        </div>
+                        <span>(<?php echo $course_number; ?>)</span>
+                    </label>
+                </div>
+                <ul>
+                    <?php foreach ($this->crud_model->get_sub_categories($category['id']) as $sub_category): ?>
+                        <?php $course_number = $this->crud_model->get_active_course_by_category_id($sub_category['id'], 'sub_category_id')->num_rows(); ?>
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="<?php echo $sub_category['slug'] ?>" name="category" id="sub_category-<?php echo $sub_category['id']; ?>" onchange="filterCourse()" <?php if($selected_category == $sub_category['slug']) echo 'checked'; ?>>
+                                <label class="form-check-label" for="sub_category-<?php echo $sub_category['id']; ?>">
+                                    <p class="radio-text"><?php echo $sub_category['name']; ?></p>
+                                    <span>(<?php echo $course_number; ?>)</span>
+                                </label>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endforeach; ?>
+        </div>
+        <div class="show-more">
+            <a class="show-more-less-btn" href="#" onclick="$('.course-all-category .course-category .webdesign').toggleClass('less'); $('.show-more-less-btn').toggleClass('d-none');"><?php echo get_phrase('Show More'); ?></a>
+            <a class="show-more-less-btn d-none" href="#" onclick="$('.course-all-category .course-category .webdesign').toggleClass('less'); $('.show-more-less-btn').toggleClass('d-none');"><?php echo get_phrase('Show Less'); ?></a>
+        </div>
+    </div>
+        
+    <!-- Profession Filter -->
+    <div class="course-price course-category">
+        
+        <h3><?php echo get_phrase('Profession'); ?></h3>
+        <?php
+        $selected_professions = isset($_GET['profession']) ? $_GET['profession'] : array();
+        $professions = array(
+            'Nurses', 'Doctors', 'Paramedics', 'Pharmacists', 'Allied Healthcare Professionals',
+            'Healthcare Assistants', 'Managers', 'Admin Staff', 'Physician Assistants', 'Overseas doctors'
+        );
+        foreach ($professions as $profession): ?>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="<?php echo $profession; ?>" name="profession[]" id="profession_<?php echo strtolower($profession); ?>" onchange="filterCourse()" <?php if(in_array($profession, $selected_professions)) echo 'checked'; ?>>
+                <label class="form-check-label" for="profession_<?php echo strtolower($profession); ?>">
+                    <p class="text-checkbox"><?php echo $profession; ?></p>
+                </label>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
         <div class="course-price course-category">
             <h3><?php echo get_phrase('Price'); ?></h3>
             <div class="form-check">

@@ -70,6 +70,8 @@ class Home extends CI_Controller
             $this->session->set_userdata('layout', 'list');
         }
         $layout = $this->session->userdata('layout');
+        $selected_type_id = "all";
+        $selected_profession_id = "all";
         $selected_category_id = "all";
         $selected_price = "all";
         $selected_level = "all";
@@ -96,6 +98,13 @@ class Home extends CI_Controller
             $search_string = "";
         }
 
+        // print_r($_GET['price']); exit;
+        // Get the course type ids
+        if (isset($_GET['type']) && !empty($_GET['type'] && $_GET['type'] != "all")) {
+            $selected_type_id = $this->crud_model->get_type_id($_GET['type']);
+        }
+
+      
 
         // Get the category ids
         if (isset($_GET['category']) && !empty($_GET['category'] && $_GET['category'] != "all")) {
@@ -311,10 +320,10 @@ class Home extends CI_Controller
 
                     $nestedData['date'] = date('D jS M Y', strtotime($row['datetime']));
                     $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
-                    $nestedData['venue'] = '<span>' . $row['address'] . '</span>';
+                    $nestedData['venue'] = '<span>' . ucfirst($row['city']) .' ('. $row['address'] .')</span>';
                     $nestedData['time'] = '<span>' . date('g:i A', strtotime($row['datetime'])) . '</span>';
                     $nestedData['price'] = $price_field; 
-                    $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-outline-primary">Book Now</a>';
+                    $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
 
                     $data[] = $nestedData;
                 }

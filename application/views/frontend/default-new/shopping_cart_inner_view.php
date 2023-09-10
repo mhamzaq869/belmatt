@@ -49,17 +49,20 @@
                                     </a>
                                 </div>
                             </td>
-                            <td class="d-flex">
+                            <td class="">
                                 <?php if($course_details['is_free_course']): ?>
                                     <h4><?php echo get_phrase('Free'); ?></h4>
                                 <?php elseif($course_details['discount_flag']): ?>
                                     <?php $total += $course_details['discounted_price'] * $userGroupCount; ?>
                                     <h4><?php echo currency($course_details['discounted_price'] * $userGroupCount); ?></h4>
+                                    <small><?php echo currency($course_details['discounted_price']); ?>x<?php echo $userGroupCount; ?></small>
                                     <h6 class="mt-2 ms-2"><del><?php echo currency($course_details['price']); ?></del></h6>
                                 <?php else: ?>
                                     <?php $total += $course_details['price'] * $userGroupCount; ?>
                                     <h4><?php echo currency($course_details['price'] * $userGroupCount); ?></h4>
+                                    <small><?php echo currency($course_details['price']); ?>x<?php echo $userGroupCount; ?></small>
                                 <?php endif; ?>
+                                
                             </td>
                             <td class="text-end">
                                 <a class="ms-auto" href="#" onclick="actionTo('<?php echo site_url('home/handle_cart_items/'.$course_details['id']); ?>');"><i class="fa-solid fa-trash-can"></i></a>

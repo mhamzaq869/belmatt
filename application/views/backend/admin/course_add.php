@@ -150,6 +150,26 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <!-- Add "Profession" Filter -->
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-2 col-form-label" for="profession"><?php echo get_phrase('profession'); ?></label>
+                                                <div class="col-md-10">
+                                                    <select class="form-control select2" data-toggle="select2" name="profession[]" id="profession" multiple>
+                                                    <option value="nurses">Nurses</option>
+                                                            <option value="doctors">Doctors</option>
+                                                            <option value="paramedics">Paramedics</option>
+                                                            <option value="pharmacists">Pharmacists</option>
+                                                            <option value="allied-healthcare-professionals">Allied Healthcare Professionals</option>
+                                                            <option value="healthcare-assistants">Healthcare Assistants</option>
+                                                            <option value="managers">Managers</option>
+                                                            <option value="admin-staff">Admin Staff</option>
+                                                            <option value="physician-assistants">Physician Assistants</option>
+                                                            <option value="overseas-doctors" >Overseas doctors</option>
+
+                                                        <!-- Add more profession options as needed -->
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="form-group row mb-3">
                                                 <label class="col-md-2 col-form-label" for="Type"><?php echo get_phrase('Type'); ?></label>
                                                 <div class="col-md-10">
