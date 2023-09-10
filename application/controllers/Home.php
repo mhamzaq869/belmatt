@@ -70,8 +70,8 @@ class Home extends CI_Controller
             $this->session->set_userdata('layout', 'list');
         }
         $layout = $this->session->userdata('layout');
-        $selected_type_id = "all";
-        $selected_profession_id = "all";
+        $selected_type = "all";
+        $selected_professions = "all";
         $selected_category_id = "all";
         $selected_price = "all";
         $selected_level = "all";
@@ -83,7 +83,7 @@ class Home extends CI_Controller
         $h5p_status = addon_status('h5p');
 
         // check script inject
-        foreach($_GET as $key => $value){
+        foreach($_GET as $key => $value){ 
             //check double quote and script text in the search string
             if(preg_match('/"/', strtolower($value)) >= 1 && strpos(strtolower($value),"script") >= 1){
                 $this->session->set_flashdata('error_message', site_phrase('such_script_searches_are_not_allowed').'!');
@@ -92,35 +92,39 @@ class Home extends CI_Controller
             $_GET[htmlspecialchars_($key)] = htmlspecialchars_($value);
         }
 
+
         if(isset($_GET['query']) && $_GET['query'] != ""){
             $search_string = $_GET['query'];
         }else{
             $search_string = "";
-        }
-
-        // print_r($_GET['price']); exit;
-        // Get the course type ids
+        } 
+        
+        // Get the course types
         if (isset($_GET['type']) && !empty($_GET['type'] && $_GET['type'] != "all")) {
-            $selected_type_id = $this->crud_model->get_type_id($_GET['type']);
-        }
-
-      
+            $selected_type = $_GET['type'] ;
+        }   
 
         // Get the category ids
         if (isset($_GET['category']) && !empty($_GET['category'] && $_GET['category'] != "all")) {
             $selected_category_id = $this->crud_model->get_category_id($_GET['category']);
         }
 
+        // Get the professions
+        if (isset($_GET['profession']) && !empty($_GET['profession'] && $_GET['profession'] != "all")) {
+            $selected_professions = $_GET['profession'] ;
+        }
+
         // Get the selected price
         if (isset($_GET['price']) && !empty($_GET['price'])) {
             $selected_price = $_GET['price'];
         }
-
+        
         // Get the selected level
         if (isset($_GET['level']) && !empty($_GET['level'])) {
             $selected_level = $_GET['level'];
         }
-
+ 
+        
         // Get the selected language
         if (isset($_GET['language']) && !empty($_GET['language'])) {
             $selected_language = $_GET['language'];
@@ -137,7 +141,7 @@ class Home extends CI_Controller
         }
 
 
-        if ($search_string == "" && $selected_category_id == "all" && $selected_price == "all" && $selected_level == 'all' && $selected_language == 'all' && $selected_rating == 'all' && $selected_sorting == 'newest') {
+        if ($search_string == "" && $selected_type == "all" && $selected_category_id == "all" && $selected_professions == "all" && $selected_price == "all" && $selected_level == 'all' && $selected_language == 'all' && $selected_rating == 'all' && $selected_sorting == 'newest') {
 
             $this->db->group_start();
                 $this->db->where('course_type', 'general');
@@ -184,16 +188,16 @@ class Home extends CI_Controller
                 $search_string_val = "";
             }
 
-            $all_filtered_courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating)->num_rows();
+            $all_filtered_courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating,'','','', $selected_type, $selected_professions)->num_rows();
             $config = array();
             $config = pagintaion($all_filtered_courses, 9);
             $config['base_url']  = site_url('home/courses/');
 
-            $config['suffix']  = '?'.$search_string_val.'category=' . $category_slug . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
-            $config['first_url']  = site_url('home/courses').'?'.$search_string_val.'category=' . $category_slug . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
+            $config['suffix']  = '?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
+            $config['first_url']  = site_url('home/courses').'?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
 
             $this->pagination->initialize($config);
-            $courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating, $selected_sorting, $config['per_page'], $this->uri->segment(3))->result_array();
+            $courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating, $selected_sorting, $config['per_page'], $this->uri->segment(3), $selected_type, $selected_professions)->result_array();
             $page_data['courses'] = $courses;
             $page_data['total_result'] = $all_filtered_courses;
         }
@@ -201,7 +205,9 @@ class Home extends CI_Controller
         $page_data['page_name']  = "courses_page";
         $page_data['page_title'] = site_phrase('courses');
         $page_data['layout']     = $layout;
-        $page_data['selected_category_id']     = $selected_category_id;
+        $page_data['selected_type']     = $selected_type;
+        $page_data['selected_category_id'] = $selected_category_id;
+        $page_data['selected_professions']     = $selected_professions;
         $page_data['selected_price']     = $selected_price;
         $page_data['selected_level']     = $selected_level;
         $page_data['selected_language']     = $selected_language;

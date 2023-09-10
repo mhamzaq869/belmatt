@@ -16,6 +16,21 @@ class Crud_model extends CI_Model
         $this->output->set_header('Pragma: no-cache');
     }
 
+    public function pluckValue($data, $keyToPluck) {
+        $result = array();
+        
+        if (!empty($data) && is_array($data)) {
+            foreach ($data as $item) {
+                if (isset($item[$keyToPluck])) {
+                    $result[] = $item[$keyToPluck];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+
     public function get_categories($param1 = "")
     {
         if ($param1 != "") {
@@ -32,13 +47,19 @@ class Crud_model extends CI_Model
 
     public function get_type_id($type)
     {
-        $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type)';
-        $query = $this->db->query($sql);
+        // return $this->db->get_where('course', array("FIND_IN_SET('$type', course.type)"));
 
-        return $query->result_array();
+        $this->db->where("FIND_IN_SET('$type', course.type) >", 0);
+        return $this->db->get('course')->row_array();
+        
+    //     $sql = 'SELECT * FROM course WHERE find_in_set("' . $type . '", course.type)';
+    //    return $query = $this->db->query($sql)->row_array();
+        // var_dump($query);
 
-        $category_details = $this->db->get_where('category', array('slug' => $slug))->row_array();
-        return $category_details['id'];
+        // return $query->row_array();
+
+        // $category_details = $this->db->get_where('category', array('slug' => $slug))->row_array();
+        // return $category_details['id'];
     }
 
     public function get_category_id($slug = "")
@@ -2750,7 +2771,7 @@ class Crud_model extends CI_Model
     }
 
     // version 1.4
-    function filter_course($search_string = "", $selected_category_id = "", $selected_price = "", $selected_level = "", $selected_language = "", $selected_rating = "", $selected_sorting = "", $per_page = "", $uri_segment = "")
+    function filter_course($search_string = "", $selected_category_id = "", $selected_price = "", $selected_level = "", $selected_language = "", $selected_rating = "", $selected_sorting = "", $per_page = "", $uri_segment = "", $selected_type= "", $selected_professions= "")
     {
 
         if ($selected_category_id != "all") {
@@ -2899,6 +2920,18 @@ class Crud_model extends CI_Model
         if ($selected_level != "all") {
             $this->db->group_start();
             $this->db->where('c.level', $selected_level);
+            $this->db->group_end();
+        }
+        
+        if ($selected_type != "all") {
+            $this->db->group_start();
+            $this->db->where("FIND_IN_SET('$selected_type', c.type) >", 0);
+            $this->db->group_end();
+        } 
+
+        if ($selected_professions != "all") {
+            $this->db->group_start();
+            $this->db->where("FIND_IN_SET('$selected_professions', c.profession) >", 0);
             $this->db->group_end();
         }
 
