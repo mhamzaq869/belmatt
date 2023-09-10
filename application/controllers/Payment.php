@@ -51,6 +51,19 @@ class Payment extends CI_Controller
         
         //ENDED payment model and functions are dynamic here
         if ($response === true) {
+            
+            if($payment_details['purchase_type'] == 'global'){
+                $emails = json_decode($payment_details['user_group_emails']);
+                foreach ($emails as $email) 
+                {
+                    $this->db->insert('purchased_course_usergroup_email', [
+                        'course_id' => $payment_details['course_id'],
+                        'email' => $email,
+                        'type' => $payment_details['purchase_type'],
+                    ]);
+                }
+            } 
+
             //if course is a gift purchase
             if($payment_details['gift_to_user_id'] > 0){
                 $enrol_user_id = $payment_details['gift_to_user_id'];
@@ -59,9 +72,11 @@ class Payment extends CI_Controller
             }else{
                 
                 $this->crud_model->enrol_student($enrol_user_id);
-                $this->purchaseduseremail_model->add_purchased_course_user_email($payment_details);
                 $this->email_model->course_purchase_notification($enrol_user_id, $payment_method, $payment_details['total_payable_amount']);
             }
+
+            
+
             $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
 
             $this->session->unset_userdata('gift_to_user_id');

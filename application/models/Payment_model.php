@@ -52,7 +52,7 @@ class Payment_model extends CI_Model {
             } 
              
 
-            $item_details['purchase_type'] = $userGroupCount > 0 ? 'group' : 'single';
+            $item_details['purchase_type'] = $userGroupCount > 1 ? 'group' : 'single';
             $item_details['user_group_emails'] = json_encode($extractedEmails);
             $item_details['quantity'] = $userGroupCount;
 
