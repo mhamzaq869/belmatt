@@ -232,18 +232,18 @@ class Home extends CI_Controller
             $venue = $this->input->post('venue'); 
             $title = $this->input->post('title');
 
-            $start = htmlspecialchars_($this->input->post('start'));
+            // $start = htmlspecialchars_($this->input->post('start'));
             $limit = htmlspecialchars_($this->input->post('length'));
 
-            $column_index = $columns[$this->input->post('order')[0]['column']];
+            // $column_index = $columns[$this->input->post('order')[0]['column']];
 
-            $dir = $this->input->post('order')[0]['dir'];
+            // $dir = $this->input->post('order')[0]['dir'];
 
             $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
             $total_row_query = $this->db->query($total_row_sql);
             $total_number_of_row = count($total_row_query->result_array());
 
-            $search = $this->input->post('search')['value'];
+            // $search = $this->input->post('search')['value'];
             
             // FILTERED DATA
             $sql = 'SELECT * FROM course WHERE '; 
@@ -277,7 +277,10 @@ class Home extends CI_Controller
             $sql .= '  find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
 
             if (!empty($venue) && $venue != 'all') {
-                $venue = explode(',', $venue);
+                if(!is_array($venue)){
+                    $venue = explode(',', $venue);
+                }
+
                 $sql .= " AND city = '$venue[0]'";
                 $sql .= " AND address = '$venue[1]'"; 
             }
