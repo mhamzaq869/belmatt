@@ -242,33 +242,31 @@ class Email_model extends CI_Model
 					$emails = $query->result(); 
 					foreach($emails as $email){
 					 
-						if($user_type == 'student'){
-							if(!$email->is_email_sent){
-								$replaces['paid_amount'] = ''; 
-								$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
-								$replaces['address'] = $course_details['address'];
-								$replaces['city'] = $course_details['city'];
-								$replaces['state'] = $course_details['state'];
-								$replaces['postal_code'] = $course_details['postal_code'];
-								$replaces['country'] = $course_details['country'];
+						if($user_type == 'student'){ 
+							$replaces['paid_amount'] = ''; 
+							$replaces['datetime'] = date('D jS M Y \a\t g:i A', strtotime($course_details['datetime']));
+							$replaces['address'] = $course_details['address'];
+							$replaces['city'] = $course_details['city'];
+							$replaces['state'] = $course_details['state'];
+							$replaces['postal_code'] = $course_details['postal_code'];
+							$replaces['country'] = $course_details['country'];
+							
+							$template_data['replaces'] = isset($replaces) ? $replaces:array();
+							$template_data['to_user'] = $to_user;
+							$template_data['notification'] = $notification;
+							$template_data['user_type'] = $user_type;
+							$template_data['auth_link'] = true;
+							
+							$subject = $to_user['first_name'].' '.$to_user['last_name'].' has purchased a course for you';
+							$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
+
+							if(json_decode($notification['email_notification'], true)[$user_type] == 1){
+								$this->send_smtp_mail($email_template, $subject, $email->email);
 								
-								$template_data['replaces'] = isset($replaces) ? $replaces:array();
-								$template_data['to_user'] = $to_user;
-								$template_data['notification'] = $notification;
-								$template_data['user_type'] = $user_type;
-								$template_data['auth_link'] = true;
-								
-								$subject = $to_user['first_name'].' '.$to_user['last_name'].' has purchased a course for you';
-								$email_template = $this->load->view('email/common_template',  $template_data, TRUE);
-	
-								if(json_decode($notification['email_notification'], true)[$user_type] == 1){
-									$this->send_smtp_mail($email_template, $subject, $email->email);
-									
-									$this->db->where('course_id', $course_id);
-									$this->db->where('email', $email->email);
-									$this->db->update('purchased_course_usergroup_email', ['is_email_sent' => 1]);
-								} 
-							}
+								$this->db->where('course_id', $course_id);
+								$this->db->where('email', $email->email);
+								$this->db->delete('purchased_course_usergroup_email');
+							}  
 						}
 					}
 				} 

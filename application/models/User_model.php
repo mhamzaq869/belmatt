@@ -50,6 +50,22 @@ class User_model extends CI_Model
         endforeach;
     }
     
+    public function check_auth_user_course_purchased($email)
+    {
+        $this->db->where('email', $email);
+        $invites_query = $this->db->get('group_user_course_purchased');
+        $invites = $invites_query->result_array();
+      
+        foreach($invites as $invite):
+            $this->db->insert('enrol', ['user_id' => $invite['student_id'], 'course_id' => $invite['course_id'], 'date_added' => $invite['date_added'] ]);
+            if ($this->db->affected_rows() > 0) {
+                $this->db->where('email', $email);
+                $this->db->where('course_id', $invite['course_id']);
+                $this->db->delete('group_user_course_purchased');
+            }
+        endforeach;
+    }
+
     public function add_user($is_instructor = false, $is_admin = false)
     {
         $validity = $this->check_duplication('on_create', $this->input->post('email'));

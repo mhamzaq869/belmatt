@@ -1,5 +1,6 @@
 <?php $enrolments = $this->user_model->my_courses()->result_array(); ?>
 <?php $user_details = $this->user_model->get_all_user($this->session->userdata('user_id'))->row_array(); ?>
+<?php $this->user_model->check_auth_user_course_purchased($user_details['email']); ?>
 <?php include "breadcrumb.php"; ?>
 
 <!-------- Wish List body section start ------>

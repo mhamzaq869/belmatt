@@ -1057,7 +1057,7 @@ class Crud_model extends CI_Model
         $this->db->where('student_id', $student_id);
         $query = $this->db->get('purchased_course_usergroup_email');
 
-        return $query;
+        return $query->result_array();
     }
 
     public function get_course_by_type($type = "classroom")
@@ -2372,7 +2372,7 @@ class Crud_model extends CI_Model
     }
     public function course_purchase($user_id, $method, $amount_paid, $param1 = "", $param2 = "")
     {
-        $payment_details = $this->session->userdata('payment_details');
+
         $purchased_courses = $this->session->userdata('cart_items');
         $userGroupEmails = $this->session->userdata('cart_items_user_group_emails');
         $applied_coupon = $this->session->userdata('applied_coupon');
@@ -2394,16 +2394,16 @@ class Crud_model extends CI_Model
             $data['payment_type'] = $method;
             $data['course_id'] = $purchased_course;
             $course_details = $this->get_course_by_id($purchased_course)->row_array();
-            $course_user_group_email = $this->get_purchased_course_user_group_email($purchased_course,$user_id)->row_array();
+            $course_user_group_email = $this->get_purchased_course_user_group_email($purchased_course,$user_id);
             
             if(!empty($course_user_group_email)){
                 $email = [];
                 foreach($course_user_group_email as $mail){
-                    $email[] = $mail; 
+                    $email[] = $mail['email']; 
                     $this->db->insert('group_user_course_purchased', [
                         'purchased_by_student' => $user_id,
                         'course_id' => $purchased_course,
-                        'email' => $mail,
+                        'email' => $mail['email'],
                         'date_added' => time(),
                     ]);
                 } 
@@ -2427,9 +2427,7 @@ class Crud_model extends CI_Model
             }
             $data['quantity'] = $userGroupCount;
              
-           
-
-
+            
 
             if ($course_details['discount_flag'] == 1) {
                 $data['amount'] = $course_details['discounted_price'];

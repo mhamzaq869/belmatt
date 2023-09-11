@@ -43,7 +43,6 @@ class Payment extends CI_Controller
             $this->load->model('addons/'.strtolower($payment_gateway['model_name']));
         }
          
-      
         if($model_name != null){
             $payment_check_function = 'check_'.$payment_method.'_payment';
             $response = $this->$model_name->$payment_check_function($payment_method, 'course');
@@ -53,26 +52,28 @@ class Payment extends CI_Controller
         //ENDED payment model and functions are dynamic here
         if ($response === true) {
             
-            foreach($payment_details['items'] as $item){ 
-                if(!empty($item['user_group_emails'])){
-                    $emails = json_decode($item['user_group_emails']);  
-                    foreach ($emails as $email){
-                        $this->db->insert('purchased_course_usergroup_email', [
-                            'student_id' => $enrol_user_id,
-                            'course_id' => $item['id'],
-                            'email' => $email,
-                            'type' => $payment_details['purchase_type'],
-                        ]);
-
-                        $this->db->insert('group_user_course_purchased', [
-                            'purchased_by_student' => $enrol_user_id,
-                            'course_id' => $item['id'],
-                            'email' => $email,
-                            'date_added' => time(),
-                        ]);
+            if($payment_method != 'offline_payment'){
+                foreach($payment_details['items'] as $item){ 
+                    if(!empty($item['user_group_emails'])){
+                        $emails = json_decode($item['user_group_emails']);  
+                        foreach ($emails as $email){
+                            $this->db->insert('purchased_course_usergroup_email', [
+                                'student_id' => $enrol_user_id,
+                                'course_id' => $item['id'],
+                                'email' => $email,
+                                'type' => $payment_details['purchase_type'],
+                            ]);
+    
+                            $this->db->insert('group_user_course_purchased', [
+                                'purchased_by_student' => $enrol_user_id,
+                                'course_id' => $item['id'],
+                                'email' => $email,
+                                'date_added' => time(),
+                            ]);
+                        }
                     }
-                }
-            } 
+                } 
+            }
   
             //if course is a gift purchase
             if($payment_details['gift_to_user_id'] > 0){
