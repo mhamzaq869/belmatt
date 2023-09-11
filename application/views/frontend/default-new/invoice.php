@@ -64,8 +64,8 @@ $instructor_details = $this->user_model->get_all_user($course_details['user_id']
                       <tr>
                         <th scope="row"><p><?php echo $course_details['title']; ?></p></th>
                         <td><p ><?php echo $instructor_details['first_name'].' '.$instructor_details['last_name']; ?></p></td>
-                        <td><p class="text-end"><?php echo $payment_info['quantity']; ?></p></td>
-                        <td><p class="text-end"><?php echo currency(($payment_info['admin_revenue'] + $payment_info['instructor_revenue']) * $payment_info['quantity']) ?></p></td>
+                        <td><p class="text-end">1</p></td>
+                        <td><p class="text-end"><?php echo currency(($payment_info['admin_revenue'] + $payment_info['instructor_revenue'])) ?></p></td>
                       </tr>
                     </tbody>
                   </table> 
@@ -90,7 +90,7 @@ $instructor_details = $this->user_model->get_all_user($course_details['user_id']
                                             <h5 class="text-end">:</h5>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-3 pe-0">
-                                            <h4><?php echo currency(($payment_info['admin_revenue'] + $payment_info['instructor_revenue']) * $payment_info['quantity']); ?></h4>
+                                            <h4><?php echo currency(($payment_info['admin_revenue'] + $payment_info['instructor_revenue'])); ?></h4>
                                             <h4><?php echo currency($payment_info['tax']); ?></h4>
                                         </div>
                                     </div>

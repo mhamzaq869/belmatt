@@ -19,7 +19,7 @@ $purchase_history = $this->db->get('payment',$per_page, $this->uri->segment(3));
                                 <th scope="col"><h6><?php echo get_phrase('Payment method') ?></h6></th>
                                 <th scope="col"><h6><?php echo get_phrase('Price') ?></h6></th>
                                 <th scope="col"><h6><?php echo get_phrase('Purchased Date') ?></h6></th>
-                                <th scope="col" class="w-auto"><h6><?php echo get_phrase('group_user_emails'); ?></h6></th>
+                                <th scope="col"><h6><?php echo get_phrase('group_user_emails'); ?></h6></th>
                                 <th scope="col" class="w-auto"><h6 class="text-end"><?php echo get_phrase('Invoice') ?></h6></th>
                             </tr>
                         </thead>
@@ -38,9 +38,9 @@ $purchase_history = $this->db->get('payment',$per_page, $this->uri->segment(3));
                                             </div>
                                         </th>
                                         <td><h5><?php echo ucfirst($each_purchase['payment_type']); ?></h5></td>
-                                        <td><h4><?php echo currency($each_purchase['amount']); ?></h4></td>
+                                        <td><h4><?php echo currency($each_purchase['amount']); ?></h4><small style="font-size: 11px;"><?php echo currency($course_details['price']).' x '.$each_purchase['quantity']; ?></small></td>
                                         <td><h5><?php echo date('d M Y', $each_purchase['date_added']); ?></h5></td>
-                                        <td><h5><?php echo $each_purchase['user_group_emails'].','; ?></h5></td>
+                                        <td><h5><?php echo $each_purchase['user_group_emails']; ?></h5></td>
                                         <td>
                                             <button class="purchase-btn">
                                                 <a href="<?php echo site_url('home/invoice/'.$each_purchase['id']); ?>"><?php echo get_phrase('Invoice'); ?></a>

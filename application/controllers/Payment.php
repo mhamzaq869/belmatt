@@ -79,14 +79,15 @@ class Payment extends CI_Controller
             if($payment_details['gift_to_user_id'] > 0){
                 $enrol_user_id = $payment_details['gift_to_user_id'];
                 $this->crud_model->enrol_student($enrol_user_id, $payer_user_id);
+                $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
                 $this->email_model->course_gift_notification($enrol_user_id, $payer_user_id, $payment_method, $payment_details['total_payable_amount']);
             }else{
                 
                 $this->crud_model->enrol_student($enrol_user_id);
+                $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
                 $this->email_model->course_purchase_notification($enrol_user_id, $payment_method, $payment_details['total_payable_amount']);
             }  
 
-            $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
             
            
             $this->session->unset_userdata('gift_to_user_id');

@@ -2430,13 +2430,13 @@ class Crud_model extends CI_Model
             
 
             if ($course_details['discount_flag'] == 1) {
-                $data['amount'] = $course_details['discounted_price'];
+                $data['amount'] = $course_details['discounted_price'] * $userGroupCount;
                 if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
                     $aff['buying_amount'] = $course_details['discounted_price']; // after discount ,he paid this price 
                     $aff['note'] = "discounted";
                 }
             } else {
-                $data['amount'] = $course_details['price'];
+                $data['amount'] = $course_details['price'] * $userGroupCount;
                 if (addon_status('affiliate_course')  && $this->session->userdata('course_referee') != "" && $this->session->userdata('course_reffer_id')) {
                     $aff['buying_amount'] = $course_details['price'];
                     $aff['note'] = "actual price";
