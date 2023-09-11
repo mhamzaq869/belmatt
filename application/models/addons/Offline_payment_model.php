@@ -17,11 +17,24 @@ class Offline_payment_model extends CI_Model
 		$file_extension = pathinfo($_FILES['payment_document']['name'], PATHINFO_EXTENSION);
 		if ($file_extension == 'jpg' || $file_extension == 'pdf' || $file_extension == 'txt' || $file_extension == 'png' || $file_extension == 'docx') :
 			if ($payment_details['total_payable_amount'] > 0) :
+				$user_id = $this->session->userdata('user_id');
+
 				foreach($payment_details['items'] as $item){
 					$item_ids[] = $item['id'];
+					if(!empty($item['user_group_emails'])){
+						$emails = json_decode($item['user_group_emails']);
+						foreach ($emails as $email) 
+						{
+							$this->db->insert('purchased_course_usergroup_email', [
+								'student_id' => $user_id,
+								'course_id' => $item['id'],
+								'email' => $email,
+								'type' => $item['purchase_type'],
+							]);
+						}
+					}
 				}
-
-				$user_id = $this->session->userdata('user_id');
+			
 				$curse_id = json_encode($this->session->userdata('cart_items'));
 				$data['user_id'] = $user_id;
 				$data['amount'] = $payment_details['total_payable_amount'];
@@ -30,6 +43,7 @@ class Offline_payment_model extends CI_Model
 				$data['item_type'] = $item_type;
 				$data['document_image'] = rand(6000, 10000000) . '.' . $file_extension;
 				$data['timestamp'] = strtotime(date('H:i'));
+				
 				$data['status'] = 0;
 				$this->db->insert('offline_payment', $data);
 				move_uploaded_file($_FILES['payment_document']['tmp_name'], 'uploads/payment_document/' . $data['document_image']);
@@ -83,6 +97,12 @@ class Offline_payment_model extends CI_Model
 			$this->db->where('id', $offline_payment_id);
 		}
 		return $this->db->get('offline_payment');
+	}
+	public function offline_payment_user_group_email($course_id = "", $user_id="")
+	{
+		$this->db->where('course_id', $course_id);
+		$this->db->where('student_id', $user_id);
+		return $this->db->get('purchased_course_usergroup_email');
 	}
 	public function offline_payment_pending($offline_payment_id = "")
 	{

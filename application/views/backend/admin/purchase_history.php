@@ -19,6 +19,7 @@
           <th><?php echo get_phrase('paid_amount'); ?></th>
           <th><?php echo get_phrase('payment_method'); ?></th>
           <th><?php echo get_phrase('purchased_date'); ?></th>
+          <th><?php echo get_phrase('group_user_emails'); ?></th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +37,7 @@
               </td>
               <td><?php echo ucfirst($purchase['payment_type']); ?></td>
               <td><?php echo date('D, d-M-Y', $purchase['date_added']); ?></td>
+              <td><?php echo $purchase['user_group_emails']; ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

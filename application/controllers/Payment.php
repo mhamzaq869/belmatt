@@ -43,27 +43,37 @@ class Payment extends CI_Controller
             $this->load->model('addons/'.strtolower($payment_gateway['model_name']));
         }
          
-       
+      
         if($model_name != null){
             $payment_check_function = 'check_'.$payment_method.'_payment';
             $response = $this->$model_name->$payment_check_function($payment_method, 'course');
         }
-        
+
+     
         //ENDED payment model and functions are dynamic here
         if ($response === true) {
             
-            if($payment_details['purchase_type'] == 'global'){
-                $emails = json_decode($payment_details['user_group_emails']);
-                foreach ($emails as $email) 
-                {
-                    $this->db->insert('purchased_course_usergroup_email', [
-                        'course_id' => $payment_details['course_id'],
-                        'email' => $email,
-                        'type' => $payment_details['purchase_type'],
-                    ]);
+            foreach($payment_details['items'] as $item){ 
+                if(!empty($item['user_group_emails'])){
+                    $emails = json_decode($item['user_group_emails']);  
+                    foreach ($emails as $email){
+                        $this->db->insert('purchased_course_usergroup_email', [
+                            'student_id' => $enrol_user_id,
+                            'course_id' => $item['id'],
+                            'email' => $email,
+                            'type' => $payment_details['purchase_type'],
+                        ]);
+
+                        $this->db->insert('group_user_course_purchased', [
+                            'purchased_by_student' => $enrol_user_id,
+                            'course_id' => $item['id'],
+                            'email' => $email,
+                            'date_added' => time(),
+                        ]);
+                    }
                 }
             } 
-
+  
             //if course is a gift purchase
             if($payment_details['gift_to_user_id'] > 0){
                 $enrol_user_id = $payment_details['gift_to_user_id'];
@@ -73,12 +83,11 @@ class Payment extends CI_Controller
                 
                 $this->crud_model->enrol_student($enrol_user_id);
                 $this->email_model->course_purchase_notification($enrol_user_id, $payment_method, $payment_details['total_payable_amount']);
-            }
-
-            
+            }  
 
             $this->crud_model->course_purchase($payer_user_id, $payment_method, $payment_details['total_payable_amount']);
-
+            
+           
             $this->session->unset_userdata('gift_to_user_id');
             $this->session->set_userdata('cart_items', array());
             $this->session->set_userdata('cart_items_user_group_emails', array());

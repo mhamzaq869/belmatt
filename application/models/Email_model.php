@@ -256,6 +256,7 @@ class Email_model extends CI_Model
 								$template_data['to_user'] = $to_user;
 								$template_data['notification'] = $notification;
 								$template_data['user_type'] = $user_type;
+								$template_data['auth_link'] = true;
 								
 								$subject = $to_user['first_name'].' '.$to_user['last_name'].' has purchased a course for you';
 								$email_template = $this->load->view('email/common_template',  $template_data, TRUE);

@@ -57,6 +57,8 @@ class Login extends CI_Controller
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
+            $this->user_model->check_group_user_course_purchased($row->id, $row->email);
+
             $this->user_model->new_device_login_tracker($row->id);
             $this->user_model->set_login_userdata($row->id);
         } else {
