@@ -43,11 +43,12 @@ class Payment extends CI_Controller
             $this->load->model('addons/'.strtolower($payment_gateway['model_name']));
         }
          
+
         if($model_name != null){
             $payment_check_function = 'check_'.$payment_method.'_payment';
             $response = $this->$model_name->$payment_check_function($payment_method, 'course');
         }
-
+        
      
         //ENDED payment model and functions are dynamic here
         if ($response === true) {

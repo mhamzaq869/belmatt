@@ -2396,6 +2396,7 @@ class Crud_model extends CI_Model
             $course_details = $this->get_course_by_id($purchased_course)->row_array();
             $course_user_group_email = $this->get_purchased_course_user_group_email($purchased_course,$user_id);
             
+           
             if(!empty($course_user_group_email)){
                 $email = [];
                 foreach($course_user_group_email as $mail){
@@ -2410,21 +2411,29 @@ class Crud_model extends CI_Model
                 $user_group_emails = implode(',', $email);
                 $data['user_group_emails'] = $user_group_emails;
             }
+
             //Get Group User Purchase Emails 
             $userGroupCount = 1;
-            if (!empty($userGroupEmails)) {
-                
-                $filteredEmails = array_filter($userGroupEmails, function ($value) use ($purchased_course) {
-                    return $value['course_id'] == $purchased_course;
-                });
-
-                if(count($filteredEmails) == 1){
-                    $userGroupCount += 1;
-                }elseif(count($filteredEmails) > 1){
-                    $userGroupCount += count($filteredEmails);
-                } 
-
+            if($method == 'offline'){
+                if (count($course_user_group_email) > 0) {
+                    $userGroupCount += count($course_user_group_email);
+                }
+            }else{
+                if (!empty($userGroupEmails)) {
+                    
+                    $filteredEmails = array_filter($userGroupEmails, function ($value) use ($purchased_course) {
+                        return $value['course_id'] == $purchased_course;
+                    });
+    
+                    if(count($filteredEmails) == 1){
+                        $userGroupCount += 1;
+                    }elseif(count($filteredEmails) > 1){
+                        $userGroupCount += count($filteredEmails);
+                    } 
+    
+                }  
             }
+          
             $data['quantity'] = $userGroupCount;
              
             
