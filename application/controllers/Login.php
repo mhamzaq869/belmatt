@@ -151,7 +151,11 @@ class Login extends CI_Controller
             'linkedin' => ""
         );
         $data['social_links'] = json_encode($social_links);
-        $data['role_id']  = 2;
+        if($this->input->post('signupType') == 'student'){
+            $data['role_id']  = 2;
+        }else if($this->input->post('signupType')  == 'organization'){
+            $data['role_id']  = 4;
+        }
 
         $data['payment_keys'] = json_encode(array());
 

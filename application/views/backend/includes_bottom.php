@@ -35,7 +35,11 @@
 <script src="<?php echo base_url('assets/global/jquery-form/jquery.form.min.js'); ?>"></script>
 
 <script src="<?php echo site_url('assets/backend/js/custom.js');?>"></script>
-
+ 
+ <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+ <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <!-- Dashboard chart's data is coming from this file -->
 <?php include "$logged_in_user_role/dashboard-chart.php"; ?>
 

@@ -33,24 +33,24 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span class="menu-arrow"></span>
 				</a>
 				<ul class="side-nav-second-level" aria-expanded="false">
-					<?php if (has_permission('course')) : ?>
+					<?php if (has_permission('course') && check_sub_permission('Edit', 'course', true)) : ?>
 						<li class="<?php if ($page_name == 'courses' || $page_name == 'course_edit') echo 'active'; ?>">
 							<a href="<?php echo site_url('admin/courses'); ?>"><?php echo get_phrase('manage_courses'); ?></a>
 						</li>
 					<?php endif; ?>
 
-					<?php if (has_permission('course')) : ?>
+					<?php if (has_permission('course') && check_sub_permission('Add', 'course', true)) : ?>
 						<li class="<?php if ($page_name == 'course_add') echo 'active'; ?>">
 							<a href="<?php echo site_url('admin/course_form/add_course'); ?>"><?php echo get_phrase('add_new_course'); ?></a>
 						</li>
 					<?php endif; ?>
 
-					<?php if (has_permission('category')) : ?>
+					<?php if (has_permission('category') && check_sub_permission('Add', 'category', true)) : ?>
 						<li class="<?php if ($page_name == 'categories' || $page_name == 'category_add' || $page_name == 'category_edit') echo 'active'; ?>">
 							<a href="<?php echo site_url('admin/categories'); ?>"><?php echo get_phrase('course_category'); ?></a>
 						</li>
 					<?php endif; ?>
-					<?php if (has_permission('coupon')) : ?>
+					<?php if (has_permission('coupon') && check_sub_permission('Add', 'coupon', true)) : ?>
 						<li class="<?php if ($page_name == 'coupons' || $page_name == 'coupon_add' || $page_name == 'coupon_edit') echo 'active'; ?>">
 							<a href="<?php echo site_url('admin/coupons'); ?>">
 								<?php echo get_phrase('coupons'); ?>
@@ -154,9 +154,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span class="menu-arrow"></span>
 				</a>
 				<ul class="side-nav-second-level" aria-expanded="false">
+					<?php if(check_sub_permission('Add', 'enrolment', true)):?>
 					<li class="<?php if ($page_name == 'enrol_student') echo 'active'; ?>">
 						<a href="<?php echo site_url('admin/enrol_student'); ?>"><?php echo get_phrase('course_enrollment'); ?></a>
 					</li>
+					<?php endif; ?>
+					
 					<li class="<?php if ($page_name == 'enrol_history') echo 'active'; ?>">
 						<a href="<?php echo site_url('admin/enrol_history'); ?>"><?php echo get_phrase('enrol_history'); ?></a>
 					</li>

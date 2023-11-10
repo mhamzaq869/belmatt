@@ -49,6 +49,7 @@ class Admin extends CI_Controller
         check_permission('category');
 
         if ($param1 == 'add') {
+            check_sub_permission('Add', 'category');
 
             $response = $this->crud_model->add_category();
             if ($response) {
@@ -58,6 +59,7 @@ class Admin extends CI_Controller
             }
             redirect(site_url('admin/categories'), 'refresh');
         } elseif ($param1 == "edit") {
+            check_sub_permission('Edit', 'category');
 
             $response = $this->crud_model->edit_category($param2);
             if ($response) {
@@ -67,6 +69,7 @@ class Admin extends CI_Controller
             }
             redirect(site_url('admin/categories'), 'refresh');
         } elseif ($param1 == "delete") {
+            check_sub_permission('Delete', 'category');
 
             $this->crud_model->delete_category($param2);
             $this->session->set_flashdata('flash_message', get_phrase('data_deleted'));
@@ -1790,7 +1793,7 @@ class Admin extends CI_Controller
 
         if ($param1 == "add") {
             // CHECK ACCESS PERMISSION
-            check_permission('admin');
+            check_permission('admin'); 
 
             $this->user_model->add_user(false, true); // PROVIDING TRUE FOR INSTRUCTOR
             redirect(site_url('admin/admins'), 'refresh');
@@ -1884,6 +1887,19 @@ class Admin extends CI_Controller
         check_permission('admin');
 
         echo $this->user_model->assign_permission();
+    }
+    
+    // ASSIGN SUB PERMISSION TO ADMIN
+    public function assign_sub_permission()
+    {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+
+        // CHECK ACCESS PERMISSION
+        check_permission('admin');
+
+        echo $this->user_model->assign_sub_permission();
     }
 
     // REMOVING INSTRUCTOR FROM COURSE

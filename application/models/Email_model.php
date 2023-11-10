@@ -789,7 +789,23 @@ class Email_model extends CI_Model
 
 	//course gift notification end
 
+	
+	//notify the sender/payer of the gift success
+	public function send_org_user_password($user_id, $password)
+	{  
+		$student = $this->user_model->get_all_user($user_id)->row_array(); 
+   
+        
+		$subject = 'Your organization has generated a new password for you!';
+		$message = ' <div class="credentials"> 
+						<strong>Email:</strong> '. $student['email'] .'<br>
+						<strong>Password:</strong> '. $password .'
+					</div>';
 
+		$email_template = $this->load->view('email/static_common_template', $subject , $message, TRUE);
+
+		$this->send_smtp_mail($email_template, $subject, $student['email']);
+	}
 
 
 

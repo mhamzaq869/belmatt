@@ -107,8 +107,44 @@ class User_model extends CI_Model
             }
 
             $this->db->insert('users', $data);
-            $user_id = $this->db->insert_id();
-         //   $this->user_model->update_unique_identifier($user_id);
+            $user_id = $this->db->insert_id(); 
+            // IF THIS IS A USER THEN INSERT BLANK VALUE IN PERMISSION TABLE AS WELL
+            if ($is_admin) {
+                $permission_data['admin_id'] = $user_id;
+                $permission_data['permissions'] = json_encode(array());
+                $this->db->insert('permissions', $permission_data);
+
+                $permission_data['parent_permissions'] = 'category';
+                $this->db->insert('sub_permissions', $permission_data);
+            }
+
+            $this->upload_user_image($data['image']);
+            $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
+        }
+    }
+
+    public function add_org_user()
+    {
+        $validity = $this->check_duplication('on_create', $this->input->post('email'));
+        if ($validity == false) {
+            $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
+        } else {
+          //  $data['unique_identifier'] = 0;
+            $data['first_name'] = html_escape($this->input->post('first_name'));
+            $data['last_name'] = html_escape($this->input->post('last_name'));
+            $data['email'] = html_escape($this->input->post('email'));
+            $data['role_id'] = 2;
+            $data['password'] = null; 
+ 
+            $data['organization_id'] = $this->session->userdata('user_id');
+            $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
+            $data['wishlist'] = json_encode(array());
+            $data['status'] = 1;
+            $data['image'] = md5(rand(10000, 10000000));
+  
+
+            $this->db->insert('users', $data);
+            $user_id = $this->db->insert_id(); 
 
             // IF THIS IS A USER THEN INSERT BLANK VALUE IN PERMISSION TABLE AS WELL
             if ($is_admin) {
@@ -120,6 +156,36 @@ class User_model extends CI_Model
             $this->upload_user_image($data['image']);
             $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
         }
+    } 
+
+    public function add_org_staff()
+    { 
+        $data['first_name'] = html_escape($this->input->post('first_name'));
+        $data['last_name'] = html_escape($this->input->post('last_name'));
+        $data['email'] = html_escape($this->input->post('email'));
+        $data['role_id'] = html_escape($this->input->post('role')); 
+
+        $data['organization_id'] = $this->session->userdata('user_id');
+        $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
+        $data['wishlist'] = json_encode(array());
+        $data['status'] = 1;
+        $data['image'] = md5(rand(10000, 10000000)); 
+
+        $this->db->insert('users', $data); 
+        $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
+    }
+
+    public function genereate_org_user_pass($user_id)
+    {
+        $data = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        $password = substr(str_shuffle($data), 0, 12);
+
+        $this->db->where('id', $user_id);
+        $this->db->update('users', ['password' => sha1($password)]);
+       
+        $this->email_model->send_org_user_password($user_id, $password);
+        
+        $this->session->set_flashdata('flash_message', 'User credentials has been sent!');
     }
 
     public function add_shortcut_user($is_instructor = false)
@@ -243,6 +309,28 @@ class User_model extends CI_Model
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
         }
     }
+    
+    public function edit_org_staff($user_id = "")
+    { // Admin does this editing
+        $validity = $this->check_duplication('on_update', $this->input->post('email'), $user_id);
+        if ($validity) {
+            $data['first_name'] = html_escape($this->input->post('first_name'));
+            $data['last_name'] = html_escape($this->input->post('last_name'));
+
+            if (isset($_POST['email'])) {
+                $data['email'] = html_escape($this->input->post('email'));
+            }
+            
+            $data['last_modified'] = strtotime(date("Y-m-d H:i:s")); 
+            
+            $this->db->where('id', $user_id);
+            $this->db->update('users', $data);
+            $this->session->set_flashdata('flash_message', get_phrase('user_update_successfully'));
+        } else {
+            $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
+        }
+    }
+
     public function delete_user($user_id = "")
     {
         $this->db->where('id', $user_id);
@@ -589,6 +677,48 @@ class User_model extends CI_Model
         }
     }
 
+    // Manage ROLE
+    public function add_role()
+    { 
+        $name = html_escape($this->input->post('name'));
+        
+        return $this->db->insert('role', ['name' => $name]);
+    } 
+
+    public function update_role($id)
+    { 
+        $name = html_escape($this->input->post('name'));
+        
+        $this->db->where('id', $id);
+        $updated = $this->db->update('role', ['name' => $name]);
+        $this->session->set_flashdata('flash_message', 'Role is updated');
+        
+        return $updated; 
+    } 
+
+    public function delete_role($id)
+    { 
+        $users = $this->db->where('role_id', $id)->get('users'); 
+        
+        if(count($users->result_array()) > 0){
+            $this->session->set_flashdata('error_message', 'Can not delete this becuase, There are users registered against this role');
+            redirect(site_url('organization/roles'), 'refresh');
+        }
+
+        $this->db->delete('role', array('id' => $id));
+        return $this->db->affected_rows();
+    } 
+    
+    public function get_role($id)
+    { 
+        return $this->db->where('id', $id)->get('role')->result_array();    
+    } 
+    
+    public function all_org_roles()
+    { 
+        return $this->db->where_not_in('name', ['Admin', 'User', 'Organization'])->get('role');    
+    } 
+    
     // ASSIGN PERMISSION
     public function assign_permission()
     {
@@ -624,11 +754,62 @@ class User_model extends CI_Model
         return true;
     }
 
+    // ASSIGN PERMISSION
+    public function assign_sub_permission()
+    {
+        $argument = html_escape($this->input->post('arg'));
+        $argument = explode('-', $argument);
+        $admin_id = $argument[0];
+        $module = $argument[1];
+        $parent_module = $argument[2];
+
+        // CHECK IF IT IS A ROOT ADMIN
+        if (is_root_admin($admin_id)) {
+            return false;
+        }
+        
+        $permission_data['admin_id'] = $admin_id;
+        $previous_permissions = $this->get_admins_sub_permission_json($permission_data['admin_id'],  $parent_module);
+        $previous_permissions_json = !empty($previous_permissions['permissions']) ? json_decode($previous_permissions['permissions'], TRUE) : [];
+          
+        if (in_array($module, $previous_permissions_json)) {
+            $new_permission = array();
+            foreach ($previous_permissions_json as $permission) {
+                if ($permission != $module && $previous_permissions['parent_permissions'] != $parent_module) {
+                    array_push($new_permission, $permission);
+                }
+            }
+        } else { 
+            array_push($previous_permissions_json, $module);
+            $new_permission = $previous_permissions_json;
+        }
+
+        $permission_data['permissions'] = json_encode($new_permission);
+        
+        if(count($previous_permissions) > 0){
+           
+            $this->db->where('admin_id', $admin_id);
+            $this->db->where('parent_permissions', $parent_module);
+            $this->db->update('sub_permissions', $permission_data);
+        }else{
+            $this->db->insert('sub_permissions', ['admin_id' => $admin_id, 'parent_permissions' => $parent_module, 'permissions' => json_encode($new_permission)]);
+        }
+
+        return true;
+    }
+
     // GET ADMIN'S PERMISSION JSON
     public function get_admins_permission_json($admin_id)
     {
-        $admins_permissions = $this->db->get_where('permissions', ['admin_id' => $admin_id])->row_array();
+        $admins_permissions = $this->db->get_where('permissions', ['admin_id' => $admin_id])->row_array(); 
         return $admins_permissions['permissions'];
+    }
+    
+    // GET ADMIN'S Sub PERMISSION JSON
+    public function get_admins_sub_permission_json($admin_id, $parent_permissions)
+    { 
+        $admins_permissions = $this->db->get_where('sub_permissions', ['admin_id' => $admin_id, 'parent_permissions' => $parent_permissions])->row_array();  
+        return is_array($admins_permissions) ? $admins_permissions : [];
     }
 
     // GET MULTI INSTRUCTOR DETAILS WITH COURSE ID
@@ -748,6 +929,9 @@ class User_model extends CI_Model
                     redirect($this->session->userdata('url_history'), 'refresh');
                 }
                 redirect(site_url('home'), 'refresh');
+            }else if ($row->role_id == 4) { 
+                $this->session->set_userdata('organization_login', '1');
+                redirect(site_url('organization/dashboard'), 'refresh');
             }
         } else {
             $this->session->set_flashdata('error_message', get_phrase('invalid_login_credentials'));
@@ -765,7 +949,7 @@ class User_model extends CI_Model
         if (!$this->session->userdata('language')) {
             $this->session->set_userdata('language', get_settings('language'));
         }
-
+        
         if($user_type == 'admin'){
             if($this->session->userdata('custom_session_limit') >= time()){
                 $this->session->set_userdata('custom_session_limit', (time()+864000));
@@ -793,11 +977,30 @@ class User_model extends CI_Model
                     redirect(site_url('login'), 'refresh');
                 }
             }
+        }elseif($user_type == 'organization'){
+            
+            if($this->session->userdata('custom_session_limit') >= time()){
+                $this->session->set_userdata('custom_session_limit', (time()+864000));
+            }else{
+                $this->session_destroy();
+                redirect(site_url('login'), 'refresh');
+            }
+
+            if ($this->session->userdata('organization_login') != true) {
+                redirect(site_url('login'), 'refresh');
+            }else{
+                if($this->get_all_user($this->session->userdata('user_id'))->num_rows() == 0){
+                    $this->session_destroy();
+                    redirect(site_url('login'), 'refresh');
+                }
+            }
         }elseif($user_type == 'login'){
             if ($this->session->userdata('admin_login')) {
                 redirect(site_url('admin'), 'refresh');
             } elseif ($this->session->userdata('user_login')) {
                 redirect(site_url('home/my_courses'), 'refresh');
+            } elseif ($this->session->userdata('organization_login')) {
+                redirect(site_url('organization'), 'refresh');
             }
         }
     }

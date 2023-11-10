@@ -9,7 +9,7 @@
             <div class="col-lg-7 col-md-6 col-sm-12 col-12 text-center">
                 <img width="65%" src="<?php echo site_url('assets/frontend/default-new/image/login-security.gif') ?>">
             </div>
-            <div class="col-lg-5 col-md-6 col-sm-12 col-12 ">
+            <div class="col-lg-5 col-md-6 col-sm-12 col-12 "> 
                 <div class="sing-up-right">
                     <h3><?php echo get_phrase('Sign Up'); ?><span>!</span></h3>
                     <p><?php echo get_phrase('Explore, learn, and grow with us. Enjoy a seamless and enriching educational journey. Lets begin!') ?></p>
@@ -44,7 +44,17 @@
                                 <input class="form-control" id="password" type="password" name="password" placeholder="<?php echo get_phrase('Enter your valid password'); ?>" required>
                             </div>
                         </div>
+                        
+                        <div class="mb-4">
+                            <h5><?php echo get_phrase('Signup As') ?></h5>
+                            <select class="form-control select2" name="signupType" id="signupType">
+                                <option value="student" selected><?php echo get_phrase('Student'); ?></option>
+                                 
+                                <option value="organization"><?php echo get_phrase('Organization'); ?></option>
+                            </select>
+                        </div>
 
+                        
                         <?php if(get_settings('allow_instructor')): ?>
                             <div class="mb-4">
                                 <input id="instructor" type="checkbox" onchange="$('#become-instructor-fields').toggle()" name="instructor" value="yes" <?php echo isset($_GET['instructor']) ? 'checked':''; ?>>

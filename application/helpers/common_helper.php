@@ -72,6 +72,36 @@ if (!function_exists('has_permission')) {
     }
 }
 
+if (!function_exists('has_sub_permission')) {
+    function has_sub_permission($permission_for = '', $parent = '', $admin_id = '', )
+    {
+        $CI    = &get_instance();
+        $CI->load->database();
+
+        // GET THE LOGGEDIN IN ADMIN ID
+        if (empty($admin_id)) {
+            $admin_id = $CI->session->userdata('user_id');
+        }
+
+        $CI->db->where('admin_id', $admin_id);
+        $CI->db->where('parent_permissions', $parent);
+        $get_admin_permissions = $CI->db->get('sub_permissions');
+     
+        if ($get_admin_permissions->num_rows() == 0) {
+            return true;
+        } else {
+            $get_admin_permissions = $get_admin_permissions->row_array();
+            $permissions = json_decode($get_admin_permissions['permissions']); 
+           
+            if (in_array($permission_for, $permissions) && $parent == $get_admin_permissions['parent_permissions']) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
 if (!function_exists('check_permission')) {
     function check_permission($permission_for)
     {
@@ -81,6 +111,28 @@ if (!function_exists('check_permission')) {
         if (!has_permission($permission_for)) {
             $CI->session->set_flashdata('error_message', get_phrase('you_are_not_authorized_to_access_this_page'));
             redirect(site_url('admin/dashboard'), 'refresh');
+        }
+    }
+}
+
+if (!function_exists('check_sub_permission')) {
+    function check_sub_permission($permission_for, $parent, $returnBoolean = false)
+    {
+        $CI    = &get_instance();
+        $CI->load->database();
+      
+        if (!has_sub_permission($permission_for, $parent)) {
+            if(!$returnBoolean){
+                $CI->session->set_flashdata('error_message', get_phrase('you_are_not_authorized_to_access_this_page'));
+                redirect(site_url('admin/dashboard'), 'refresh');
+            }else{
+                return false;
+            }
+        }
+
+
+        if($returnBoolean){
+            return true;
         }
     }
 }
