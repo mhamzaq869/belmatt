@@ -1,5 +1,16 @@
 <?php
 $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+
+$courseType = [];
+$courseProfession = [];
+
+if ($course_details['type'] != null) {
+    $courseType = explode(',', $course_details['type']);
+}
+
+if ($course_details['profession'] != null) {
+    $courseProfession = explode(',', $course_details['profession']);
+}
 ?>
 <div class="row ">
     <div class="col-xl-12">
@@ -36,7 +47,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                         <form class="required-form" action="<?php echo site_url('user/course_actions/edit/' . $course_id); ?>" method="post" enctype="multipart/form-data">
                             <div class="scrollable-tab-section" id="basicwizard">
 
-                                <button type="button" class="scrollable-tab-btn-left" ><i class="mdi mdi-arrow-left"></i></button>
+                                <button type="button" class="scrollable-tab-btn-left"><i class="mdi mdi-arrow-left"></i></button>
 
                                 <div class="scrollable-tab">
                                     <ul class="nav nav-pills nav-justified form-wizard-header">
@@ -142,7 +153,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                         </li>
                                     </ul>
                                 </div>
-                                <button type="button" class="scrollable-tab-btn-right" ><i class="mdi mdi-arrow-right"></i></button>
+                                <button type="button" class="scrollable-tab-btn-right"><i class="mdi mdi-arrow-right"></i></button>
 
                                 <div class="tab-content b-0 mb-0">
 
@@ -152,10 +163,10 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                             include 'curriculum.php';
                                         elseif ($course_details['course_type'] == 'scorm' && addon_status('scorm_course') == true) :
                                             include 'scorm_curriculum.php';
-                                        elseif($course_details['course_type']== 'h5p' && addon_status('h5p') == true):
-                                            include 'h5p_curriculum.php' ; 
-                                        else:?>
-                                            <?php if ($course_details['course_type'] == 'scorm_course') :?>
+                                        elseif ($course_details['course_type'] == 'h5p' && addon_status('h5p') == true) :
+                                            include 'h5p_curriculum.php';
+                                        else : ?>
+                                            <?php if ($course_details['course_type'] == 'scorm_course') : ?>
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-6">
                                                         <div class="alert alert-warning" role="alert">
@@ -166,7 +177,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                 </div>
                                             <?php endif; ?>
 
-                                            <?php if ($course_details['course_type'] == 'h5p') :?>
+                                            <?php if ($course_details['course_type'] == 'h5p') : ?>
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-6">
                                                         <div class="alert alert-warning" role="alert">
@@ -196,7 +207,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                     <!-- LIVE CLASS CODE BASE -->
 
                                     <!-- ASSIGNMENT CODE BASE -->
-                                    <?php if(addon_status('assignment')): ?>
+                                    <?php if (addon_status('assignment')) : ?>
                                         <div class="tab-pane" id="assignment">
                                             <?php include 'assignment.php'; ?>
                                         </div>
@@ -319,6 +330,79 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <!-- Add "Profession" Filter -->
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="profession"><?php echo get_phrase('profession'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <select class="form-control select2" data-toggle="select2" name="profession[]" id="profession" multiple>
+                                                            <option value="nurses" <?php if (in_array('nurses', $courseProfession)) echo 'selected'; ?>>Nurses</option>
+                                                            <option value="doctors" <?php if (in_array('doctors', $courseProfession)) echo 'selected'; ?>>Doctors</option>
+                                                            <option value="paramedics" <?php if (in_array('paramedics', $courseProfession)) echo 'selected'; ?>>Paramedics</option>
+                                                            <option value="pharmacists" <?php if (in_array('pharmacists', $courseProfession)) echo 'selected'; ?>>Pharmacists</option>
+                                                            <option value="allied-healthcare-professionals" <?php if (in_array('allied-healthcare-professionals', $courseProfession)) echo 'selected'; ?>>Allied Healthcare Professionals</option>
+                                                            <option value="healthcare-assistants" <?php if (in_array('healthcare-assistants', $courseProfession)) echo 'selected'; ?>>Healthcare Assistants</option>
+                                                            <option value="managers" <?php if (in_array('managers', $courseProfession)) echo 'selected'; ?>>Managers</option>
+                                                            <option value="admin-staff" <?php if (in_array('admin-staff', $courseProfession)) echo 'selected'; ?>>Admin Staff</option>
+                                                            <option value="physician-assistants" <?php if (in_array('physician-assistants', $courseProfession)) echo 'selected'; ?>>Physician Assistants</option>
+                                                            <option value="overseas-doctors" <?php if (in_array('overseas-doctors', $courseProfession)) echo 'selected'; ?>>Overseas doctors</option>
+
+                                                            <!-- Add more profession options as needed -->
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="Type"><?php echo get_phrase('Type'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <select class="form-control select2" name="type[]" id="type" multiple="multiple">
+                                                            <option value="e-learning" <?php if (in_array('e-learning', $courseType)) echo 'selected'; ?>><?php echo get_phrase('E-Learning'); ?></option>
+                                                            <option value="live-webinar" <?php if (in_array('live-webinar', $courseType)) echo 'selected'; ?>><?php echo get_phrase('Live Webinar'); ?></option>
+                                                            <option value="classroom" <?php if (in_array('classroom', $courseType)) echo 'selected'; ?>><?php echo get_phrase('Classroom'); ?></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="address <?php if (in_array('classroom', $courseType)) : echo '';
+                                                                    else : echo 'd-none';
+                                                                    endif; ?> ">
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="Country"><?php echo get_phrase('Country'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="text" class="form-control" id="course_country" name="country" value="<?php echo $course_details['country']; ?>" placeholder="<?php echo get_phrase('enter_country_name'); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="State"><?php echo get_phrase('State'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="text" class="form-control" id="course_state" name="state" value="<?php echo $course_details['state']; ?>" placeholder="<?php echo get_phrase('enter_country_name'); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="City"><?php echo get_phrase('City'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="text" class="form-control" id="course_city" name="city" value="<?php echo $course_details['city']; ?>" placeholder="<?php echo get_phrase('enter_city_name'); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="Address"><?php echo get_phrase('Address'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="text" class="form-control" id="course_address" name="address" value="<?php echo $course_details['address']; ?>" placeholder="<?php echo get_phrase('enter_address'); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="Postal Code"><?php echo get_phrase('Postal Code'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="text" class="form-control" id="course_postal_code" name="postal_code" value="<?php echo $course_details['postal_code']; ?>" placeholder="<?php echo get_phrase('enter_postal_code'); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-3">
+                                                        <label class="col-md-2 col-form-label" for="Date Time"><?php echo get_phrase('Date Time'); ?></label>
+                                                        <div class="col-md-10">
+                                                            <input type="datetime-local" class="form-control" id="course_date_time" name="datetime" value="<?php echo $course_details['datetime']; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="language_made_in"><?php echo get_phrase('language_made_in'); ?></label>
                                                     <div class="col-md-10">
@@ -332,7 +416,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="enable_drip_content"><?php echo get_phrase('enable_drip_content'); ?></label>
                                                     <div class="col-md-10 pt-2">
-                                                        <input type="checkbox" name="enable_drip_content" value="1" id="enable_drip_content" data-switch="primary" <?php if($course_details['enable_drip_content'] == 1) echo 'checked'; ?>>
+                                                        <input type="checkbox" name="enable_drip_content" value="1" id="enable_drip_content" data-switch="primary" <?php if ($course_details['enable_drip_content'] == 1) echo 'checked'; ?>>
                                                         <label for="enable_drip_content" data-on-label="On" data-off-label="Off"></label>
                                                     </div>
                                                 </div>
@@ -346,11 +430,11 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="faq"><?php echo get_phrase('course_faq'); ?></label>
                                                     <div class="col-md-10">
-                                                        <div id = "faq_area">
+                                                        <div id="faq_area">
                                                             <?php $faq_counter = 0; ?>
-                                                            <?php $course_faqs_arr = !empty($course_details['faqs']) ? json_decode($course_details['faqs'], true):[]; ?>
+                                                            <?php $course_faqs_arr = !empty($course_details['faqs']) ? json_decode($course_details['faqs'], true) : []; ?>
                                                             <?php $course_faqs_arr = is_array($course_faqs_arr) ? $course_faqs_arr : array(); ?>
-                                                            <?php foreach($course_faqs_arr as $faq_title => $faq_description): ?>
+                                                            <?php foreach ($course_faqs_arr as $faq_title => $faq_description) : ?>
                                                                 <div class="d-flex mt-2">
                                                                     <div class="flex-grow-1 px-3">
                                                                         <div class="form-group">
@@ -359,9 +443,9 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                                         </div>
                                                                     </div>
                                                                     <div class="">
-                                                                        <?php if($faq_counter == 0): ?>
+                                                                        <?php if ($faq_counter == 0) : ?>
                                                                             <button type="button" class="btn btn-success btn-sm" style="" name="button" onclick="appendFaq()"> <i class="fa fa-plus"></i> </button>
-                                                                        <?php else: ?>
+                                                                        <?php else : ?>
                                                                             <button type="button" class="btn btn-danger btn-sm" style="margin-top: 0px;" name="button" onclick="removeFaq(this)"> <i class="fa fa-minus"></i> </button>
                                                                         <?php endif; ?>
                                                                     </div>
@@ -369,7 +453,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                                 <?php $faq_counter++; ?>
                                                             <?php endforeach; ?>
 
-                                                            <?php if($faq_counter == 0): ?>
+                                                            <?php if ($faq_counter == 0) : ?>
                                                                 <div class="d-flex mt-2">
                                                                     <div class="flex-grow-1 px-3">
                                                                         <div class="form-group">
@@ -383,7 +467,7 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                                 </div>
                                                             <?php endif; ?>
 
-                                                            <div id = "blank_faq_field">
+                                                            <div id="blank_faq_field">
                                                                 <div class="d-flex mt-2">
                                                                     <div class="flex-grow-1 px-3">
                                                                         <div class="form-group">
@@ -568,16 +652,16 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
                                                     <label class="col-md-2 col-form-label"><?php echo get_phrase('Expiry period'); ?></label>
                                                     <div class="col-md-10 pt-2 d-flex">
                                                         <div class="custom-control custom-radio mr-2">
-                                                            <input type="radio" id="lifetime_expiry_period" name="expiry_period" class="custom-control-input" value="lifetime" onchange="checkExpiryPeriod(this)" <?php if($course_details['expiry_period'] == 0) echo 'checked'; ?>>
+                                                            <input type="radio" id="lifetime_expiry_period" name="expiry_period" class="custom-control-input" value="lifetime" onchange="checkExpiryPeriod(this)" <?php if ($course_details['expiry_period'] == 0) echo 'checked'; ?>>
                                                             <label class="custom-control-label" for="lifetime_expiry_period"><?php echo get_phrase('Lifetime'); ?></label>
                                                         </div>
                                                         <div class="custom-control custom-radio">
-                                                            <input type="radio" id="limited_expiry_period" name="expiry_period" class="custom-control-input" value="limited_time" onchange="checkExpiryPeriod(this)" <?php if($course_details['expiry_period'] > 0) echo 'checked'; ?>>
+                                                            <input type="radio" id="limited_expiry_period" name="expiry_period" class="custom-control-input" value="limited_time" onchange="checkExpiryPeriod(this)" <?php if ($course_details['expiry_period'] > 0) echo 'checked'; ?>>
                                                             <label class="custom-control-label" for="limited_expiry_period"><?php echo get_phrase('Limited time'); ?></label>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row mb-3" id="number_of_month" style="<?php if($course_details['expiry_period']  == '') echo 'display: none'; ?>">
+                                                <div class="form-group row mb-3" id="number_of_month" style="<?php if ($course_details['expiry_period']  == '') echo 'display: none'; ?>">
                                                     <label class="col-md-2 col-form-label"><?php echo get_phrase('Number of month'); ?></label>
                                                     <div class="col-md-10">
                                                         <input class="form-control" type="number" name="number_of_month" min="1" value="<?php echo $course_details['expiry_period']; ?>">
@@ -680,36 +764,41 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
     });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
 <script type="text/javascript">
     var blank_faq = jQuery('#blank_faq_field').html();
     var blank_outcome = jQuery('#blank_outcome_field').html();
     var blank_requirement = jQuery('#blank_requirement_field').html();
     jQuery(document).ready(function() {
-      jQuery('#blank_faq_field').hide();
-      jQuery('#blank_outcome_field').hide();
-      jQuery('#blank_requirement_field').hide();
-      calculateDiscountPercentage($('#discounted_price').val());
+        jQuery('#blank_faq_field').hide();
+        jQuery('#blank_outcome_field').hide();
+        jQuery('#blank_requirement_field').hide();
+        calculateDiscountPercentage($('#discounted_price').val());
     });
 
     function appendFaq() {
-      jQuery('#faq_area').append(blank_faq);
+        jQuery('#faq_area').append(blank_faq);
     }
+
     function removeFaq(faqElem) {
-      jQuery(faqElem).parent().parent().remove();
+        jQuery(faqElem).parent().parent().remove();
     }
 
     function appendOutcome() {
-      jQuery('#outcomes_area').append(blank_outcome);
+        jQuery('#outcomes_area').append(blank_outcome);
     }
+
     function removeOutcome(outcomeElem) {
-      jQuery(outcomeElem).parent().parent().remove();
+        jQuery(outcomeElem).parent().parent().remove();
     }
 
     function appendRequirement() {
-      jQuery('#requirement_area').append(blank_requirement);
+        jQuery('#requirement_area').append(blank_requirement);
     }
+
     function removeRequirement(requirementElem) {
-      jQuery(requirementElem).parent().parent().remove();
+        jQuery(requirementElem).parent().parent().remove();
     }
 
     function ajax_get_sub_category(category_id) {
@@ -776,9 +865,9 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         $('#widgets-of-' + id).hide();
     });
 
-    function student_academic_progress(course_id){
+    function student_academic_progress(course_id) {
         var academicProgressContent = $('#academic_progress').html();
-        if(academicProgressContent == ''){
+        if (academicProgressContent == '') {
             $('.ajax_loader').addClass('start_ajax_loading');
             $.ajax({
                 url: '<?php echo site_url('user/student_academic_progress/'); ?>' + course_id,
@@ -792,15 +881,53 @@ $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
 
 
     //Show specific tab by passing the tab id when reload browser
-    <?php if(isset($_GET['tab'])): ?>
+    <?php if (isset($_GET['tab'])) : ?>
         $('.ajax_loader').addClass('start_ajax_loading');
-        const tabClickInterval = setInterval(function(){
-            if(!$("a[href$=<?= $_GET['tab']; ?>]").hasClass('active')){
+        const tabClickInterval = setInterval(function() {
+            if (!$("a[href$=<?= $_GET['tab']; ?>]").hasClass('active')) {
                 $("a[href$=<?= $_GET['tab']; ?>]").click();
-            }else{
+            } else {
                 $('.ajax_loader').removeClass('start_ajax_loading');
                 clearInterval(tabClickInterval);
             }
         }, 1000);
     <?php endif; ?>
+
+
+    $('#type').select2().on("select2:select", function(e) {
+
+        var data = $("#type :selected").map(function(i, el) {
+            return $(el).val();
+        }).get();
+
+        if (data.includes('classroom')) {
+            $('.address').removeClass('d-none')
+        } else {
+            $('.address').addClass('d-none')
+        }
+    });
+
+
+    $('#type').on("select2:unselect", function(e) {
+
+        var data = $("#type :selected").map(function(i, el) {
+            return $(el).val();
+        }).get();
+
+        if (data.includes('classroom')) {
+            $('.address').removeClass('d-none')
+        } else {
+            $('.address').addClass('d-none')
+        }
+    });
+
+
+    // Get the input element by its ID
+    var datetimeInput = document.getElementById('course_date_time');
+
+    // Get the current date and time as a string
+    var currentDatetime = new Date().toISOString().slice(0, 16);
+
+    // Set the minimum value of the input to the current date and time
+    datetimeInput.min = currentDatetime;
 </script>

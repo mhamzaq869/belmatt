@@ -391,6 +391,7 @@ if($course_details['profession'] != null){
                                                         </div>
                                                     </div>      
                                                 </div>
+                                                
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="language_made_in"><?php echo get_phrase('language_made_in'); ?></label>
                                                     <div class="col-md-10">
