@@ -2,25 +2,16 @@
 // DEFINING MODULE FOR SETTING PERMISSION
 // MAKE SURE TO KEEP A PERMISSION FOR USERS AND THEME
 $modules = [
-    'category', 'course', 'user', 'instructor', 'student', 'enrolment', 'revenue', 'messaging', 'blog', 'addon', 'theme', 'settings', 'coupon', 'academy_cloud', 'newsletter'
+   'course', 'role', 'staff', 'student', 'enrolment', 'offline_payment'
 ];
 
-$sub_modules = [
-    'category' => ['Add', 'Edit', 'Delete'], 
+$sub_modules = [ 
     'course' => ['Add', 'Edit', 'Delete'], 
-    'user' => ['Add', 'Edit', 'Delete'], 
-    'instructor' => ['Add', 'Edit', 'Delete'], 
+    'role' => [], 
+    'staff' => ['Add', 'Edit', 'Delete'], 
     'student' => ['Add', 'Edit', 'Delete'], 
     'enrolment' => ['course_enrolment', 'History'], 
-    'revenue' => ['admin_revenue', 'instructor_revenue', 'purchase_history'],  
-    'messaging' => [],  
-    'blog' => [],  
-    'addon' => [],  
-    'theme' => [],  
-    'settings' => [],  
-    'coupon' => [],  
-    'academy_cloud' => [],  
-    'newsletter' => ['all_newsletter', 'subscribed'],  
+    'offline_payment' => [],    
 ];
 
 ?>

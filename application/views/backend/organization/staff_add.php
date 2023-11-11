@@ -1,3 +1,30 @@
+<?php
+// DEFINING MODULE FOR SETTING PERMISSION
+// MAKE SURE TO KEEP A PERMISSION FOR USERS AND THEME
+$modules = [
+    'category', 'course', 'user', 'instructor', 'student', 'enrolment', 'revenue', 'messaging', 'blog', 'addon', 'theme', 'settings', 'coupon', 'academy_cloud', 'newsletter'
+];
+
+$sub_modules = [
+    'category' => ['Add', 'Edit', 'Delete'], 
+    'course' => ['Add', 'Edit', 'Delete'], 
+    'user' => ['Add', 'Edit', 'Delete'], 
+    'instructor' => ['Add', 'Edit', 'Delete'], 
+    'student' => ['Add', 'Edit', 'Delete'], 
+    'enrolment' => ['course_enrolment', 'History'], 
+    'revenue' => ['admin_revenue', 'instructor_revenue', 'purchase_history'],  
+    'messaging' => [],  
+    'blog' => [],  
+    'addon' => [],  
+    'theme' => [],  
+    'settings' => [],  
+    'coupon' => [],  
+    'academy_cloud' => [],  
+    'newsletter' => ['all_newsletter', 'subscribed'],  
+];
+
+?>
+
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">
@@ -58,7 +85,7 @@
                                         <option value="<?php echo $role['id']; ?>"><?php echo $role['name']; ?></option>
                                         <?php endforeach;?>
                                     </select>
-                                </div>
+                                </div> 
                             </div> 
 
                             <button type="button" class="btn btn-primary" onclick="checkRequiredFields()"

@@ -33,7 +33,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span class="menu-arrow"></span>
 				</a>
 				<ul class="side-nav-second-level" aria-expanded="false">
-					<?php if (has_permission('course') && check_sub_permission('Edit', 'course', true)) : ?>
+					<?php if (has_permission('course') ) : ?>
 						<li class="<?php if ($page_name == 'courses' || $page_name == 'course_edit') echo 'active'; ?>">
 							<a href="<?php echo site_url('admin/courses'); ?>"><?php echo get_phrase('manage_courses'); ?></a>
 						</li>
@@ -121,9 +121,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<li class="<?php if ($page_name == 'all_ebooks' || $page_name == 'ebook_edit') echo 'active'; ?>">
 						<a href="<?php echo site_url('addons/ebook_manager/ebook'); ?>"><?php echo get_phrase('all_ebooks'); ?></a>
 					</li>
+					<?php if(check_sub_permission('Add', 'ebook', true)):?>
 					<li class="<?php if ($page_name == 'add_ebook') echo 'active'; ?>">
 						<a href="<?php echo site_url('ebook_manager/add_ebook'); ?>"><?php echo get_phrase('add_ebook'); ?></a>
 					</li>
+					<?php endif; ?>
+
 					<li class="<?php if ($page_name == 'ebook_payment_history') echo 'active'; ?>">
 						<a href="javascript: void(0);" class="<?php if ($page_name == 'admin_revenue' || $page_name == 'instructor_revenue') : ?> active <?php endif; ?>" aria-expanded="false"><?php echo get_phrase('payment_history'); ?>
 							<span class="menu-arrow"></span>
@@ -159,7 +162,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 						<a href="<?php echo site_url('admin/enrol_student'); ?>"><?php echo get_phrase('course_enrollment'); ?></a>
 					</li>
 					<?php endif; ?>
-					
+
 					<li class="<?php if ($page_name == 'enrol_history') echo 'active'; ?>">
 						<a href="<?php echo site_url('admin/enrol_history'); ?>"><?php echo get_phrase('enrol_history'); ?></a>
 					</li>
@@ -278,9 +281,11 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 								<li class="<?php if ($page_name == 'admins' || $page_name == 'admin_edit' || $page_name == 'admin_permission') : ?> active <?php endif; ?>">
 									<a href="<?php echo site_url('admin/admins'); ?>" class="<?php if ($page_name == 'admins' || $page_name == 'admin_edit' || $page_name == 'admin_permission') : ?> active <?php endif; ?>"><?php echo get_phrase('manage_admins'); ?></a>
 								</li>
+								<?php if(check_sub_permission('Add', 'admin', true)):?>
 								<li class="<?php if ($page_name == 'admin_add') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/admin_form/add_admin_form'); ?>"><?php echo get_phrase('add_new_admin'); ?></a>
 								</li>
+								<?php endif; ?>
 							</ul>
 						</li>
 					<?php endif; ?>
@@ -292,27 +297,35 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 								<span class="menu-arrow"></span>
 							</a>
 							<ul class="side-nav-third-level" aria-expanded="false">
+
 								<li class="<?php if ($page_name == 'instructors' || $page_name == 'instructor_edit') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/instructors'); ?>"><?php echo get_phrase('manage_instructors'); ?></a>
 								</li>
+
+								<?php if(check_sub_permission('Add', 'instructor', true)):?>
 								<li class="<?php if ($page_name == 'instructor_add') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/instructor_form/add_instructor_form'); ?>"><?php echo get_phrase('add_new_instructor'); ?></a>
 								</li>
+								<?php endif; ?>
+
 								<li class="<?php if ($page_name == 'instructor_payout') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/instructor_payout'); ?>">
 										<?php echo get_phrase('instructor_payout'); ?>
 										<span class="badge badge-danger-lighten"><?php echo $this->crud_model->get_pending_payouts()->num_rows(); ?></span>
 									</a>
 								</li>
+
 								<li class="<?php if ($page_name == 'instructor_settings') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/instructor_settings'); ?>"><?php echo get_phrase('instructor_settings'); ?></a>
 								</li>
+
 								<li class="<?php if ($page_name == 'application_list') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/instructor_application'); ?>">
 										<?php echo get_phrase('applications'); ?>
 										<span class="badge badge-danger-lighten"><?php echo $this->user_model->get_pending_applications()->num_rows(); ?></span>
 									</a>
 								</li>
+
 							</ul>
 						</li>
 					<?php endif; ?>
@@ -326,9 +339,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 								<li class="<?php if ($page_name == 'users' || $page_name == 'user_edit') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/users'); ?>"><?php echo get_phrase('manage_students'); ?></a>
 								</li>
+
+								<?php if(check_sub_permission('Add', 'student', true)):?>
 								<li class="<?php if ($page_name == 'user_add') echo 'active'; ?>">
 									<a href="<?php echo site_url('admin/user_form/add_user_form'); ?>"><?php echo get_phrase('add_new_student'); ?></a>
 								</li>
+								<?php endif; ?>
 							</ul>
 						</li>
 					<?php endif; ?>

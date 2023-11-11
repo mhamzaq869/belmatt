@@ -6,65 +6,7 @@
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card widget-inline">
-            <div class="card-body p-0">
-                <div class="row no-gutters">
-                    <div class="col-sm-6 col-xl-3">
-                        <a href="<?php echo site_url('organization/courses?category_id=all&status=active&instructor_id=all&price=all&button='); ?>" class="text-secondary">
-                            <div class="card shadow-none m-0">
-                                <div class="card-body text-center">
-                                    <i class="dripicons-link text-muted" style="font-size: 24px;"></i>
-                                    <h3><span><?php echo $status_wise_courses['active']->num_rows(); ?></span></h3>
-                                    <p class="text-muted font-15 mb-0"><?php echo get_phrase('active_courses'); ?></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <a href="<?php echo site_url('organization/admin/courses?category_id=all&status=pending&instructor_id=all&price=all&button='); ?>" class="text-secondary">
-                            <div class="card shadow-none m-0 border-left">
-                                <div class="card-body text-center">
-                                    <i class="dripicons-link-broken text-muted" style="font-size: 24px;"></i>
-                                    <h3><span><?php echo $status_wise_courses['pending']->num_rows(); ?></span></h3>
-                                    <p class="text-muted font-15 mb-0"><?php echo get_phrase('pending_courses'); ?></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <a href="<?php echo site_url('organization/courses?category_id=all&status=all&instructor_id=all&price=free&button='); ?>" class="text-secondary">
-                            <div class="card shadow-none m-0 border-left">
-                                <div class="card-body text-center">
-                                    <i class="dripicons-star text-muted" style="font-size: 24px;"></i>
-                                    <h3><span><?php echo $this->crud_model->get_free_and_paid_courses('free')->num_rows(); ?></span></h3>
-                                    <p class="text-muted font-15 mb-0"><?php echo get_phrase('free_courses'); ?></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-sm-6 col-xl-3">
-                        <a href="<?php echo site_url('organization/courses?category_id=all&status=all&instructor_id=all&price=paid&button='); ?>" class="text-secondary">
-                            <div class="card shadow-none m-0 border-left">
-                                <div class="card-body text-center">
-                                    <i class="dripicons-tags text-muted" style="font-size: 24px;"></i>
-                                    <h3><span><?php echo $this->crud_model->get_free_and_paid_courses('paid')->num_rows(); ?></span></h3>
-                                    <p class="text-muted font-15 mb-0"><?php echo get_phrase('paid_courses'); ?></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                </div> <!-- end row -->
-            </div>
-        </div> <!-- end card-box-->
-    </div> <!-- end col-->
-</div>
+</div> 
 <div class="row">
     <div class="col-xl-12">
         <div class="card">
@@ -89,7 +31,7 @@
                   </div>
               </div>
               <div class="table-responsive-sm mt-4">
-                  <?php if (count($enrol_history->result_array()) > 0): ?>
+                   <?php if (count($enrol_history->result_array()) > 0): ?>
                       <table class="table table-striped table-centered mb-0">
                           <thead>
                               <tr>
@@ -98,13 +40,32 @@
                                   <th><?php echo get_phrase('enrolled_course'); ?></th>
                                   <th><?php echo get_phrase('enrollment_date'); ?></th>
                                   <th><?php echo get_phrase('Expiry date'); ?></th>
+                                  <th><?php echo get_phrase('lesson_and_section'); ?></th>
+                                  <th><?php echo get_phrase('enrolled_student'); ?></th>
+                                  <th><?php echo get_phrase('status'); ?></th>
                                   <th><?php echo get_phrase('actions'); ?></th>
                               </tr>
                           </thead>
                           <tbody>
                               <?php foreach ($enrol_history->result_array() as $enrol):
                                   $user_data = $this->db->get_where('users', array('id' => $enrol['user_id']))->row_array();
-                                  $course_data = $this->db->get_where('course', array('id' => $enrol['course_id']))->row_array();?>
+                                  $course_data = $this->db->get_where('course', array('id' => $enrol['course_id']))->row_array();
+                                  $sections = $this->crud_model->get_section('course', $enrol['course_id']);
+                                  $lessons = $this->crud_model->get_lessons('course', $enrol['course_id']);
+                                  $enroll_history = $this->crud_model->enrol_history($enrol['course_id']);
+
+                                    $status_badge = "badge-success-lighten"; 
+                                    if ($course_data['status'] == 'pending') {
+                                        $status_badge = "badge-danger-lighten";
+                                    } elseif ($course_data['status'] == 'draft') {
+                                        $status_badge = "badge-dark-lighten";
+                                    }elseif($course_data['status'] == 'private'){
+                                        $status_badge = "badge-dark";
+                                    }elseif($course_data['status'] == 'upcoming'){
+                                        $status_badge = "badge-warning-lighten";
+                                    }
+                                  ?>
+                                  
                                   <tr class="gradeU">
                                       <td>
                                           <img src="<?php echo $this->user_model->get_user_image_url($enrol['user_id']); ?>" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">
@@ -113,7 +74,7 @@
                                           <b><?php echo $user_data['first_name'].' '.$user_data['last_name']; ?></b><br>
                                           <small><?php echo get_phrase('email').': '.$user_data['email']; ?></small>
                                       </td>
-                                      <td><strong><a href="<?php echo site_url('organization/course_form/course_edit/'.$course_data['id']); ?>" target="_blank"><?php echo $course_data['title']; ?></a></strong></td>
+                                      <td><strong><a href="<?php echo site_url('organization/enrol_course/'.$course_data['id']); ?>"><?php echo $course_data['title']; ?></a></strong></td>
                                       <td><?php echo date('D, d M Y', $enrol['date_added']); ?></td>
                                       <td>
                                         <?php if($enrol['expiry_date']): ?>
@@ -122,6 +83,18 @@
                                           <?php echo get_phrase('Lifetime access'); ?>
                                         <?php endif; ?>
                                       </td>
+                                      <td>
+                                        <?php if ($course_data['course_type'] == 'scorm'): ?>
+                                            <span class="badge badge-info-lighten"><?php echo get_phrase('scorm_course'); ?></span>
+                                        <?php elseif ($course_data['course_type'] == 'h5p'):?>
+                                            <span class="badge badge-info-lighten"><?php echo get_phrase('h5p_course'); ?></span>
+                                        <?php elseif ($course_data['course_type'] == 'general'):?> 
+                                            <small class="text-muted"><b><?php echo get_phrase('Section'); ?></b>: <?php echo $sections->num_rows();?></small><br>
+                                            <small class="text-muted"><b><?php echo get_phrase('Lesson'); ?></b>: <?php echo $lessons->num_rows();?></small>
+                                        <?php endif; ?>
+                                      </td>
+                                      <td> <small class="text-muted"><b> <?php echo get_phrase('Enrollments'); ?> </b>: <?php echo $enroll_history->num_rows(); ?></small></td>
+                                      <td> <span class="badge <?php echo $status_badge; ?> "><?php echo get_phrase($course_data['status']);  ?></span></td>
                                       <td>
                                           <button type="button" class="btn btn-outline-danger btn-icon btn-rounded btn-sm" onclick="confirm_modal('<?php echo site_url('organization/enrol_history_delete/'.$enrol['id']); ?>');"> <i class="dripicons-trash"></i> </button>
                                       </td>

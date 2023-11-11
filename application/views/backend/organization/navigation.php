@@ -24,44 +24,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 				<span><?php echo get_phrase('dashboard'); ?></span>
 			</a>
 		</li> 
-
-		<?php if (has_permission('course')) : ?>
-			<li class="side-nav-item <?php if ($page_name == 'courses' || $page_name == 'course_add' || $page_name == 'course_edit' || $page_name == 'categories' || $page_name == 'category_add' || $page_name == 'category_edit' || $page_name == 'coupons' || $page_name == 'coupon_add' || $page_name == 'coupon_edit' || $page_name == 'add_bundle' || $page_name == 'manage_course_bundle' || $page_name == 'edit_bundle' || $page_name == 'active_bundle_subscription_report' || $page_name == 'expire_bundle_subscription_report' || $page_name == 'bundle_invoice') echo 'active'; ?>">
-				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'courses' || $page_name == 'course_add' || $page_name == 'course_edit' || $page_name == 'categories' || $page_name == 'category_add' || $page_name == 'category_edit' || $page_name == 'coupons' || $page_name == 'coupon_add' || $page_name == 'coupon_edit') : ?> active <?php endif; ?>">
-					<i class="dripicons-archive"></i>
-					<span> <?php echo get_phrase('courses'); ?> </span>
-					<span class="menu-arrow"></span>
-				</a>
-				<ul class="side-nav-second-level" aria-expanded="false">
-					<?php if (has_permission('course')) : ?>
-						<li class="<?php if ($page_name == 'courses' || $page_name == 'course_edit') echo 'active'; ?>">
-							<a href="<?php echo site_url('organization/courses'); ?>"><?php echo get_phrase('manage_courses'); ?></a>
-						</li>
-					<?php endif; ?>
-
-					<?php if (has_permission('course')) : ?>
-						<li class="<?php if ($page_name == 'course_add') echo 'active'; ?>">
-							<a href="<?php echo site_url('organization/course_form/add_course'); ?>"><?php echo get_phrase('add_new_course'); ?></a>
-						</li>
-					<?php endif; ?>
-
-					<?php if (has_permission('category')) : ?>
-						<li class="<?php if ($page_name == 'categories' || $page_name == 'category_add' || $page_name == 'category_edit') echo 'active'; ?>">
-							<a href="<?php echo site_url('organization/categories'); ?>"><?php echo get_phrase('course_category'); ?></a>
-						</li>
-					<?php endif; ?>
-					<?php if (has_permission('coupon')) : ?>
-						<li class="<?php if ($page_name == 'coupons' || $page_name == 'coupon_add' || $page_name == 'coupon_edit') echo 'active'; ?>">
-							<a href="<?php echo site_url('organization/coupons'); ?>">
-								<?php echo get_phrase('coupons'); ?>
-							</a>
-						</li>
-					<?php endif; ?>
  
-				</ul>
-			</li>
-		<?php endif; ?>
-
 		<?php if (has_permission('enrolment')) : ?>
 			<li class="side-nav-item <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student') : ?> active <?php endif; ?>">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student') : ?> active <?php endif; ?>">
@@ -90,8 +53,8 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 				<ul class="side-nav-second-level" aria-expanded="false"> 
 				
 					<li class="side-nav-item <?php if ($page_name == 'roles') : ?> active <?php endif; ?>">
-						<a href="<?php echo site_url('organization/roles'); ?>" class="<?php if ($page_name == 'roles') : ?> active <?php endif; ?>"><?php echo get_phrase('Roles & Permissions'); ?>
-							
+						<a href="<?php echo site_url('organization/roles'); ?>" class="<?php if ($page_name == 'roles') : ?> active <?php endif; ?>">
+							<?php echo get_phrase('Roles'); ?>
 						</a> 
 					</li> 
 
@@ -135,22 +98,11 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span> <?php echo get_phrase('offline_payment'); ?></span>
 					<span class="menu-arrow"></span>
 				</a>
-				<ul class="side-nav-second-level" aria-expanded="false">
-					<li class="<?php if ($page_name == 'offline_payment_pending') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/offline_payment/pending'); ?>">
-							<?php echo get_phrase('pending_request'); ?>
-							<span class="badge badge-danger-lighten badge-pill float-right"><?php echo get_pending_offline_payment(); ?></span></span>
-						</a>
-					</li>
+				<ul class="side-nav-second-level" aria-expanded="false"> 
 					<li class="<?php if ($page_name == 'offline_payment_approve') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/offline_payment/approve'); ?>"><?php echo get_phrase('accepted_request'); ?></a>
+						<a href="<?php echo site_url('addons/offline_payment/approve'); ?>"><?php echo get_phrase('submit_payment_request'); ?></a>
 					</li>
-					<li class="<?php if ($page_name == 'offline_payment_suspended') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/offline_payment/suspended'); ?>"><?php echo get_phrase('suspended_request'); ?></a>
-					</li>
-					<li class="<?php if ($page_name == 'offline_payment_settings') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/offline_payment/settings'); ?>"><?php echo get_phrase('offline_payment_settings'); ?></a>
-					</li>
+					 
 				</ul>
 			</li>
 		<?php endif; ?> 

@@ -419,6 +419,7 @@ class Organization extends CI_Controller
                                 <i class="mdi mdi-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu"> 
+                                <li><a class="dropdown-item" href="'.site_url('organization/permissions?permission_assing_to=' . $student['id']).'">'.get_phrase('Assign permission').'</a></li>
                                 <li><a class="dropdown-item" href="'.site_url('organization/user_form/edit_staff_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('organization/staffs/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
                             </ul>
@@ -584,11 +585,32 @@ class Organization extends CI_Controller
             $page_data['page_title'] = get_phrase('student_edit');
             $this->load->view('backend/index', $page_data);
         } elseif ($param1 == 'edit_staff_form') {
+            
+            $user_details = $this->user_model->get_all_user($param2);
+            if ($user_details->num_rows() == 0) {
+                $this->session->set_flashdata('error_message', get_phrase('invalid_admin'));
+                redirect(site_url('organization/staffs'), 'refresh');
+            } else {
+                $user_details = $user_details->row_array();
+                if ($user_details['role_id'] != 1) {
+                    $this->session->set_flashdata('error_message', get_phrase('invalid_admin'));
+                    redirect(site_url('organization/staffs'), 'refresh');
+                }
+                if (is_root_admin($user_details['id'])) {
+                    $this->session->set_flashdata('error_message', get_phrase('you_can_not_set_permission_to_the_root_admin'));
+                    redirect(site_url('organization/staffs'), 'refresh');
+                }
+            }
+    
+            $page_data['permission_assign_to'] = $user_details;
+
             $page_data['page_name'] = 'staff_edit';
             $page_data['user_id'] = $param2;
             $page_data['page_title'] = get_phrase('staff_edit');
             $this->load->view('backend/index', $page_data);
         } elseif ($param1 == 'add_staff_form') {
+            
+
             $page_data['page_name'] = 'staff_add';
             $page_data['user_id'] = $param2;
             $page_data['page_title'] = get_phrase('staff_add');
@@ -600,9 +622,8 @@ class Organization extends CI_Controller
     {
         if ($this->session->userdata('organization_login') != true) {
             redirect(site_url('login'), 'refresh');
-        }
- 
-
+        } 
+        
         if ($param1 != "") {
             $date_range                   = $this->input->get('date_range');
             $date_range                   = explode(" - ", $date_range);
@@ -614,8 +635,9 @@ class Organization extends CI_Controller
             $page_data['timestamp_start']   = strtotime($first_day_of_month);
             $page_data['timestamp_end']     = strtotime($last_day_of_month);
         }
+
         $page_data['page_name'] = 'enrol_history';
-        $page_data['enrol_history'] = $this->crud_model->enrol_history_by_date_range($page_data['timestamp_start'], $page_data['timestamp_end']);
+        $page_data['enrol_history'] = $this->crud_model->enrol_history_by_date_range_of_org($page_data['timestamp_start'], $page_data['timestamp_end']);
         $page_data['page_title'] = get_phrase('enrol_history');
         $this->load->view('backend/index', $page_data);
     }
@@ -633,6 +655,22 @@ class Organization extends CI_Controller
         $page_data['page_name'] = 'enrol_student';
         $page_data['page_title'] = get_phrase('course_enrolment');
         $this->load->view('backend/index', $page_data);
+    }
+
+    public function enrol_course($param1 = "")
+    {
+        if ($this->session->userdata('organization_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        } 
+ 
+        $course_details = $this->crud_model->get_course_by_id($param1)->row_array(); 
+
+        $page_data['page_name'] = 'enrol_course_progress';
+        $page_data['page_title'] = get_phrase('enrol_course_progress'); 
+        $page_data['course_details'] = $course_details;
+ 
+        $this->load->view('backend/index', $page_data);
+
     }
 
     public function shortcut_enrol_student()
@@ -1063,7 +1101,7 @@ class Organization extends CI_Controller
                 $lessons = $this->crud_model->get_lessons('course', $row['id']);
                 $enroll_history = $this->crud_model->enrol_history($row['id']);
                
-                $status_badge = "badge-success-lighten";
+                $status_badge = "badge-success-lighten"; 
                 if ($row['status'] == 'pending') {
                     $status_badge = "badge-danger-lighten";
                 } elseif ($row['status'] == 'draft') {
@@ -1165,7 +1203,7 @@ class Organization extends CI_Controller
                 $nestedData['title'] = '<strong><a href="' . site_url('organization/course_form/course_edit/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>
                 <small class="text-muted">' . get_phrase('instructor') . ': <b>' . $instructor_names . '</b></small>';
 
-                $nestedData['category'] = '<span class="badge badge-dark-lighten">' . $category_details['name'] . '</span>';
+                $nestedData['category'] = '<span class="badge badge-dark-lighten">' . $category_details['name'] ?? '' . '</span>';
 
                 if ($row['course_type'] == 'scorm') {
                     $nestedData['lesson_and_section'] = '<span class="badge badge-info-lighten">' . get_phrase('scorm_course') . '</span>';
@@ -1274,7 +1312,7 @@ class Organization extends CI_Controller
         } elseif ($param1 == 'add_course_shortcut') {
             $page_data['languages'] = $this->crud_model->get_all_languages();
             $page_data['categories'] = $this->crud_model->get_categories();
-            $this->load->view('backend/admin/course_add_shortcut', $page_data);
+            $this->load->view('backend/organization/course_add_shortcut', $page_data);
         } elseif ($param1 == 'course_edit') {
 
             $this->is_drafted_course($param2);
@@ -1987,23 +2025,25 @@ class Organization extends CI_Controller
 
         $page_data['permission_assing_to'] = $this->input->get('permission_assing_to');
         $user_details = $this->user_model->get_all_user($page_data['permission_assing_to']);
+       
         if ($user_details->num_rows() == 0) {
             $this->session->set_flashdata('error_message', get_phrase('invalid_admin'));
             redirect(site_url('organization/staffs'), 'refresh');
         } else {
             $user_details = $user_details->row_array();
-            if ($user_details['role_id'] != 1) {
-                $this->session->set_flashdata('error_message', get_phrase('invalid_admin'));
-                redirect(site_url('organization/staffs'), 'refresh');
-            }
-            if (is_root_admin($user_details['id'])) {
-                $this->session->set_flashdata('error_message', get_phrase('you_can_not_set_permission_to_the_root_admin'));
-                redirect(site_url('organization/staffs'), 'refresh');
-            }
+            // if ($user_details['role_id'] != 1) {
+            //     $this->session->set_flashdata('error_message', get_phrase('invalid_admin'));
+            //     redirect(site_url('organization/staffs'), 'refresh');
+            // }
+
+            // if (is_root_admin($user_details['id'])) {
+            //     $this->session->set_flashdata('error_message', get_phrase('you_can_not_set_permission_to_the_root_admin'));
+            //     redirect(site_url('organization/staffs'), 'refresh');
+            // }
         }
 
         $page_data['permission_assign_to'] = $user_details;
-        $page_data['page_name'] = 'organization_permission';
+        $page_data['page_name'] = 'staff_permission';
         $page_data['page_title'] = get_phrase('assign_permission');
         $this->load->view('backend/index', $page_data);
     }
@@ -2014,10 +2054,7 @@ class Organization extends CI_Controller
         if ($this->session->userdata('organization_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-
-        // CHECK ACCESS PERMISSION
-        check_permission('admin');
-
+ 
         echo $this->user_model->assign_permission();
     }
     
@@ -2550,7 +2587,7 @@ class Organization extends CI_Controller
             redirect(site_url('certificate/'.$certificate->row('shareable_url')));
         }else{
             $this->session->set_flashdata('error_message', get_phrase('The course is not over yet'));
-            redirect(site_url('admin/course_form/course_edit/'.$course_id.'?tab=academic_progress'));
+            redirect(site_url('organization/enrol_course/'.$course_id.'?tab=academic_progress'));
         }
     }
 

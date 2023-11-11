@@ -24,6 +24,16 @@ class User_model extends CI_Model
         }
         $this->db->where('role_id', 2);
         return $this->db->get('users');
+    } 
+    
+    public function get_org_user($user_id = 0)
+    {
+        if ($user_id > 0) {
+            $this->db->where('id', $user_id);
+        }
+        $this->db->where('role_id', 2);
+        $this->db->where('organization_id', $this->session->userdata('user_id'));
+        return $this->db->get('users');
     }
 
     public function get_all_user($user_id = 0)
@@ -1010,7 +1020,8 @@ class User_model extends CI_Model
         $this->remove_garbage_collection();
 
         $logged_in_user_id = $this->session->userdata('user_id');
-        if($logged_in_user_id > 0 && $this->session->userdata('user_login') == 1){
+        
+        if($logged_in_user_id > 0 && $this->session->userdata('user_login') == 1 OR $this->session->userdata('organization_login') == 1){
             $pre_sessions = array();
             $updated_session_arr = array();
             $current_session_id = session_id();

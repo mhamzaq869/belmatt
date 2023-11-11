@@ -34,6 +34,8 @@ class Login extends CI_Controller
             redirect(site_url('admin'), 'refresh');
         } elseif ($this->session->userdata('user_login')) {
             redirect(site_url('user'), 'refresh');
+        } elseif ($this->session->userdata('organization_login')) {
+            redirect(site_url('user'), 'refresh');
         }
         $page_data['page_name'] = 'sign_up';
         $page_data['page_title'] = site_phrase('sign_up');

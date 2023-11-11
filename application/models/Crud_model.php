@@ -183,6 +183,30 @@ class Crud_model extends CI_Model
             }
         }
     }
+    
+    public function enrol_history_org($course_id = "", $distinct_data = false)
+    {
+        $userIds = [];
+
+        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        if($users->num_rows() > 0){ 
+            $userIds = array_column($users->result_array(), 'id');
+        }
+        
+        if ($distinct_data) {
+            $this->db->select('user_id');
+            $this->db->distinct('user_id');
+            $this->db->where('course_id', $course_id);
+            $this->db->where_in('user_id', $userIds);
+            return $this->db->get('enrol');
+        } else {
+            if ($course_id > 0) { 
+                return $this->db->where_in('user_id', $userIds)->where('course_id' , $course_id)->get('enrol');
+            } else {
+                return $this->db->where_in('user_id', $userIds)->get('enrol');
+            }
+        }
+    }
 
     public function enrol_history_by_user_id($user_id = "")
     {
@@ -201,6 +225,24 @@ class Crud_model extends CI_Model
         $this->db->order_by('date_added', 'desc');
         $this->db->where('date_added >=', $timestamp_start);
         $this->db->where('date_added <=', $timestamp_end);
+       
+        return $this->db->get('enrol');
+    }
+
+    public function enrol_history_by_date_range_of_org($timestamp_start = "", $timestamp_end = "")
+    {
+        $userIds = [];
+
+        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        if($users->num_rows() > 0){ 
+            $userIds = array_column($users->result_array(), 'id');
+        }
+
+        $this->db->order_by('date_added', 'desc');
+        $this->db->where('date_added >=', $timestamp_start);
+        $this->db->where('date_added <=', $timestamp_end);
+        $this->db->where_in('user_id', $userIds);
+       
         return $this->db->get('enrol');
     }
 
@@ -1284,6 +1326,53 @@ class Crud_model extends CI_Model
             $courses['active'] = $this->db->get('course');
 
             //upcoming
+            $this->db->where('status', 'upcoming');
+            $courses['upcoming'] = $this->db->get('course');
+        }
+
+        return $courses;
+    }
+
+    public function get_status_wise_courses_of_org($status = "")
+    {
+        $courseIds = [];
+
+        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        if($users->num_rows() > 0){  
+            $all_courses = $this->db->where_in('user_id', array_column($users->result_array(), 'id'))->get('enrol'); 
+            if($all_courses->num_rows() > 0){  
+                $courseIds = array_column($all_courses->result_array(), 'course_id');
+            }
+        }
+
+       
+        if ($status != "") {
+            $this->db->where_in('id', $courseIds);
+            $this->db->where('status', $status);
+            $courses = $this->db->get('course');
+        } else {
+            //draft
+            $this->db->where_in('id', $courseIds);
+            $this->db->where('status', 'draft');
+            $courses['draft'] = $this->db->get('course');
+            
+            //pending
+            $this->db->where_in('id', $courseIds);
+            $this->db->where('status', 'pending');
+            $courses['pending'] = $this->db->get('course');
+
+            //private
+            $this->db->where_in('id', $courseIds);
+            $this->db->where('status', 'private');
+            $courses['private'] = $this->db->get('course');
+
+            //
+            $this->db->where_in('id', $courseIds);
+            $this->db->where('status', 'active');
+            $courses['active'] = $this->db->get('course');
+
+            //upcoming
+            $this->db->where_in('id', $courseIds);
             $this->db->where('status', 'upcoming');
             $courses['upcoming'] = $this->db->get('course');
         }
