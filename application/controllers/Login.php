@@ -56,13 +56,14 @@ class Login extends CI_Controller
 
         // Checking login credential for admin
         $query = $this->db->get_where('users', $credential);
+        $staffRoleId = $this->db->get_where('role', array('name' => 'Staff'))->result_array();
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
             $this->user_model->check_group_user_course_purchased($row->id, $row->email);
 
             $this->user_model->new_device_login_tracker($row->id);
-            $this->user_model->set_login_userdata($row->id);
+            $this->user_model->set_login_userdata($row->id, $staffRoleId);
         } else {
             $this->session->set_flashdata('error_message', get_phrase('invalid_login_credentials'));
             redirect(site_url('login'), 'refresh');

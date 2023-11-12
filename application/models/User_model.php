@@ -916,10 +916,10 @@ class User_model extends CI_Model
         }
     }
 
-    function set_login_userdata($user_id = ""){
+    function set_login_userdata($user_id = "", $staffRoleId = ""){
         // Checking login credential for admin
         $query = $this->db->get_where('users', array('id' => $user_id));
-
+        
         if ($query->num_rows() > 0) {
             $row = $query->row();
             //604800s == 7 days
@@ -940,6 +940,9 @@ class User_model extends CI_Model
                 }
                 redirect(site_url('home'), 'refresh');
             }else if ($row->role_id == 4) { 
+                $this->session->set_userdata('organization_login', '1');
+                redirect(site_url('organization/dashboard'), 'refresh');
+            }else if ($row->role_id = $staffRoleId) { 
                 $this->session->set_userdata('organization_login', '1');
                 redirect(site_url('organization/dashboard'), 'refresh');
             }
