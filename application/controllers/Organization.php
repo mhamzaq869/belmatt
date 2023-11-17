@@ -649,6 +649,91 @@ class Organization extends CI_Controller
         }
     }
 
+    
+	//Expor to Excel 
+    public function generateXls() {	
+       /* Set file name */
+        $filename = 'users_' . date('Ymd') . '.csv'; 
+
+        /* Send headers to initiate file download */
+        header("Content-Description: File Transfer"); 
+        header("Content-Disposition: attachment; filename=$filename"); 
+        header("Content-Type: text/csv");
+
+        /* Prepare user data */
+        $usersData = [];
+
+        /* Create and write data to the file */
+        $file = fopen('php://output', 'w');  
+        $header = array("Username", "First Name", "Last Name", "Email", "Password"); 
+        fputcsv($file, $header);
+        foreach ($usersData as $line){ 
+            fputcsv($file, $line); 
+        }
+        fclose($file); 
+        exit;
+ 
+    }  
+    
+    public function import_csv($param1= "") {	
+
+        if($param1 == 'import'){
+ 
+            // File path to the CSV file
+            $filePath = $_FILES['file']['tmp_name'];
+    
+            // Check if the file exists and is readable
+            if (($file = fopen($filePath, 'r')) !== false) {
+                // Array to store the CSV data
+                $csvData = [];
+    
+                // Read each line of the file
+                while (($data = fgetcsv($file)) !== false) {
+                    // Push each line as an array to the CSV data array 
+                    
+                    $csvData[] = $data;
+                } 
+
+                // Close the file handle
+                fclose($file);
+               
+                
+                // Display or process the CSV data
+                // Example: Displaying the CSV data 
+                foreach($csvData as $i => $user):
+                    if($i > 0){ 
+                        $user_data['first_name'] = $user[0];
+                        $user_data['last_name'] = $user[1];
+                        $user_data['username'] = $user[2];
+                        $user_data['email'] = $user[3];
+                        $user_data['password'] = sha1($user[4]);
+                        $user_data['role_id'] = 2;
+                        $user_data['status'] = 1;
+
+                        if($this->session->userdata('organization_id')){
+                            $user_data['organization_id'] = $this->session->userdata('organization_id');
+                        }else{
+                            $user_data['organization_id'] = $this->session->userdata('user_id'); 
+                        } 
+
+                        $this->db->insert('users', $user_data);
+                    }
+                endforeach; 
+
+                $this->session->set_flashdata('flash_message', get_phrase('users_imported_successfully'));
+                redirect(site_url('organization/users'), 'refresh');
+            } else {
+                // File doesn't exist or is not readable 
+                $this->session->set_flashdata('error_message', 'The file does not exist or cannot be read.');
+            }
+        }
+
+        $page_data['page_name'] = 'import_users';
+        $page_data['page_title'] = get_phrase('import_users');
+        $this->load->view('backend/index', $page_data);
+ 
+    }  
+
     public function enrol_history($param1 = "")
     {
         if ($this->session->userdata('organization_login') != true) {
