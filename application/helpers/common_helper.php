@@ -59,7 +59,7 @@ if (!function_exists('has_permission')) {
         $CI->db->where('admin_id', $admin_id);
         $get_admin_permissions = $CI->db->get('permissions');
         if ($get_admin_permissions->num_rows() == 0) {
-            return true;
+            return false;
         } else {
             $get_admin_permissions = $get_admin_permissions->row_array();
             $permissions = json_decode($get_admin_permissions['permissions']);
@@ -88,11 +88,11 @@ if (!function_exists('has_sub_permission')) {
         $get_admin_permissions = $CI->db->get('sub_permissions');
      
         if ($get_admin_permissions->num_rows() == 0) {
-            return true;
+            return false;
         } else {
             $get_admin_permissions = $get_admin_permissions->row_array();
             $permissions = json_decode($get_admin_permissions['permissions']); 
-           
+            
             if (in_array($permission_for, $permissions) && $parent == $get_admin_permissions['parent_permissions']) {
                 return true;
             } else {

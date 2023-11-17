@@ -11,7 +11,7 @@ $sub_modules = [
     'staff' => ['Add', 'Edit', 'Delete'], 
     'student' => ['Add', 'Edit', 'Delete'], 
     'enrolment' => ['course_enrolment', 'History'], 
-    'offline_payment' => [],    
+    'offline_payment' => ['submitted_payment_request'],    
 ];
 
 ?>
@@ -48,8 +48,7 @@ $sub_modules = [
                         </thead>
                         <tbody>
                             <?php foreach ($modules as $module) :
-                                $module_permission = has_permission($module, $permission_assign_to['id']);
-                                
+                                $module_permission = has_permission($module, $this->session->userdata('user_id')); 
                             ?>
                                 <tr>
                                     <td><?php echo ucwords(get_phrase($module)); ?></td>

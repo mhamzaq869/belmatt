@@ -15,9 +15,9 @@
         $total_admin_revenue > 0 ? array_push($month_wise_income, $total_admin_revenue) : array_push($month_wise_income, 0);
     }
 
-    $status_wise_courses = $this->crud_model->get_status_wise_courses();
-    $number_of_active_course = $status_wise_courses['active']->num_rows();
-    $number_of_pending_course = $status_wise_courses['pending']->num_rows();
+    $status_wise_courses = $this->crud_model->get_status_wise_courses_of_org();
+    $number_of_active_course = $status_wise_courses['active'];
+    $number_of_pending_course = $status_wise_courses['pending'];
 ?>
 
  <script type="text/javascript">

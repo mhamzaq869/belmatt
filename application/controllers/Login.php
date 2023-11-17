@@ -55,15 +55,16 @@ class Login extends CI_Controller
         $credential = array('email' => $email, 'password' => sha1($password), 'status' => 1);
 
         // Checking login credential for admin
-        $query = $this->db->get_where('users', $credential);
-        $staffRoleId = $this->db->get_where('role', array('name' => 'Staff'))->result_array();
+        $query = $this->db->where('email',$email)->or_where('username',$email)
+                    ->where('password', sha1($password))->where('status', 1)->get('users');
 
+ 
         if ($query->num_rows() > 0) {
             $row = $query->row();
             $this->user_model->check_group_user_course_purchased($row->id, $row->email);
 
             $this->user_model->new_device_login_tracker($row->id);
-            $this->user_model->set_login_userdata($row->id, $staffRoleId);
+            $this->user_model->set_login_userdata($row->id);
         } else {
             $this->session->set_flashdata('error_message', get_phrase('invalid_login_credentials'));
             redirect(site_url('login'), 'refresh');
@@ -188,13 +189,35 @@ class Login extends CI_Controller
                     }
                 }
             endif;
-            //End Check  instructor application document
+            //End Check  instructor application document 
 
             if ($validity === true) {
                 $user_id = $this->user_model->register_user($data);
                 $this->email_model->signup_mail($user_id);
             } else {
                 $this->user_model->register_user_update_code($data);
+            }
+
+            if($data['role_id']  == 4){
+                $permissions = array('course', 'role', 'staff', 'student', 'enrolment', 'offline_payment');
+                $sub_permissions = [
+                    'course' => ['Add', 'Edit', 'Delete'], 
+                    'role' => [], 
+                    'staff' => ['Add', 'Edit', 'Delete'], 
+                    'student' => ['Add', 'Edit', 'Delete'], 
+                    'enrolment' => ['course_enrolment', 'History'], 
+                    'offline_payment' => ['submitted_payment_request'],  
+                ]; 
+                
+                $permission_data['admin_id'] = $user_id;
+                $permission_data['permissions'] = json_encode($permissions);
+                $this->db->insert('permissions', $permission_data);
+                
+                foreach($permissions as $permission){
+                    $permission_data['parent_permissions'] = $permission;
+                    $permission_data['permissions'] = json_encode($sub_permissions[$permission]);
+                    $this->db->insert('sub_permissions', $permission_data);
+                }
             }
 
             //instructor application

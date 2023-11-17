@@ -43,7 +43,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 			</li>
 		<?php endif; ?> 
 
-		<?php if (has_permission('user')) : ?>
+		<?php if (has_permission('student') OR has_permission('staff') OR has_permission('role')) : ?>
 			<li class="side-nav-item <?php if ($page_name == 'admins' || $page_name == 'admin_add' || $page_name == 'admin_edit' || $page_name == 'admin_permission' || $page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit' || $page_name == 'instructor_payout' || $page_name == 'instructor_settings' || $page_name == 'application_list' || $page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit') : ?> active <?php endif; ?>">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'admins' || $page_name == 'admin_add' || $page_name == 'admin_edit' || $page_name == 'admin_permission' || $page_name == 'instructors' || $page_name == 'instructor_add' || $page_name == 'instructor_edit' || $page_name == 'instructor_payout' || $page_name == 'instructor_settings' || $page_name == 'application_list' || $page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit') : ?> active <?php endif; ?>">
 					<i class="dripicons-user-group"></i>
@@ -51,13 +51,16 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span class="menu-arrow"></span>
 				</a>
 				<ul class="side-nav-second-level" aria-expanded="false"> 
-				
+					
+					<?php if (has_permission('role')): ?>
 					<li class="side-nav-item <?php if ($page_name == 'roles') : ?> active <?php endif; ?>">
 						<a href="<?php echo site_url('organization/roles'); ?>" class="<?php if ($page_name == 'roles') : ?> active <?php endif; ?>">
 							<?php echo get_phrase('Roles'); ?>
 						</a> 
 					</li> 
+					<?php endif; ?>
 
+					<?php if (has_permission('staff')): ?>
 					<li class="side-nav-item <?php if ($page_name == 'staff') : ?> active <?php endif; ?>">
 						<a href="javascript: void(0);" aria-expanded="false" class="<?php if ($page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit') : ?> active <?php endif; ?>"><?php echo get_phrase('Staff'); ?>
 								<span class="menu-arrow"></span>
@@ -66,24 +69,32 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 							<li class="<?php if ($page_name == 'users' || $page_name == 'user_edit') echo 'active'; ?>">
 								<a href="<?php echo site_url('organization/staffs'); ?>">Manage Staff</a>
 							</li> 
+
+							<?php if (has_sub_permission('Add', 'staff')) : ?>
 							<li class="<?php if ($page_name == 'user_add') echo 'active'; ?>">
 								<a href="<?php echo site_url('organization/user_form/add_staff_form'); ?>">Add New Staff</a>
 							</li>
+							<?php endif; ?>
+
 						</ul>
 					</li> 
+					<?php endif; ?>
 
 					<?php if (has_permission('student')) : ?>
 						<li class="side-nav-item <?php if ($page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit') : ?> active <?php endif; ?>">
 							<a href="javascript: void(0);" aria-expanded="false" class="<?php if ($page_name == 'users' || $page_name == 'user_add' || $page_name == 'user_edit') : ?> active <?php endif; ?>"><?php echo get_phrase('students'); ?>
 								<span class="menu-arrow"></span>
 							</a>
-							<ul class="side-nav-third-level" aria-expanded="false">
+							<ul class="side-nav-third-level" aria-expanded="false"> 
 								<li class="<?php if ($page_name == 'users' || $page_name == 'user_edit') echo 'active'; ?>">
 									<a href="<?php echo site_url('organization/users'); ?>"><?php echo get_phrase('manage_students'); ?></a>
-								</li>
+								</li> 
+
+								<?php if (has_sub_permission('Add', 'student')) : ?>
 								<li class="<?php if ($page_name == 'user_add') echo 'active'; ?>">
 									<a href="<?php echo site_url('organization/user_form/add_user_form'); ?>"><?php echo get_phrase('add_new_student'); ?></a>
 								</li>
+								<?php endif; ?>
 							</ul>
 						</li>
 					<?php endif; ?>
@@ -91,7 +102,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 			</li>
 		<?php endif; ?>
 
-		<?php if (addon_status('offline_payment')) : ?>
+		<?php if (has_permission('offline_payment') && has_sub_permission('submitted_payment_request', 'offline_payment')) : ?>
 			<li class="side-nav-item">
 				<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'offline_payment_pending' || $page_name == 'offline_payment_approve' || $page_name == 'offline_payment_suspended') : ?> active <?php endif; ?>">
 					<i class="dripicons-box"></i>
@@ -99,10 +110,11 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span class="menu-arrow"></span>
 				</a>
 				<ul class="side-nav-second-level" aria-expanded="false"> 
-					<li class="<?php if ($page_name == 'offline_payment_approve') echo 'active'; ?>">
-						<a href="<?php echo site_url('addons/offline_payment/approve'); ?>"><?php echo get_phrase('submit_payment_request'); ?></a>
+					<?php if (has_sub_permission('submitted_payment_request', 'offline_payment')) : ?>
+					<li class="<?php if ($page_name == 'submit_offline_payment') echo 'active'; ?>">
+						<a href="<?php echo site_url('addons/offline_payment/submitted_payment_request'); ?>"><?php echo get_phrase('submitted_payment_request'); ?></a>
 					</li>
-					 
+					<?php endif; ?>
 				</ul>
 			</li>
 		<?php endif; ?> 

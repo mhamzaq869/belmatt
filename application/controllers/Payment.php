@@ -29,7 +29,7 @@ class Payment extends CI_Controller
         $page_data['page_title'] = get_phrase('payment');
         $this->load->view('payment-global/index.php', $page_data);
     }
-
+ 
 
     function success_course_payment($payment_method = ""){
         //STARTED payment model and functions are dynamic here
@@ -45,7 +45,7 @@ class Payment extends CI_Controller
          
 
         if($model_name != null){
-            $payment_check_function = 'check_'.$payment_method.'_payment';
+            $payment_check_function = 'check_'.$payment_method.'_payment'; 
             $response = $this->$model_name->$payment_check_function($payment_method, 'course');
         }
         

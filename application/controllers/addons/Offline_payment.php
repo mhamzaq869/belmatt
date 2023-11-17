@@ -173,6 +173,19 @@ class Offline_payment extends CI_Controller
 		}
 	}
 
+	//Organization submitted payment
+	
+	public function submitted_payment_request($param1 = "", $id = "", $user_id = "", $amount_paid = "")
+	{
+		if ($this->session->userdata('organization_login') != true) {
+			redirect(site_url('login'), 'refresh');
+		} 
+
+		$page_data['page_name'] = 'submit_offline_paymnet';
+		$page_data['offline_payments'] = $this->offline_payment_model->offline_payment_all_data_org()->result_array();
+		$page_data['page_title'] = get_phrase('submitted_offline_payment');
+		$this->load->view('backend/index', $page_data);
+	}
 
 	public function settings($param1 = ""){
 		if($param1 != ""){

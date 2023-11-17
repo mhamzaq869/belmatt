@@ -61,7 +61,7 @@ class Offline_payment_model extends CI_Model
 		endif;
 		redirect(site_url('home/purchase_history'), 'refresh');
 	}
-	public function attach_payment_document($file_extension = "")
+	public function attach_payment_document($file_extension = "") 
 	{
 		$total_amount = $this->session->userdata('total_price_of_checking_out');
 		$user_id = $this->session->userdata('user_id');
@@ -87,6 +87,21 @@ class Offline_payment_model extends CI_Model
 			$this->db->where('user_id', $user_id);
 		}
 		$this->db->where('status', 0);
+		return $this->db->get('offline_payment');
+	}
+
+	//Organization Panel
+	public function offline_payment_all_data_org($offline_payment_id = "")
+	{
+		if ($offline_payment_id > 0) {
+			$this->db->where('id', $offline_payment_id);
+		}
+
+		if($this->session->userdata('organization_id')){
+			$this->db->where('user_id', $this->session->userdata('organization_id'));
+		}else{
+			$this->db->where('user_id', $this->session->userdata('user_id'));
+		}
 		return $this->db->get('offline_payment');
 	}
 

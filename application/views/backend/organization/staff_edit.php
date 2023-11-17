@@ -57,6 +57,15 @@ $user_data = $this->db->get_where('users', array('id' => $user_id))->row_array()
                             </div>  
 
                             <div class="form-group row mb-3">
+                                <label class="col-md-3 col-form-label"
+                                    for="last_name"><?php echo get_phrase('password'); ?><span
+                                        class="required">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-3">
                                 <label class="col-md-3 col-form-label" for="last_name"><?php echo get_phrase('role'); ?>
                                     <span class="required">*</span>
                                 </label>

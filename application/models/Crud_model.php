@@ -188,7 +188,12 @@ class Crud_model extends CI_Model
     {
         $userIds = [];
 
-        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        if($this->session->userdata('organization_id')){
+            $users = $this->db->where('organization_id',$this->session->userdata('organization_id'))->get('users');
+        }else{
+            $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        }
+
         if($users->num_rows() > 0){ 
             $userIds = array_column($users->result_array(), 'id');
         }
@@ -198,12 +203,16 @@ class Crud_model extends CI_Model
             $this->db->distinct('user_id');
             $this->db->where('course_id', $course_id);
             $this->db->where_in('user_id', $userIds);
-            return $this->db->get('enrol');
+            return $this->db->get('enrol')->num_rows();
         } else {
             if ($course_id > 0) { 
-                return $this->db->where_in('user_id', $userIds)->where('course_id' , $course_id)->get('enrol');
+                return $this->db->where_in('user_id', $userIds)->where('course_id' , $course_id)->get('enrol')->num_rows();
             } else {
-                return $this->db->where_in('user_id', $userIds)->get('enrol');
+                if(count($userIds) > 0){
+                    return $this->db->where_in('user_id', $userIds)->get('enrol')->num_rows();
+                }else{
+                    return 0;
+                }
             }
         }
     }
@@ -232,8 +241,12 @@ class Crud_model extends CI_Model
     public function enrol_history_by_date_range_of_org($timestamp_start = "", $timestamp_end = "")
     {
         $userIds = [];
+        if($this->session->userdata('organization_id')){
+            $users = $this->db->where('organization_id',$this->session->userdata('organization_id'))->get('users');
+        }else{
+            $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        }
 
-        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
         if($users->num_rows() > 0){ 
             $userIds = array_column($users->result_array(), 'id');
         }
@@ -624,6 +637,31 @@ class Crud_model extends CI_Model
             return $this->db->get_where('lesson', array('id' => $id));
         } else {
             return $this->db->get('lesson');
+        }
+    }
+
+
+    public function get_lessons_org($type = "", $id = "")
+    {
+        $courseIds = []; 
+        if($this->session->userdata('organization_id')){
+            $users = $this->db->where('organization_id',$this->session->userdata('organization_id'))->get('users');
+        }else{
+            $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        }
+        
+        if($users->num_rows() > 0){ 
+            $all_courses = $this->db->where_in('user_id', array_column($users->result_array(), 'id') )->get('enrol'); 
+            
+            if($all_courses->num_rows() > 0){  
+                $courseIds = array_column($all_courses->result_array(), 'course_id');
+            }
+        }
+  
+        if(count($courseIds) > 0){ 
+            return $this->db->where_in('course_id',$courseIds)->get('lesson')->num_rows();
+        }else{
+            return 0;
         }
     }
 
@@ -1336,48 +1374,76 @@ class Crud_model extends CI_Model
     public function get_status_wise_courses_of_org($status = "")
     {
         $courseIds = [];
-
-        $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+         
+        if($this->session->userdata('organization_id')){
+            $users = $this->db->where('organization_id',$this->session->userdata('organization_id'))->get('users');
+        }else{
+            $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+        }
+        
         if($users->num_rows() > 0){  
-            $all_courses = $this->db->where_in('user_id', array_column($users->result_array(), 'id'))->get('enrol'); 
+            
+            $all_courses = $this->db->where_in('user_id', array_column($users->result_array(), 'id') )->get('enrol'); 
+            
             if($all_courses->num_rows() > 0){  
                 $courseIds = array_column($all_courses->result_array(), 'course_id');
             }
+           
         }
 
-       
         if ($status != "") {
             $this->db->where_in('id', $courseIds);
             $this->db->where('status', $status);
             $courses = $this->db->get('course');
         } else {
             //draft
-            $this->db->where_in('id', $courseIds);
-            $this->db->where('status', 'draft');
-            $courses['draft'] = $this->db->get('course');
+            if(count($courseIds) > 0){
+                $this->db->where_in('id', $courseIds);
+                $this->db->where('status', 'draft');
+                $courses['draft'] = $this->db->get('course')->num_rows();
+            }else{
+                $courses['draft'] = 0;
+            }
             
             //pending
-            $this->db->where_in('id', $courseIds);
-            $this->db->where('status', 'pending');
-            $courses['pending'] = $this->db->get('course');
+            if(count($courseIds) > 0){
+                $this->db->where_in('id', $courseIds);
+                $this->db->where('status', 'pending');
+                $courses['pending'] = $this->db->get('course')->num_rows();
+            }else{
+                $courses['pending'] = 0;
+            }
 
             //private
-            $this->db->where_in('id', $courseIds);
-            $this->db->where('status', 'private');
-            $courses['private'] = $this->db->get('course');
+            if(count($courseIds) > 0){
+                $this->db->where_in('id', $courseIds);
+                $this->db->where('status', 'private');
+                $courses['private'] = $this->db->get('course')->num_rows();
+            }else{
+                $courses['private'] = 0;
+            }
 
             //
-            $this->db->where_in('id', $courseIds);
-            $this->db->where('status', 'active');
-            $courses['active'] = $this->db->get('course');
+            if(count($courseIds) > 0){
+                $this->db->where_in('id', $courseIds);
+                $this->db->where('status', 'active');
+                $courses['active'] = $this->db->get('course')->num_rows();
+            }else{
+                $courses['active'] = 0;
+            }
 
             //upcoming
-            $this->db->where_in('id', $courseIds);
-            $this->db->where('status', 'upcoming');
-            $courses['upcoming'] = $this->db->get('course');
+            if(count($courseIds) > 0){
+                $this->db->where_in('id', $courseIds);
+                $this->db->where('status', 'upcoming');
+                $courses['upcoming'] = $this->db->get('course')->num_rows();
+            }else{
+                $courses['upcoming'] = 0;
+            }
         }
 
-        return $courses;
+        return $courses; 
+
     }
 
     public function get_status_wise_courses_for_instructor($status = "")
@@ -2369,8 +2435,7 @@ class Crud_model extends CI_Model
         $courses_id = $this->input->post('course_id');
         $users_id   = $this->input->post('user_id');
 
-        foreach ($users_id as $user_id) {
-
+        foreach ($users_id as $user_id) { 
             foreach ($courses_id as $course_id) {
                 $course_details = $this->get_course_by_id($course_id)->row_array();
                 if ($course_details['expiry_period'] > 0) {
@@ -2395,6 +2460,58 @@ class Crud_model extends CI_Model
                 }
             }
         }
+
+        $this->session->set_flashdata('flash_message', get_phrase('student_has_been_enrolled'));
+    } 
+    
+    public function enrol_a_org_student_manually()
+    {
+        $courses_id = $this->input->post('course_id');
+        $users_id   = $this->input->post('user_id'); 
+        
+        foreach ($users_id as $user_id) { 
+            foreach ($courses_id as $course_id) {
+                $course_details = $this->get_course_by_id($course_id)->row_array();
+                if ($course_details['expiry_period'] > 0) {
+                    $days = $course_details['expiry_period'] * 30;
+                    $data['expiry_date'] = strtotime("+" . $days . " days");
+                } else {
+                    $data['expiry_date'] = null;
+                }
+                $data['gifted_by'] = 0;
+
+
+                if ($this->db->get_where('enrol', ['user_id' => $user_id, 'course_id' => $course_id])->num_rows() == 0) {
+                    $data['user_id'] = $user_id;
+                    $data['course_id'] = $course_id;
+                    $data['date_added'] = strtotime(date('D, d-M-Y'));
+                    $this->db->insert('enrol', $data);
+                } else {
+                    $data['last_modified'] = time();
+                    $this->db->where('course_id', $course_id);
+                    $this->db->where('user_id', $user_id);
+                    $this->db->update('enrol', $data);
+                } 
+                
+                $payment_data['user_id'] = $this->session->userdata('user_id');
+                $payment_data['course_id'] = json_encode($courses_id);
+                $payment_data['item_id'] = json_encode($courses_id);
+                $payment_data['amount'] = $course_details['price'];
+                $payment_data['item_type'] = 'course'; 
+                $payment_data['timestamp'] = strtotime(date('D, d-M-Y'));
+                $payment_data['status'] = 0;
+
+                $file_extension = pathinfo($_FILES['payment_document']['name'], PATHINFO_EXTENSION);
+                $payment_data['document_image'] = rand(6000, 10000000) . '.' . $file_extension;
+
+                $this->db->insert('offline_payment', $payment_data); 
+                move_uploaded_file($_FILES['payment_document']['tmp_name'], 'uploads/payment_document/' . $payment_data['document_image']);
+                  
+                
+            }
+        }
+
+        
 
         $this->session->set_flashdata('flash_message', get_phrase('student_has_been_enrolled'));
     }

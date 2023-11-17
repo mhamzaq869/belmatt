@@ -34,6 +34,7 @@ class Organization extends CI_Controller
         if ($this->session->userdata('organization_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+
         $page_data['page_name'] = 'dashboard';
         $page_data['page_title'] = get_phrase('dashboard');
         $this->load->view('backend/index.php', $page_data);
@@ -254,7 +255,13 @@ class Organization extends CI_Controller
         $column_index = $columns[$this->input->post('order')[0]['column']];
 
         $dir = $this->input->post('order')[0]['dir'];
-        $total_number_of_row = $this->db->where('role_id !=', 1)->get('users')->num_rows();
+        if($this->session->userdata('organization_id')){
+            $this->db->where('organization_id', $this->session->userdata('organization_id'));
+        }else{
+            $this->db->where('organization_id',$this->session->userdata('user_id'));
+        }
+
+        $total_number_of_row = $this->db->where('role_id', 2)->get('users')->num_rows();
 
         $filtered_number_of_row = $total_number_of_row;
         $search = $this->input->post('search')['value'];
@@ -264,7 +271,11 @@ class Organization extends CI_Controller
             $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
             $this->db->where('role_id',2);
-            $this->db->where('organization_id',$this->session->userdata('user_id'));
+            if($this->session->userdata('organization_id')){
+                $this->db->where('organization_id', $this->session->userdata('organization_id'));
+            }else{
+                $this->db->where('organization_id',$this->session->userdata('user_id'));
+            }
             $students = $this->db->get('users')->result_array();
         }else{
             $this->db->select('*');
@@ -273,7 +284,11 @@ class Organization extends CI_Controller
             $this->db->or_like('email',$search);
             $this->db->or_like('phone',$search);
             $this->db->where('role_id',2);
-            $this->db->where('organization_id',$this->session->userdata('user_id'));
+            if($this->session->userdata('organization_id')){
+                $this->db->where('organization_id', $this->session->userdata('organization_id'));
+            }else{
+                $this->db->where('organization_id',$this->session->userdata('user_id'));
+            }
             $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
             $students = $this->db->get('users')->result_array();
@@ -285,7 +300,11 @@ class Organization extends CI_Controller
             $this->db->or_like('email',$search);
             $this->db->or_like('phone',$search);
             $this->db->where('role_id',2);
-            $this->db->where('organization_id',$this->session->userdata('user_id'));
+            if($this->session->userdata('organization_id')){
+                $this->db->where('organization_id', $this->session->userdata('organization_id'));
+            }else{
+                $this->db->where('organization_id',$this->session->userdata('user_id'));
+            }
             $filtered_number_of_row = $this->db->get('users')->num_rows();
         }
 
@@ -297,6 +316,7 @@ class Organization extends CI_Controller
             //user name
             if($student['status'] != 1){ $status = '<small><p>'.get_phrase('status').'<span class="badge badge-danger-lighten">'.get_phrase('unverified').'</span></p></small>';}else{$status = '';}
             $name = $student['first_name'].' '.$student['last_name'].$status;
+            $username = $student['username'];
 
             //user email
             $email = $student['email'];
@@ -316,7 +336,6 @@ class Organization extends CI_Controller
                                 <i class="mdi mdi-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.site_url('organization/send_credentials/' . $student['id']).'">Send password email</a></li>
                                 <li><a class="dropdown-item" href="'.site_url('organization/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li> 
                             </ul>
                         </div>';
@@ -325,8 +344,9 @@ class Organization extends CI_Controller
             $nestedData['key'] = ++$key;
             $nestedData['photo'] = $photo;
             $nestedData['name'] = $name;
+            $nestedData['username'] = $username;
             $nestedData['email'] = $email;
-            $nestedData['phone'] = $student['phone'];
+            // $nestedData['phone'] = $student['phone'];
             $nestedData['enrolled_courses'] = $enrolled_courses_title;
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
             $data[] = $nestedData;
@@ -351,48 +371,58 @@ class Organization extends CI_Controller
         $start = htmlspecialchars_($this->input->post('start'));
 
         $column_index = $columns[$this->input->post('order')[0]['column']];
-        $roles = $this->db->select('id')->where_not_in('name', ['Admin', 'User', 'Organization'])->get('role');
 
-        $dir = $this->input->post('order')[0]['dir'];
-        $total_number_of_row = $this->db->where_in('role_id', array_column($roles->result_array(), 'id'))->get('users')->num_rows();
-
-        $filtered_number_of_row = $total_number_of_row;
-        $search = $this->input->post('search')['value'];
-
+        if($this->session->userdata('organization_id')){
+            $roles = $this->db->select('id')
+                        ->where('user_id', $this->session->userdata('organization_id')) 
+                        ->get('role'); 
+        }else{
+            $roles = $this->db->select('id')->where('user_id', $this->session->userdata('user_id'))->get('role');
+        }
+        
         
         if($roles->num_rows() > 0){  
+    
+            $dir = $this->input->post('order')[0]['dir'];
+            $total_number_of_row = $this->db->where_in('role_id', array_column($roles->result_array(), 'id'))->get('users')->num_rows();
+    
+            $filtered_number_of_row = $total_number_of_row;
+            $search = $this->input->post('search')['value'];
+            
             if(empty($search)) {
                 $this->db->select('*');
                 $this->db->limit($limit,$start);
                 $this->db->order_by($column_index,$dir);
-                $this->db->where_in('role_id',array_column($roles->result_array(), 'id'));
-                // $this->db->where('organization_id',$this->session->userdata('user_id'));
+                $this->db->where_in('role_id',array_column($roles->result_array(), 'id')); 
                 $students = $this->db->get('users')->result_array();
             }else{
                 $this->db->select('*');
+                $this->db->where_in('role_ids',array_column($roles->result_array(), 'id'));
                 $this->db->like('first_name',$search);
                 $this->db->or_like('last_name',$search);
                 $this->db->or_like('email',$search);
-                $this->db->or_like('phone',$search);
-                // $this->db->where('organization_id',$this->session->userdata('user_id'));
-                $this->db->where_in('role_id',array_column($roles->result_array(), 'id'));
+                $this->db->or_like('phone',$search); 
                 $this->db->limit($limit,$start);
                 $this->db->order_by($column_index,$dir);
                 $students = $this->db->get('users')->result_array();
-    
-    
+                 
                 $this->db->select('*');
                 $this->db->like('first_name',$search);
                 $this->db->or_like('last_name',$search);
                 $this->db->or_like('email',$search);
                 $this->db->or_like('phone',$search);
-                // $this->db->where('organization_id',$this->session->userdata('user_id'));
                 $this->db->where_in('role_id',array_column($roles->result_array(), 'id'));
+                // if($this->session->userdata('organization_id')){
+                //     $this->db->where('id !=', $this->session->userdata('user_id'));
+                // }
                 $filtered_number_of_row = $this->db->get('users')->num_rows();
             }
+        }else{
+            $students = array();
+            $total_number_of_row = 0;
+            $filtered_number_of_row = 0;
         }
-
-
+        
         foreach($students as $key => $student):
 
             //photo
@@ -444,6 +474,7 @@ class Organization extends CI_Controller
             "data"            => $data   
         );
         echo json_encode($json_data);
+
     }
 
     function server_side_instructors_data(){
@@ -649,7 +680,7 @@ class Organization extends CI_Controller
         } 
 
         if ($param1 == 'enrol') {
-            $this->crud_model->enrol_a_student_manually();
+            $this->crud_model->enrol_a_org_student_manually();
             redirect(site_url('organization/enrol_history'), 'refresh');
         }
         $page_data['page_name'] = 'enrol_student';
@@ -1542,11 +1573,11 @@ class Organization extends CI_Controller
             redirect(site_url('login'), 'refresh');
         if ($param1 == 'update_profile_info') {
             $this->user_model->edit_user($param2);
-            redirect(site_url('admin/manage_profile'), 'refresh');
+            redirect(site_url('organization/manage_profile'), 'refresh');
         }
         if ($param1 == 'change_password') {
             $this->user_model->change_password($param2);
-            redirect(site_url('admin/manage_profile'), 'refresh');
+            redirect(site_url('organization/manage_profile'), 'refresh');
         }
         $page_data['page_name']  = 'manage_profile';
         $page_data['page_title'] = get_phrase('manage_profile');

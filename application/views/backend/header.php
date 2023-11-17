@@ -204,7 +204,7 @@
                                 }
                             } elseif(strtolower($this->session->userdata('role')) == 'organization'){ 
                                 echo get_phrase('organization');
-                            }else{
+                            } else{
                                 echo get_phrase('admin');
                             }
                         ?>

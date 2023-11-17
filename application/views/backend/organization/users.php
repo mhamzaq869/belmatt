@@ -21,8 +21,8 @@
                 <th>#</th>
                 <th><?php echo get_phrase('photo'); ?></th>
                 <th><?php echo get_phrase('name'); ?></th>
-                <th><?php echo get_phrase('email'); ?></th>
-                <th><?php echo get_phrase('Phone'); ?></th>
+                <th><?php echo get_phrase('username'); ?></th>
+                <th><?php echo get_phrase('email'); ?></th> 
                 <th><?php echo get_phrase('enrolled_courses'); ?></th>
                 <th><?php echo get_phrase('actions'); ?></th>
               </tr>
@@ -50,8 +50,9 @@
         { "data": "key" },
         { "data": "photo" },
         { "data": "name" },
+        { "data": "username" },
         { "data": "email" },
-        { "data": "phone" },
+        // { "data": "phone" },
         { "data": "enrolled_courses" },
         { "data": "action" }
       ]   

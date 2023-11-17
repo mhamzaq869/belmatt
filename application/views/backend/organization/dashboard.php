@@ -1,8 +1,8 @@
 <?php
-    $status_wise_courses = $this->crud_model->get_status_wise_courses_of_org();
-    $number_of_courses = $status_wise_courses['pending']->num_rows() + $status_wise_courses['active']->num_rows();
-    $number_of_lessons = $this->crud_model->get_lessons()->num_rows();
-    $number_of_enrolment = $this->crud_model->enrol_history_org()->num_rows();
+    $status_wise_courses = $this->crud_model->get_status_wise_courses_of_org(); 
+    $number_of_courses = $status_wise_courses['pending'] + $status_wise_courses['active'];
+    $number_of_lessons = $this->crud_model->get_lessons_org();
+    $number_of_enrolment = $this->crud_model->enrol_history_org();
     $number_of_students = $this->user_model->get_org_user()->num_rows();
 ?>
 <div class="row">
@@ -86,14 +86,14 @@
                     <div class="col-6">
                         <i class="mdi mdi-trending-up text-success mt-3 h3"></i>
                         <h3 class="font-weight-normal">
-                            <span><?php echo $status_wise_courses['active']->num_rows(); ?></span>
+                            <span><?php echo $status_wise_courses['active']; ?></span>
                         </h3>
                         <p class="text-muted mb-0"><?php echo get_phrase('active_courses'); ?></p>
                     </div>
                     <div class="col-6">
                         <i class="mdi mdi-trending-down text-warning mt-3 h3"></i>
                         <h3 class="font-weight-normal">
-                            <span><?php echo $status_wise_courses['pending']->num_rows(); ?></span>
+                            <span><?php echo $status_wise_courses['pending']; ?></span>
                         </h3>
                         <p class="text-muted mb-0"> <?php echo get_phrase('pending_courses'); ?></p>
                     </div>

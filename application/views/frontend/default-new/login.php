@@ -19,7 +19,7 @@
                                 <h5><?php echo get_phrase('Your email'); ?></h5>
                                 <div class="position-relative">
                                     <i class="fa-solid fa-user"></i>
-                                    <input class="form-control" id="email" type="email" name="email" placeholder="<?php echo get_phrase('Enter your email'); ?>">
+                                    <input class="form-control" id="email" type="text" name="email" placeholder="<?php echo get_phrase('Enter your email'); ?>">
                                 </div>
                             </div>
                             <div class="">
