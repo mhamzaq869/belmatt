@@ -212,6 +212,221 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+    public function organizations($param1 = "", $param2 = "")
+    {
+     
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+
+        if($param1 == 'students'){
+
+            $page_data['organization_id'] = $param2;
+            $page_data['page_name'] = 'organization_students';
+            $page_data['page_title'] = get_phrase('organization_students');
+
+            $this->load->view('backend/index', $page_data);
+
+        }else{
+
+            $page_data['page_name'] = 'organizations';
+            $page_data['page_title'] = get_phrase('organizations');
+            $this->load->view('backend/index', $page_data);
+        }
+ 
+    }
+
+
+    function server_side_organizations_data(){
+
+        $data = array();
+        //mentioned all with colum of database table that related with html table
+        $columns = array('id','id','first_name','email','phone','id', 'id');
+
+        $limit = htmlspecialchars_($this->input->post('length'));
+        $start = htmlspecialchars_($this->input->post('start'));
+
+        $column_index = $columns[$this->input->post('order')[0]['column']];
+
+        $dir = $this->input->post('order')[0]['dir'];
+        $total_number_of_row = $this->db->where('role_id', 4)->get('users')->num_rows();
+
+        $filtered_number_of_row = $total_number_of_row;
+        $search = $this->input->post('search')['value'];
+
+        if(empty($search)) {
+            $this->db->select('*');
+            $this->db->limit($limit,$start);
+            $this->db->order_by($column_index,$dir);
+            $this->db->where('role_id',4);
+            $students = $this->db->get('users')->result_array();
+        }else{
+            $this->db->select('*');
+            $this->db->like('first_name',$search);
+            $this->db->or_like('last_name',$search);
+            $this->db->or_like('email',$search);
+            $this->db->or_like('phone',$search);
+            $this->db->where('role_id',4);
+            $this->db->limit($limit,$start);
+            $this->db->order_by($column_index,$dir);
+            $students = $this->db->get('users')->result_array();
+
+
+            $this->db->select('*');
+            $this->db->like('first_name',$search);
+            $this->db->or_like('last_name',$search);
+            $this->db->or_like('email',$search);
+            $this->db->or_like('phone',$search);
+            $this->db->where('role_id',4);
+            $filtered_number_of_row = $this->db->get('users')->num_rows();
+        }
+
+        foreach($students as $key => $student):
+
+            //photo
+            $photo = '<img src="'.$this->user_model->get_user_image_url($student['id']).'" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">';
+
+            //user name
+            if($student['status'] != 1){ $status = '<small><p>'.get_phrase('status').'<span class="badge badge-danger-lighten">'.get_phrase('unverified').'</span></p></small>';}else{$status = '';}
+            $name = '<a href="'.site_url('admin/organizations/students/' . $student['id']).'">'.$student['first_name'].' '.$student['last_name'].$status.'</a>';
+
+            //user email
+            $email = $student['email'];
+
+            //enrolled courses
+            $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
+            $enrolled_courses_title = '<ul>';
+            foreach ($enrolled_courses->result_array() as $enrolled_course) :
+                $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();
+                    $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+            endforeach;
+            $enrolled_courses_title .= '</ul>';
+
+
+            $action = '<div class="dropright dropright">
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.site_url('admin/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
+                            </ul>
+                        </div>';
+
+
+            $nestedData['key'] = ++$key;
+            $nestedData['photo'] = $photo;
+            $nestedData['name'] = $name;
+            $nestedData['email'] = $email;
+            $nestedData['phone'] = $student['phone']; 
+            $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
+            $data[] = $nestedData;
+        endforeach;
+
+        $json_data = array(
+            "draw"            => intval($this->input->post('draw')),  
+            "recordsTotal"    => intval($total_number_of_row),  
+            "recordsFiltered" => intval($filtered_number_of_row), 
+            "data"            => $data   
+        );
+        echo json_encode($json_data);
+    }
+
+    function server_side_organizations_students_data($param1){
+
+        $data = array();
+        //mentioned all with colum of database table that related with html table
+        $columns = array('id','id','first_name','email','phone','id', 'id');
+
+        $limit = htmlspecialchars_($this->input->post('length'));
+        $start = htmlspecialchars_($this->input->post('start'));
+
+        $column_index = $columns[$this->input->post('order')[0]['column']];
+
+        $dir = $this->input->post('order')[0]['dir'];
+        $total_number_of_row = $this->db->where('organization_id', $param1)->get('users')->num_rows();
+
+        $filtered_number_of_row = $total_number_of_row;
+        $search = $this->input->post('search')['value'];
+
+        if(empty($search)) {
+            $this->db->select('*');
+            $this->db->limit($limit,$start);
+            $this->db->order_by($column_index,$dir);
+            $this->db->where('organization_id', $param1);
+            $students = $this->db->get('users')->result_array();
+        }else{
+            $this->db->select('*');
+            $this->db->like('first_name',$search);
+            $this->db->or_like('last_name',$search);
+            $this->db->or_like('email',$search);
+            $this->db->or_like('phone',$search);
+            $this->db->where('organization_id', $param1);
+            $this->db->limit($limit,$start);
+            $this->db->order_by($column_index,$dir);
+            $students = $this->db->get('users')->result_array();
+
+
+            $this->db->select('*');
+            $this->db->like('first_name',$search);
+            $this->db->or_like('last_name',$search);
+            $this->db->or_like('email',$search);
+            $this->db->or_like('phone',$search);
+            $this->db->where('organization_id', $param1);
+            $filtered_number_of_row = $this->db->get('users')->num_rows();
+        }
+
+        foreach($students as $key => $student):
+
+            //photo
+            $photo = '<img src="'.$this->user_model->get_user_image_url($student['id']).'" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">';
+
+            //user name
+            if($student['status'] != 1){ $status = '<small><p>'.get_phrase('status').'<span class="badge badge-danger-lighten">'.get_phrase('unverified').'</span></p></small>';}else{$status = '';}
+            $name = $student['first_name'].' '.$student['last_name'].$status;
+
+            //user email
+            $email = $student['email'];
+
+            //enrolled courses
+            $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
+            $enrolled_courses_title = '<ul>';
+            foreach ($enrolled_courses->result_array() as $enrolled_course) :
+                $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();
+                    $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+            endforeach;
+            $enrolled_courses_title .= '</ul>';
+
+
+            $action = '<div class="dropright dropright">
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.site_url('admin/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
+                            </ul>
+                        </div>';
+
+
+            $nestedData['key'] = ++$key;
+            $nestedData['photo'] = $photo;
+            $nestedData['name'] = $name;
+            $nestedData['email'] = $email;
+            $nestedData['phone'] = $student['phone']; 
+            $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
+            $data[] = $nestedData;
+        endforeach;
+
+        $json_data = array(
+            "draw"            => intval($this->input->post('draw')),  
+            "recordsTotal"    => intval($total_number_of_row),  
+            "recordsFiltered" => intval($filtered_number_of_row), 
+            "data"            => $data   
+        );
+        echo json_encode($json_data);
+    }
+
     function server_side_users_data(){
 
         $data = array();

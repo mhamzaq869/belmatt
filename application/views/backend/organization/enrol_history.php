@@ -31,7 +31,7 @@
                   </div>
               </div>
               <div class="table-responsive-sm mt-4">
-                   <?php if (count($enrol_history->result_array()) > 0): ?>
+                   <?php if ($enrol_history->num_rows() > 0): ?>
                       <table class="table table-striped table-centered mb-0">
                           <thead>
                               <tr>
@@ -39,11 +39,8 @@
                                   <th><?php echo get_phrase('user_name'); ?></th>
                                   <th><?php echo get_phrase('enrolled_course'); ?></th>
                                   <th><?php echo get_phrase('enrollment_date'); ?></th>
-                                  <th><?php echo get_phrase('Expiry date'); ?></th>
-                                  <th><?php echo get_phrase('lesson_and_section'); ?></th>
-                                  <th><?php echo get_phrase('enrolled_student'); ?></th>
-                                  <th><?php echo get_phrase('status'); ?></th>
-                                  <th><?php echo get_phrase('actions'); ?></th>
+                                  <th><?php echo get_phrase('Expiry date'); ?></th> 
+                                  <th><?php echo get_phrase('status'); ?></th> 
                               </tr>
                           </thead>
                           <tbody>
@@ -76,34 +73,16 @@
                                       </td>
                                       <td><strong><a href="<?php echo site_url('organization/enrol_course/'.$course_data['id']); ?>"><?php echo $course_data['title']; ?></a></strong></td>
                                       <td><?php echo date('D, d M Y', $enrol['date_added']); ?></td>
-                                      <td>
-                                        <?php if($enrol['expiry_date']): ?>
-                                          <?php echo date('D, d M Y', $enrol['expiry_date']); ?>
-                                        <?php else: ?>
-                                          <?php echo get_phrase('Lifetime access'); ?>
-                                        <?php endif; ?>
-                                      </td>
-                                      <td>
-                                        <?php if ($course_data['course_type'] == 'scorm'): ?>
-                                            <span class="badge badge-info-lighten"><?php echo get_phrase('scorm_course'); ?></span>
-                                        <?php elseif ($course_data['course_type'] == 'h5p'):?>
-                                            <span class="badge badge-info-lighten"><?php echo get_phrase('h5p_course'); ?></span>
-                                        <?php elseif ($course_data['course_type'] == 'general'):?> 
-                                            <small class="text-muted"><b><?php echo get_phrase('Section'); ?></b>: <?php echo $sections->num_rows();?></small><br>
-                                            <small class="text-muted"><b><?php echo get_phrase('Lesson'); ?></b>: <?php echo $lessons->num_rows();?></small>
-                                        <?php endif; ?>
-                                      </td>
+                                     
                                       <td> <small class="text-muted"><b> <?php echo get_phrase('Enrollments'); ?> </b>: <?php echo $enroll_history->num_rows(); ?></small></td>
                                       <td> <span class="badge <?php echo $status_badge; ?> "><?php echo get_phrase($course_data['status']);  ?></span></td>
-                                      <td>
-                                          <button type="button" class="btn btn-outline-danger btn-icon btn-rounded btn-sm" onclick="confirm_modal('<?php echo site_url('organization/enrol_history_delete/'.$enrol['id']); ?>');"> <i class="dripicons-trash"></i> </button>
-                                      </td>
+                                       
                                   </tr>
                               <?php endforeach; ?>
                           </tbody>
                       </table>
                   <?php endif; ?>
-                  <?php if (count($enrol_history->result_array()) == 0): ?>
+                  <?php if (count($enrol_history->num_rows()) == 0): ?>
                       <div class="img-fluid w-100 text-center">
                         <img style="opacity: 1; width: 100px;" src="<?php echo base_url('assets/backend/images/file-search.svg'); ?>"><br>
                         <?php echo get_phrase('no_data_found'); ?>

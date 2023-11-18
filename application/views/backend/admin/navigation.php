@@ -348,6 +348,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 							</ul>
 						</li>
 					<?php endif; ?>
+
+					<li class="<?php if ($page_name == 'users' || $page_name == 'user_edit') echo 'active'; ?>">
+						<a href="<?php echo site_url('admin/organizations'); ?>"><?php echo get_phrase('organization'); ?></a>
+					</li>
+						 
+
 				</ul>
 			</li>
 		<?php endif; ?>
@@ -397,8 +403,7 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<?php endif; ?>
 				</a>
 			</li>
-		<?php endif; ?>
-
+		<?php endif; ?> 
 
 		<?php if (has_permission('blog')) : ?>
 			<li class="side-nav-item <?php if ($page_name == 'blog' || $page_name == 'blog_add' || $page_name == 'blog_edit' || $page_name == 'blog_category' || $page_name == 'blog_settings') : ?> active <?php endif; ?>">
@@ -443,9 +448,8 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					</li>
 				</ul>
 			</li>
-		<?php endif; ?>
-
-
+		<?php endif; ?> 
+		
 		<?php if (addon_status('customer_support')) : ?>
 			<li class="side-nav-item <?php if ($page_name == 'tickets' || $page_name == 'support_category' || $page_name == 'support_macro' || $page_name == 'create_ticket') : ?> active <?php endif; ?>">
 				<a href="javascript: void(0);" class="side-nav-link">

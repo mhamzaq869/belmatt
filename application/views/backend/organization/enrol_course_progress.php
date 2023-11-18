@@ -35,7 +35,27 @@
                 </th>
               </tr>
             </thead>
-            <?php $enrolments = $this->db->where('course_id', $course_details['id'])->get('enrol')->result_array(); ?>
+            <?php
+               $userIds = []; 
+
+                if($this->session->userdata('organization_id')){ 
+                    $users = $this->db->where('organization_id',$this->session->userdata('organization_id'))->get('users');
+                  }else{
+                    $users = $this->db->where('organization_id',$this->session->userdata('user_id'))->get('users');
+                  } 
+                  
+                 
+                  if($users->num_rows() > 0){ 
+
+                    $userIds = array_column($users->result_array(), 'id');
+                    $enrolments = $this->db->where('course_id', $course_details['id'])
+                                  ->where_in('user_id', $userIds)
+                                  ->get('enrol')->result_array(); 
+                  }else{                
+                    $enrolments = [];  
+                  }
+
+            ?>
             <?php $lessons = $this->crud_model->get_lessons('course', $course_details['id']); ?>
             <?php $total_lesson = $lessons->num_rows(); ?>
             <tbody>
