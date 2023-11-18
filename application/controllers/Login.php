@@ -159,6 +159,7 @@ class Login extends CI_Controller
             $data['role_id']  = 2;
         }else if($this->input->post('signupType')  == 'organization'){
             $data['role_id']  = 4;
+            $data['status']  = 1;
         }
 
         $data['payment_keys'] = json_encode(array());
