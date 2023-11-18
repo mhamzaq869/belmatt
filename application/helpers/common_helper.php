@@ -59,6 +59,33 @@ if (!function_exists('has_permission')) {
         $CI->db->where('admin_id', $admin_id);
         $get_admin_permissions = $CI->db->get('permissions');
         if ($get_admin_permissions->num_rows() == 0) {
+            return true;
+        } else {
+            $get_admin_permissions = $get_admin_permissions->row_array();
+            $permissions = json_decode($get_admin_permissions['permissions']);
+            if (in_array($permission_for, $permissions)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
+if (!function_exists('has_org_permission')) {
+    function has_org_permission($permission_for = '', $admin_id = '')
+    {
+        $CI    = &get_instance();
+        $CI->load->database();
+
+        // GET THE LOGGEDIN IN ADMIN ID
+        if (empty($admin_id)) {
+            $admin_id = $CI->session->userdata('user_id');
+        }
+
+        $CI->db->where('admin_id', $admin_id);
+        $get_admin_permissions = $CI->db->get('permissions');
+        if ($get_admin_permissions->num_rows() == 0) {
             return false;
         } else {
             $get_admin_permissions = $get_admin_permissions->row_array();
