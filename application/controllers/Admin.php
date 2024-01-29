@@ -803,6 +803,41 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+    public function landing_pages($param1 = '', $param2 = '')
+    {
+        if($param1 == 'add'){
+            $this->crud_model->add_landing_page();
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_added_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }elseif($param1 == 'update'){
+            $this->crud_model->update_landing_page($param2);
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_updated_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }elseif($param1 == 'delete'){
+            $this->crud_model->landing_page_delete($param2);
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_deleted_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }
+
+        $page_data['blogs'] = $this->crud_model->get_landing_pages();
+        $page_data['page_title'] = get_phrase('blog');
+        $page_data['page_name'] = 'landing_pages';
+        $this->load->view('backend/index', $page_data);
+    } 
+
+    function add_landing_page(){
+        $page_data['page_title'] = get_phrase('add_landing_page');
+        $page_data['page_name'] = 'landing_page_add';
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function edit_landing_page($landing_page_id = ""){
+        $page_data['landing_page'] = $this->crud_model->get_landing_pages($landing_page_id)->row_array();
+        $page_data['page_title'] = get_phrase('edit_landing_page');
+        $page_data['page_name'] = 'landing_page_edit';
+        $this->load->view('backend/index', $page_data);
+    }
+
     public function system_settings($param1 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -899,6 +934,7 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('frontend_settings');
         $this->load->view('backend/index', $page_data);
     }
+
     public function payment_settings($param1 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -923,8 +959,7 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('payment_settings');
         $this->load->view('backend/index', $page_data);
     }
-
-
+ 
     public function notification_settings($param1 = "", $param2 = "", $param3 = "")
     {
         if ($param1 == 'smtp_settings') {
@@ -947,8 +982,7 @@ class Admin extends CI_Controller
         $page_data['page_name'] = 'notification_settings';
         $page_data['page_title'] = get_phrase('Notification settings');
         $this->load->view('backend/index', $page_data);
-    }
-
+    } 
 
     function edit_email_template($id = "", $param2 = ""){
         

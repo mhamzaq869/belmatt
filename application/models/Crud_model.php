@@ -666,7 +666,7 @@ class Crud_model extends CI_Model
     }
 
     public function add_course($param1 = "")
-    {
+    {   
         $faqs = array();
         if (!empty($this->input->post('faqs'))) :
             foreach (array_filter($this->input->post('faqs')) as $faq_key => $faq_title) {
@@ -711,6 +711,7 @@ class Crud_model extends CI_Model
             $data['address'] = null;
             $data['datetime'] = null;
         }
+
 
         //Course expiry period
         if ($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0) {
@@ -768,6 +769,17 @@ class Crud_model extends CI_Model
         $this->db->insert('course', $data);
 
         $course_id = $this->db->insert_id();
+
+        
+        if (in_array('classroom', $this->input->post('type')) OR in_array('live-webinar', $this->input->post('type'))) {
+            foreach($this->input->post('date') as $date){
+                $this->db->insert('course_webinar_dates', [
+                    'course_id' => $course_id,
+                    'date' => $date,
+                ]);
+            }
+        }
+
 
         // Create folder if does not exist
         if (!file_exists('uploads/thumbnails/course_thumbnails')) {
@@ -4643,6 +4655,88 @@ class Crud_model extends CI_Model
         }
     }
     //End Blog
+
+
+     //Start for admin panel
+    function get_landing_page_by_slug($slug = "")
+    {
+        $this->db->where('slug', $slug);
+        return $this->db->get('landing_pages');
+    }
+    
+    function get_landing_pages($landing_id = "")
+    {
+        if ($landing_id > 0) {
+            $this->db->where('id', $landing_id);
+        }
+
+        $this->db->order_by('id', 'desc');
+        return $this->db->get('landing_pages');
+    }
+        
+    function add_landing_page()
+    {
+        $data['title'] = htmlspecialchars_($this->input->post('title'));
+        $data['slug'] = htmlspecialchars_(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->input->post('title')))));
+        $data['header'] = htmlspecialchars_($this->input->post('heading'));
+        $data['course_overview'] = htmlspecialchars_($this->input->post('course-overview'));
+        $data['prerequisites'] = htmlspecialchars_($this->input->post('prerequisites'));
+        $data['learn'] = htmlspecialchars_($this->input->post('learn'));
+        $data['assessment'] = htmlspecialchars_($this->input->post('assessment'));
+        $data['eligibility'] = htmlspecialchars_($this->input->post('eligibility'));
+        $data['lecturers'] = htmlspecialchars_($this->input->post('lecturers'));
+        $data['duration'] = htmlspecialchars_($this->input->post('duration'));
+        $data['course_code'] = htmlspecialchars_($this->input->post('course_code'));
+        $data['course_credits'] = htmlspecialchars_($this->input->post('course_credits'));
+        $data['level'] = htmlspecialchars_($this->input->post('level'));
+
+        if ($_FILES['banner']['name'] != "") {
+            $data['banner'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['banner']['tmp_name'], 'uploads/landing-page/banner/' . $data['banner']);
+        }
+        
+        $this->db->insert('landing_pages', $data);
+    }
+
+    function update_landing_page($id = "")
+    {
+        $landing_page = $this->get_landing_pages($id)->row_array();
+      
+        $data['title'] = htmlspecialchars_($this->input->post('title'));
+        $data['slug'] = htmlspecialchars_(strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->input->post('title')))));
+        $data['header'] = htmlspecialchars_($this->input->post('heading'));
+        $data['course_overview'] = htmlspecialchars_($this->input->post('course-overview'));
+        $data['prerequisites'] = htmlspecialchars_($this->input->post('prerequisites'));
+        $data['learn'] = htmlspecialchars_($this->input->post('learn'));
+        $data['assessment'] = htmlspecialchars_($this->input->post('assessment'));
+        $data['eligibility'] = htmlspecialchars_($this->input->post('eligibility'));
+        $data['lecturers'] = htmlspecialchars_($this->input->post('lecturers'));
+        $data['duration'] = htmlspecialchars_($this->input->post('duration'));
+        $data['course_code'] = htmlspecialchars_($this->input->post('course_code'));
+        $data['course_credits'] = htmlspecialchars_($this->input->post('course_credits'));
+        $data['level'] = htmlspecialchars_($this->input->post('level'));
+        
+        if ($_FILES['banner']['name'] != "") {
+            if($landing_page['banner'] != null && file_exists('uploads/landing-page/banner/' . $landing_page['banner'])){
+                unlink('uploads/landing-page/banner/' . $landing_page['banner']);
+            }
+
+            $data['banner'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['banner']['tmp_name'], 'uploads/landing-page/banner/' . $data['banner']);
+        }
+
+        $this->db->where('id', $id);
+        $this->db->update('landing_pages', $data);
+    }
+
+    function landing_page_delete($id = "")
+    {
+        $blog = $this->get_landing_pages($id)->row_array();
+        unlink('uploads/landing-page/banner/' . $blog['banner']);
+
+        $this->db->where('id', $id);
+        $this->db->delete('landing_pages');
+    }
 
 
     function get_quiz_score($course_id = "", $quiz_id = "")

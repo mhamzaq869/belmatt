@@ -7,13 +7,13 @@
 
 <!-- Start Course Calendar list -->
 <section class="pt-50 pb-120">
-    <div class="container">
+    <div class="container"> 
         <div class="row">
             <div class="col-xl-12">
-                <h3 class="mb-3 header-title"><?php echo get_phrase('Book a Course'); ?></h3>
+                <h3 class="mb-3 header-title"><?php echo get_phrase('Book a Courses'); ?></h3>
                 <form class="row justify-content-center" action="<?php echo site_url('home/course_calendar'); ?>" method="get">
-                     <!-- Course Status -->
-                     <div class="col-xl-5">
+                    <!-- Course Status -->
+                    <div class="col-xl-3">
                         <div class="form-group mt-5">
                             <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>
                                 <option selected disabled><?php echo get_phrase('Select Venue'); ?></option>
@@ -25,7 +25,19 @@
                     </div>
 
                     <!-- Course Status -->
-                    <div class="col-xl-5">
+                    <div class="col-xl-3">
+                        <div class="form-group mt-5">
+                            <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>
+                                <option selected disabled><?php echo get_phrase('Select Venue'); ?></option>
+                                <?php foreach ($courses as $key => $course): ?>
+                                    <option value="<?php echo $course['city'].','.$course['address']; ?>"><?php echo get_phrase($course['city']).' ('.get_phrase($course['address']).')'; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Course Status -->
+                    <div class="col-xl-3">
                         <div class="form-group mt-5"> 
                             <select class="form-control select2" data-toggle="select2" name="title" id='title'>
                                 <option selected disabled><?php echo get_phrase('Select Course'); ?></option>
@@ -36,7 +48,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-2">
+                    <div class="col-xl-3">
                         <label for=".." class="text-white mt-4">..</label>
                         <div class="form-group">
                             <button type="submit" class="btn btn-sm btn-primary btn-block" name="button" style="padding:8px 28px !important;"><?php echo get_phrase('filter'); ?></button>

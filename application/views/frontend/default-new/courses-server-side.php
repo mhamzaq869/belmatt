@@ -12,8 +12,20 @@
             <div class="col-xl-12">
                 <h3 class="mb-3 header-title"><?php echo get_phrase('Book a Course'); ?></h3>
                 <form class="row justify-content-center" action="<?php echo site_url('home/course_calendar'); ?>" method="get">
-                     <!-- Course Status -->
-                     <div class="col-xl-5">
+                    
+                    <!-- Course Type -->
+                    <div class="col-xl-3">
+                        <div class="form-group mt-5">
+                        <label for="Select Course Title">Select Type</label>
+                            <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
+                                <option value="<?php echo 'classroom'; ?>" <?php if ($venue == 'classroom') echo 'selected'; ?>><?php echo get_phrase('classroom'); ?></option>
+                                <option value="<?php echo 'live-webinar'; ?>" <?php if ($venue == 'live-webinar') echo 'selected'; ?>><?php echo get_phrase('live-webinar'); ?></option>
+                            </select>
+                        </div>
+                    </div> 
+
+                    <!-- Course Status -->
+                    <div class="col-xl-3">
                         <div class="form-group mt-5">
                         <label for="Select Course Title">Select Venue</label>
                             <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
@@ -26,7 +38,7 @@
                     </div>
 
                     <!-- Course Status -->
-                    <div class="col-xl-5">
+                    <div class="col-xl-3">
                         <div class="form-group mt-5"> 
                             <label for="Select Course Title">Select Course</label>
                             <select class="form-control select2" data-toggle="select2" name="title" id='title'>
@@ -40,7 +52,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-2">
+                    <div class="col-xl-3">
                         <label for=".." class="text-white mt-5">..</label>
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-sm btn-primary btn-block" name="button" style="padding:8px 28px !important;"><?php echo get_phrase('search'); ?></button>

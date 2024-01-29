@@ -64,155 +64,169 @@ class Home extends CI_Controller
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
     }
 
-    public function courses()
+    public function courses($param1 = '')
     {
-        if (!$this->session->userdata('layout')) {
-            $this->session->set_userdata('layout', 'list');
-        }
-        $layout = $this->session->userdata('layout');
-        $selected_type = "all";
-        $selected_professions = "all";
-        $selected_category_id = "all";
-        $selected_price = "all";
-        $selected_level = "all";
-        $selected_language = "all";
-        $selected_rating = "all";
-        $selected_sorting = "newest";
+        if($param1 == ''){
 
-        $scorm_status = addon_status('scorm_course');
-        $h5p_status = addon_status('h5p');
-
-        // check script inject
-        foreach($_GET as $key => $value){ 
-            //check double quote and script text in the search string
-            if(preg_match('/"/', strtolower($value)) >= 1 && strpos(strtolower($value),"script") >= 1){
-                $this->session->set_flashdata('error_message', site_phrase('such_script_searches_are_not_allowed').'!');
-                redirect(site_url('home/courses'), 'refresh');
+            if (!$this->session->userdata('layout')) {
+                $this->session->set_userdata('layout', 'list');
             }
-            $_GET[htmlspecialchars_($key)] = htmlspecialchars_($value);
-        }
 
-
-        if(isset($_GET['query']) && $_GET['query'] != ""){
-            $search_string = $_GET['query'];
-        }else{
-            $search_string = "";
-        } 
-        
-        // Get the course types
-        if (isset($_GET['type']) && !empty($_GET['type'] && $_GET['type'] != "all")) {
-            $selected_type = $_GET['type'] ;
-        }   
-
-        // Get the category ids
-        if (isset($_GET['category']) && !empty($_GET['category'] && $_GET['category'] != "all")) {
-            $selected_category_id = $this->crud_model->get_category_id($_GET['category']);
-        }
-
-        // Get the professions
-        if (isset($_GET['profession']) && !empty($_GET['profession'] && $_GET['profession'] != "all")) {
-            $selected_professions = $_GET['profession'] ;
-        }
-
-        // Get the selected price
-        if (isset($_GET['price']) && !empty($_GET['price'])) {
-            $selected_price = $_GET['price'];
-        }
-        
-        // Get the selected level
-        if (isset($_GET['level']) && !empty($_GET['level'])) {
-            $selected_level = $_GET['level'];
-        }
- 
-        
-        // Get the selected language
-        if (isset($_GET['language']) && !empty($_GET['language'])) {
-            $selected_language = $_GET['language'];
-        }
-
-        // Get the selected rating
-        if (isset($_GET['rating']) && !empty($_GET['rating'])) {
-            $selected_rating = $_GET['rating'];
-        }
-
-        // Get the selected rating
-        if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
-            $selected_sorting = $_GET['sort_by'];
-        }
-
-
-        if ($search_string == "" && $selected_type == "all" && $selected_category_id == "all" && $selected_professions == "all" && $selected_price == "all" && $selected_level == 'all' && $selected_language == 'all' && $selected_rating == 'all' && $selected_sorting == 'newest') {
-
-            $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
+            $layout = $this->session->userdata('layout');
+            $selected_type = "all";
+            $selected_professions = "all";
+            $selected_category_id = "all";
+            $selected_price = "all";
+            $selected_level = "all";
+            $selected_language = "all";
+            $selected_rating = "all";
+            $selected_sorting = "newest";
+    
+            $scorm_status = addon_status('scorm_course');
+            $h5p_status = addon_status('h5p');
+    
+            // check script inject
+            foreach($_GET as $key => $value){ 
+                //check double quote and script text in the search string
+                if(preg_match('/"/', strtolower($value)) >= 1 && strpos(strtolower($value),"script") >= 1){
+                    $this->session->set_flashdata('error_message', site_phrase('such_script_searches_are_not_allowed').'!');
+                    redirect(site_url('home/courses'), 'refresh');
                 }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
-            $this->db->group_end();
-            $this->db->where('status', 'active');
-            $total_rows = $this->db->get('course')->num_rows();
-            $config = array();
-            $config = pagintaion($total_rows, 9);
-            $config['base_url']  = site_url('home/courses/');
-            $this->pagination->initialize($config);
-
-
-            $this->db->group_start();
-                $this->db->where('course_type', 'general');
-                if ($scorm_status) {
-                    $this->db->or_where('course_type', 'scorm');
-                }
-                if ($h5p_status) {
-                    $this->db->or_where('course_type', 'h5p');
-                }
-            $this->db->group_end();
-
-            $this->db->group_start();
-            $this->db->where('status', 'active');
-            $this->db->group_end();
-            //sorting randomly
-            //$this->db->order_by(6, 'RANDOM');
-            $this->db->order_by('id', 'desc');
-
-            $page_data['courses'] = $this->db->get('course', $config['per_page'], $this->uri->segment(3))->result_array();
-            $page_data['total_result'] = $total_rows;
-        } else {
-            $category_slug = isset($_GET['category']) ? $_GET['category'] : 'all';
-
-            if($search_string != ""){
-                $search_string_val = "query=".$search_string."&";
+                $_GET[htmlspecialchars_($key)] = htmlspecialchars_($value);
+            }
+    
+    
+            if(isset($_GET['query']) && $_GET['query'] != ""){
+                $search_string = $_GET['query'];
             }else{
-                $search_string_val = "";
+                $search_string = "";
+            } 
+            
+            // Get the course types
+            if (isset($_GET['type']) && !empty($_GET['type'] && $_GET['type'] != "all")) {
+                $selected_type = $_GET['type'] ;
+            }   
+    
+            // Get the category ids
+            if (isset($_GET['category']) && !empty($_GET['category'] && $_GET['category'] != "all")) {
+                $selected_category_id = $this->crud_model->get_category_id($_GET['category']);
             }
+    
+            // Get the professions
+            if (isset($_GET['profession']) && !empty($_GET['profession'] && $_GET['profession'] != "all")) {
+                $selected_professions = $_GET['profession'] ;
+            }
+    
+            // Get the selected price
+            if (isset($_GET['price']) && !empty($_GET['price'])) {
+                $selected_price = $_GET['price'];
+            }
+            
+            // Get the selected level
+            if (isset($_GET['level']) && !empty($_GET['level'])) {
+                $selected_level = $_GET['level'];
+            }
+     
+            
+            // Get the selected language
+            if (isset($_GET['language']) && !empty($_GET['language'])) {
+                $selected_language = $_GET['language'];
+            }
+    
+            // Get the selected rating
+            if (isset($_GET['rating']) && !empty($_GET['rating'])) {
+                $selected_rating = $_GET['rating'];
+            }
+    
+            // Get the selected rating
+            if (isset($_GET['sort_by']) && !empty($_GET['sort_by'])) {
+                $selected_sorting = $_GET['sort_by'];
+            }
+    
+    
+            if ($search_string == "" && $selected_type == "all" && $selected_category_id == "all" && $selected_professions == "all" && $selected_price == "all" && $selected_level == 'all' && $selected_language == 'all' && $selected_rating == 'all' && $selected_sorting == 'newest') {
+    
+                $this->db->group_start();
+                    $this->db->where('course_type', 'general');
+                    if ($scorm_status) {
+                        $this->db->or_where('course_type', 'scorm');
+                    }
+                    if ($h5p_status) {
+                        $this->db->or_where('course_type', 'h5p');
+                    }
+                $this->db->group_end();
+                $this->db->where('status', 'active');
+                $total_rows = $this->db->get('course')->num_rows();
+                $config = array();
+                $config = pagintaion($total_rows, 9);
+                $config['base_url']  = site_url('home/courses/');
+                $this->pagination->initialize($config);
+    
+    
+                $this->db->group_start();
+                    $this->db->where('course_type', 'general');
+                    if ($scorm_status) {
+                        $this->db->or_where('course_type', 'scorm');
+                    }
+                    if ($h5p_status) {
+                        $this->db->or_where('course_type', 'h5p');
+                    }
+                $this->db->group_end();
+    
+                $this->db->group_start();
+                $this->db->where('status', 'active');
+                $this->db->group_end();
+                //sorting randomly
+                //$this->db->order_by(6, 'RANDOM');
+                $this->db->order_by('id', 'desc');
+    
+                $page_data['courses'] = $this->db->get('course', $config['per_page'], $this->uri->segment(3))->result_array();
+                $page_data['total_result'] = $total_rows;
+            } else {
+                $category_slug = isset($_GET['category']) ? $_GET['category'] : 'all';
+    
+                if($search_string != ""){
+                    $search_string_val = "query=".$search_string."&";
+                }else{
+                    $search_string_val = "";
+                }
+    
+                $all_filtered_courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating,'','','', $selected_type, $selected_professions)->num_rows();
+                $config = array();
+                $config = pagintaion($all_filtered_courses, 9);
+                $config['base_url']  = site_url('home/courses/');
+    
+                $config['suffix']  = '?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
+                $config['first_url']  = site_url('home/courses').'?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
+    
+                $this->pagination->initialize($config);
+                $courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating, $selected_sorting, $config['per_page'], $this->uri->segment(3), $selected_type, $selected_professions)->result_array();
+                $page_data['courses'] = $courses;
+                $page_data['total_result'] = $all_filtered_courses;
+            }
+    
+            $page_data['page_name']  = "courses_page";
+            $page_data['page_title'] = site_phrase('courses');
+            $page_data['layout']     = $layout;
+            $page_data['selected_type']     = $selected_type;
+            $page_data['selected_category_id'] = $selected_category_id;
+            $page_data['selected_professions']     = $selected_professions;
+            $page_data['selected_price']     = $selected_price;
+            $page_data['selected_level']     = $selected_level;
+            $page_data['selected_language']     = $selected_language;
+            $page_data['selected_rating']     = $selected_rating;
+            $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
 
-            $all_filtered_courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating,'','','', $selected_type, $selected_professions)->num_rows();
-            $config = array();
-            $config = pagintaion($all_filtered_courses, 9);
-            $config['base_url']  = site_url('home/courses/');
+        }else{
+            
+            $page_data['landing_page'] = $this->crud_model->get_landing_page_by_slug($param1)->row_array();
+            $page_data['page_name']  = "landing_page";
+            $page_data['page_title'] = site_phrase($param1);
 
-            $config['suffix']  = '?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
-            $config['first_url']  = site_url('home/courses').'?'.$search_string_val.'type=' . $selected_type .'&category=' . $category_slug .'&profession=' . $selected_professions . '&price=' . $selected_price . '&level=' . $selected_level . '&language=' . $selected_language . '&rating=' . $selected_rating . '&sort_by=' . $selected_sorting;
-
-            $this->pagination->initialize($config);
-            $courses = $this->crud_model->filter_course($search_string, $selected_category_id, $selected_price, $selected_level, $selected_language, $selected_rating, $selected_sorting, $config['per_page'], $this->uri->segment(3), $selected_type, $selected_professions)->result_array();
-            $page_data['courses'] = $courses;
-            $page_data['total_result'] = $all_filtered_courses;
+            $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
         }
 
-        $page_data['page_name']  = "courses_page";
-        $page_data['page_title'] = site_phrase('courses');
-        $page_data['layout']     = $layout;
-        $page_data['selected_type']     = $selected_type;
-        $page_data['selected_category_id'] = $selected_category_id;
-        $page_data['selected_professions']     = $selected_professions;
-        $page_data['selected_price']     = $selected_price;
-        $page_data['selected_level']     = $selected_level;
-        $page_data['selected_language']     = $selected_language;
-        $page_data['selected_rating']     = $selected_rating;
-        $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
+       
     } 
     
     public function course_categories()
@@ -231,7 +245,7 @@ class Home extends CI_Controller
 
         $page_data['page_name'] = "courses-server-side";
         $page_data['page_title'] = site_phrase('training_course_calendar');
-     
+        
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
     }
 

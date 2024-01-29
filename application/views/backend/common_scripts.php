@@ -190,4 +190,16 @@
       $('#number_of_month').slideDown();
     }
   }
+
+
+  
+$('.landing-page').summernote({
+    placeholder: 'Write something...',
+    height: 230,
+    callbacks: {
+      onInit: function (o) {
+        $(o.editor).find('.custom-control-description').addClass('custom-control-label').parent().removeAttr('for');
+      },
+    },
+  });
 </script>
