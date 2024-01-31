@@ -240,9 +240,10 @@ class Home extends CI_Controller
     
     public function course_calendar()
     {
+        $page_data['type']         = isset($_GET['type']) ? $_GET['type'] : "all";
         $page_data['venue']         = isset($_GET['venue']) ? $_GET['venue'] : "all";
         $page_data['title']        = isset($_GET['title']) ? $_GET['title'] : "all";
-
+        
         $page_data['page_name'] = "courses-server-side";
         $page_data['page_title'] = site_phrase('training_course_calendar');
         
@@ -258,21 +259,20 @@ class Home extends CI_Controller
             $columns = array('id', 'title', 'venue', 'time', 'price', 'book'); 
             
             // Filter portion 
+            $type = $this->input->post('type'); 
             $venue = $this->input->post('venue'); 
             $title = $this->input->post('title');
 
-            // $start = htmlspecialchars_($this->input->post('start'));
             $limit = htmlspecialchars_($this->input->post('length'));
 
-            // $column_index = $columns[$this->input->post('order')[0]['column']];
+            $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) OR find_in_set("live-webinar", course.type)';
+            if(isset($type)){
+                $total_row_sql .= 'OR find_in_set("live-webinar", course.type)';
+            }
+            $total_row_sql .= 'AND status="active" AND datetime >= CURDATE()';
 
-            // $dir = $this->input->post('order')[0]['dir'];
-
-            $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
             $total_row_query = $this->db->query($total_row_sql);
             $total_number_of_row = count($total_row_query->result_array());
-
-            // $search = $this->input->post('search')['value'];
             
             // FILTERED DATA
             $sql = 'SELECT * FROM course WHERE '; 
@@ -281,7 +281,11 @@ class Home extends CI_Controller
                 $sql .= " id = $title AND"; 
             } 
 
-            $sql .= ' find_in_set("classroom", course.type) & status="active" AND datetime >= CURDATE()';
+            $sql .= ' find_in_set("classroom", course.type)';
+            if(isset($type)){
+                $sql .= 'OR find_in_set("live-webinar", course.type)';
+            }
+            $sql .= '& status="active" AND datetime >= CURDATE()';
 
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
@@ -294,8 +298,8 @@ class Home extends CI_Controller
             $sql .= " limit $limit";
            
             $query = $this->db->query($sql);
-            $courses = $query->result_array();
-        
+            $courses = $query->result_array(); 
+
             // WITHOUT FILTERED DATA
             $sql = 'SELECT * FROM course WHERE ';
             
@@ -303,7 +307,11 @@ class Home extends CI_Controller
                 $sql .= " id = $title AND"; 
             } 
 
-            $sql .= '  find_in_set("classroom", course.type) AND status="active" AND datetime >= CURDATE()';
+            $sql .= ' find_in_set("classroom", course.type)';
+            if(isset($type)){
+                $sql .= 'OR find_in_set("live-webinar", course.type)';
+            }
+            $sql .= '& status="active" AND datetime >= CURDATE()';
 
             if (!empty($venue) && $venue != 'all') {
                 if(!is_array($venue)){
@@ -317,35 +325,42 @@ class Home extends CI_Controller
             $query = $this->db->query($sql);
             $filtered_number_of_row = count($query->result_array()); 
            
- 
-           
             // Fetch the data and format it as JSON
             if (!empty($courses)) {
                 foreach ($courses as $key => $row) {
                     $price_badge = "badge-dark";
+
                     $price = 0;
                     
-                    if ($row['is_free_course'] == null) {
-                        if ($row['discount_flag'] == 1) {
-                            $price = currency($row['discounted_price']);
-                        } else {
-                            $price = currency($row['price']);
+                    // Decode the JSON array in the 'datetime' column
+                    $dates = json_decode($row['datetime']);
+
+                    foreach ($dates as $date) { 
+
+                        if ($row['is_free_course'] == null) {
+                            if ($row['discount_flag'] == 1) {
+                                $price = currency($row['discounted_price']);
+                            } else {
+                                $price = currency($row['price']);
+                            }
+                        } elseif ($row['is_free_course'] == 1) { 
+                            $price = get_phrase('free');
                         }
-                    } elseif ($row['is_free_course'] == 1) { 
-                        $price = get_phrase('free');
+    
+                        $price_field = '<p class="text-12">' . $price . '</p>';
+                        $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
+    
+                        $nestedData['date'] = date('D jS M Y', strtotime($date));
+                        $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
+                        $nestedData['venue'] = '<span>' . ucfirst($row['city']) .' ('. $row['address'] .')</span>';
+                        $nestedData['time'] = '<span>' . date('g:i A', strtotime($date)) . '</span>';
+                        $nestedData['price'] = $price_field; 
+                        $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
+    
+                        $data[] = $nestedData;
                     }
-
-                    $price_field = '<p class="text-12">' . $price . '</p>';
-                    $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
-
-                    $nestedData['date'] = date('D jS M Y', strtotime($row['datetime']));
-                    $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
-                    $nestedData['venue'] = '<span>' . ucfirst($row['city']) .' ('. $row['address'] .')</span>';
-                    $nestedData['time'] = '<span>' . date('g:i A', strtotime($row['datetime'])) . '</span>';
-                    $nestedData['price'] = $price_field; 
-                    $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
-
-                    $data[] = $nestedData;
+                    
+                    
                 }
             }
 

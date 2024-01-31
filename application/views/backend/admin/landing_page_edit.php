@@ -121,9 +121,48 @@
 							</div>
 						</div>
 						<div class="tab-pane fade" id="lecturers" role="tabpanel" aria-labelledby="lecturers-tab">
-							<div class="form-group pt-3">
-								<textarea name="lecturers" class="landing-page"><?php echo $landing_page['lecturers']; ?></textarea>
+							<div class="form-group mb-3">
+								<label class="col-form-label ml-2" for="existing_instructors"><?php echo get_phrase('instructor_of_this_course'); ?></label>
+								<div class="col-md-12">
+									<?php if ($landing_page['lecturers']) :
+										$instructor_ids = json_decode($landing_page['lecturers']); ?>
+										<?php foreach ($instructor_ids as $instructor_id) :?>
+			
+											<?php $instructor_details = $this->user_model->get_instructor($instructor_id)->row_array(); ?>
+											<div class="">
+												<img class="rounded-circle" src="<?php echo $this->user_model->get_user_image_url($instructor_details['id']); ?>" height="30px" alt="">
+												<span style="font-weight: 700; font-size: 15px; vertical-align: sub; margin-left: 6px;">
+													<?php echo html_escape($instructor_details['first_name'] . ' ' . $instructor_details['last_name']); ?>
+												</span>
+												<?php if (count($instructor_ids) > 1 && $landing_page['creator'] != $instructor_id) : ?>
+													<a href="javascript:void(0)" onclick="confirm_modal('<?php echo site_url('admin/remove_an_instructor_landing_page/' . $landing_page['id'] . '/' . $instructor_details['id']); ?>');" style="display: inline-block; height: 20px; width: 20px; border-radius: 50%; background-color: rgb(239,83,80); color: white; margin-left: 6px; vertical-align: sub;"> <i class="mdi mdi-window-close" style="margin-left: 3px; font-weight: bold; vertical-align: middle;"></i> </a>
+												<?php endif; ?>
+											</div>
+										<?php endforeach; ?>
+									<?php else : ?>
+										<?php $instructor_details = $this->user_model->get_instructor($landing_page['lecturers'])->row_array(); ?>
+										<div>
+											<img class="rounded-circle" src="<?php echo $this->user_model->get_user_image_url($instructor_details['id']);; ?>" height="30px" alt="">
+											<span style="font-weight: 700; font-size: 15px; vertical-align: sub; margin-left: 6px;">
+												<?php echo html_escape($instructor_details['first_name'] . ' ' . $instructor_details['last_name']); ?>
+											</span>
+										</div>
+									<?php endif; ?>
+								</div>
 							</div>
+
+							<div class="form-group"> 
+								<label class="col-form-label ml-2" for="new_instructor"><?php echo get_phrase('add_new_instructor'); ?></label>
+								<div class="col-md-12">
+									<select class="select2 form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." name="new_instructors[]">
+										<?php $instructors = $this->user_model->get_instructor()->result_array(); ?>
+										<?php foreach ($instructors as $key => $instructor) : ?>
+											<option value="<?php echo html_escape($instructor['id']); ?>"><?php echo html_escape($instructor['first_name'] . ' ' . $instructor['last_name']); ?> ( <?php echo html_escape($instructor['email']); ?> )</option>
+										<?php endforeach; ?>
+									</select>
+								</div> 
+							</div>
+
 						</div>
 					</div>
 
@@ -154,19 +193,88 @@
 						</div>
 					</div>
 
-
-					<div class="row">
-						<div class="col-md-12">
-							<h4>Dates <button type="button" id="addDateField" class="btn ml-2"><i class="fa fa-plus-circle"></i></button></h4>
-							<div id="dateFields">
-								<div class="d-flex">
-									<input type="date" class="form-control date-field" name="date[]" required>
-									<a type="button" href="#" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="banner"><?php echo get_phrase('e learning image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<?php $landing_page_learning_url = 'uploads/landing-page/banner/'.$landing_page['banner']; ?>
+									<?php
+										if(file_exists($landing_page_learning_url) && is_file($landing_page_learning_url)):
+											$landing_page_learning_url = base_url($landing_page_learning_url);
+										else:
+											$landing_page_learning_url = base_url('uploads/landing-page/banner/placeholder.png');
+										endif;
+									?>
+									<div class="js--image-preview" style="background-image: url('<?php echo $landing_page_learning_url; ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="banner" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="e_learning_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="e_learning_image" accept="image/*">
+									</div>
 								</div>
 							</div>
-							
+
+							<input type="text" class="form-control" name="e_learning_url" value="<?php echo $landing_page['e_learning_url']; ?>">
+						</div>
+						
+						<div class="col-md-4">
+							<label for="live-webinar"><?php echo get_phrase('live webinar image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<?php $landing_page_webinar_url = 'uploads/landing-page/banner/'.$landing_page['banner']; ?>
+									<?php
+										if(file_exists($landing_page_webinar_url) && is_file($landing_page_webinar_url)):
+											$landing_page_webinar_url = base_url($landing_page_webinar_url);
+										else:
+											$landing_page_webinar_url = base_url('uploads/landing-page/banner/placeholder.png');
+										endif;
+									?>
+									<div class="js--image-preview" style="background-image: url('<?php echo $landing_page_webinar_url; ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="live-webinar" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="live_webinar_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="live_webinar_image" accept="image/*">
+									</div>
+								</div>
+							</div>
+
+							<input type="text" class="form-control" name="live_webinar_url" value="<?php echo $landing_page['live_webinar_url']; ?>">
+						</div>
+
+						<div class="col-md-4">
+							<label for="classroom"><?php echo get_phrase('classroom image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<?php $landing_page_classroom_url = 'uploads/landing-page/banner/'.$landing_page['banner']; ?>
+									<?php
+										if(file_exists($landing_page_classroom_url) && is_file($landing_page_classroom_url)):
+											$landing_page_classroom_url = base_url($landing_page_classroom_url);
+										else:
+											$landing_page_classroom_url = base_url('uploads/landing-page/banner/placeholder.png');
+										endif;
+									?>
+									<div class="js--image-preview" style="background-image: url('<?php echo $landing_page_classroom_url; ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="classroom" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="classroom_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="classroom_image" accept="image/*">
+									</div>
+								</div>
+							</div>
+							<input type="text" class="form-control" name="classroom_url" value="<?php echo $landing_page['classroom_image']; ?>">
 						</div>
 					</div>
+
 
 					<div class="form-group mt-4">
 						<button class="btn btn-success"><?php echo get_phrase('update'); ?></button>
@@ -176,31 +284,3 @@
 		</div>
 	</div>
 </div>
- 
-
-<script>
-  $(document).ready(function() {
-    var maxFields = 5; // Maximum input fields allowed
-    var addButton = $('#addDateField');
-    var wrapper = $('#dateFields');
-    var fieldHTML = '<div class="d-flex mt-2">' +
-                      '<input type="date" class="form-control date-field" name="date[]" required>' +
-                      '<a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>' +
-                    '</div>';
-
-    var x = 1; // Initial field counter
-    $(addButton).click(function() {
-      if (x < maxFields) {
-        x++;
-        $(wrapper).append(fieldHTML); // Add field HTML
-      }
-    });
-
-    // Remove field
-    $(wrapper).on('click', '.removeDateField', function(e) {
-      e.preventDefault();
-      $(this).parent('div').remove(); // Remove field HTML
-      x--; // Decrement field counter
-    });
-  });
-</script>

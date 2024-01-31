@@ -640,7 +640,6 @@ class Crud_model extends CI_Model
         }
     }
 
-
     public function get_lessons_org($type = "", $id = "")
     {
         $courseIds = []; 
@@ -697,13 +696,13 @@ class Crud_model extends CI_Model
         $data['type'] = implode(',', $this->input->post('type'));
 
         //Course type == 'classroom'
-        if (in_array('classroom', $this->input->post('type'))) {
+        if (in_array('classroom', $this->input->post('type')) OR in_array('live-webinar', $this->input->post('type'))) {
             $data['country'] = $this->input->post('country');
             $data['state'] = $this->input->post('state');
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
-            $data['datetime'] = $this->input->post('datetime');
+            $data['datetime'] = json_encode($this->input->post('datetime'));
         } else {
             $data['country'] = null;
             $data['state'] = null;
@@ -711,7 +710,6 @@ class Crud_model extends CI_Model
             $data['address'] = null;
             $data['datetime'] = null;
         }
-
 
         //Course expiry period
         if ($this->input->post('expiry_period') == 'limited_time' && is_numeric($this->input->post('number_of_month')) && $this->input->post('number_of_month') > 0) {
@@ -749,7 +747,6 @@ class Crud_model extends CI_Model
             $data['is_admin'] = 0;
         }
 
-
         if ($this->session->userdata('admin_login')) {
             if ($this->input->post('is_top_course') != 1) {
                 $data['is_top_course'] = 0;
@@ -769,16 +766,6 @@ class Crud_model extends CI_Model
         $this->db->insert('course', $data);
 
         $course_id = $this->db->insert_id();
-
-        
-        if (in_array('classroom', $this->input->post('type')) OR in_array('live-webinar', $this->input->post('type'))) {
-            foreach($this->input->post('date') as $date){
-                $this->db->insert('course_webinar_dates', [
-                    'course_id' => $course_id,
-                    'date' => $date,
-                ]);
-            }
-        }
 
 
         // Create folder if does not exist
@@ -4684,15 +4671,38 @@ class Crud_model extends CI_Model
         $data['learn'] = htmlspecialchars_($this->input->post('learn'));
         $data['assessment'] = htmlspecialchars_($this->input->post('assessment'));
         $data['eligibility'] = htmlspecialchars_($this->input->post('eligibility'));
-        $data['lecturers'] = htmlspecialchars_($this->input->post('lecturers'));
+        $data['lecturers'] = json_encode($this->input->post('lecturers'));
         $data['duration'] = htmlspecialchars_($this->input->post('duration'));
         $data['course_code'] = htmlspecialchars_($this->input->post('course_code'));
         $data['course_credits'] = htmlspecialchars_($this->input->post('course_credits'));
         $data['level'] = htmlspecialchars_($this->input->post('level'));
+        $data['creator'] = htmlspecialchars_($this->session->userdata('user_id'));
+        $data['e_learning_url'] = htmlspecialchars_($this->input->post('e_learning_url'));
+        $data['live_webinar_url'] = htmlspecialchars_($this->input->post('live_webinar_url'));
+        $data['classroom_url'] = htmlspecialchars_($this->input->post('classroom_url'));
 
+        //Main banner image
         if ($_FILES['banner']['name'] != "") {
             $data['banner'] = md5(rand(10000000, 20000000)) . '.png';
             move_uploaded_file($_FILES['banner']['tmp_name'], 'uploads/landing-page/banner/' . $data['banner']);
+        }
+
+        //E-learning banner image
+        if ($_FILES['e_learning_image']['name'] != "") {
+            $data['e_learning_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['e_learning_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['e_learning_image']);
+        }
+
+        //live-webinar banner image
+        if ($_FILES['live_webinar_image']['name'] != "") {
+            $data['live_webinar_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['live_webinar_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['live_webinar_image']);
+        }
+        
+        //live-webinar banner image
+        if ($_FILES['classroom_image']['name'] != "") {
+            $data['classroom_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['classroom_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['classroom_image']);
         }
         
         $this->db->insert('landing_pages', $data);
@@ -4710,12 +4720,15 @@ class Crud_model extends CI_Model
         $data['learn'] = htmlspecialchars_($this->input->post('learn'));
         $data['assessment'] = htmlspecialchars_($this->input->post('assessment'));
         $data['eligibility'] = htmlspecialchars_($this->input->post('eligibility'));
-        $data['lecturers'] = htmlspecialchars_($this->input->post('lecturers'));
         $data['duration'] = htmlspecialchars_($this->input->post('duration'));
         $data['course_code'] = htmlspecialchars_($this->input->post('course_code'));
         $data['course_credits'] = htmlspecialchars_($this->input->post('course_credits'));
         $data['level'] = htmlspecialchars_($this->input->post('level'));
+        $data['e_learning_url'] = htmlspecialchars_($this->input->post('e_learning_url'));
+        $data['live_webinar_url'] = htmlspecialchars_($this->input->post('live_webinar_url'));
+        $data['classroom_url'] = htmlspecialchars_($this->input->post('classroom_url'));
         
+        //Main banner image
         if ($_FILES['banner']['name'] != "") {
             if($landing_page['banner'] != null && file_exists('uploads/landing-page/banner/' . $landing_page['banner'])){
                 unlink('uploads/landing-page/banner/' . $landing_page['banner']);
@@ -4723,8 +4736,49 @@ class Crud_model extends CI_Model
 
             $data['banner'] = md5(rand(10000000, 20000000)) . '.png';
             move_uploaded_file($_FILES['banner']['tmp_name'], 'uploads/landing-page/banner/' . $data['banner']);
+        } 
+        
+        //E-learning banner image
+        if ($_FILES['e_learning_image']['name'] != "") {
+            if($landing_page['e_learning_image'] != null && file_exists('uploads/landing-page/banner/' . $landing_page['e_learning_image'])){
+                unlink('uploads/landing-page/banner/' . $landing_page['e_learning_image']);
+            }
+
+            $data['e_learning_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['e_learning_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['e_learning_image']);
         }
 
+        //live-webinar banner image
+        if ($_FILES['live_webinar_image']['name'] != "") {
+            if($landing_page['live_webinar_image'] != null && file_exists('uploads/landing-page/banner/' . $landing_page['live_webinar_image'])){
+                unlink('uploads/landing-page/banner/' . $landing_page['live_webinar_image']);
+            }
+
+            $data['live_webinar_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['live_webinar_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['live_webinar_image']);
+        }
+
+        //classroom banner image
+        if ($_FILES['classroom_image']['name'] != "") {
+            if($landing_page['classroom_image'] != null && file_exists('uploads/landing-page/banner/' . $landing_page['classroom_image'])){
+                unlink('uploads/landing-page/banner/' . $landing_page['classroom_image']);
+            }
+
+            $data['classroom_image'] = md5(rand(10000000, 20000000)) . '.png';
+            move_uploaded_file($_FILES['classroom_image']['tmp_name'], 'uploads/landing-page/banner/' . $data['classroom_image']);
+        }
+
+        // MULTI INSTRUCTOR PART STARTS
+        if (isset($_POST['lecturers']) && !empty($_POST['lecturers'])) {
+            $existing_instructors = json_decode($landing_page['lecturers']);
+            foreach ($_POST['lecturers'] as $instructor) {
+                if (!in_array($instructor, $existing_instructors)) {
+                    array_push($existing_instructors, $instructor);
+                }
+            }
+            $data['lecturers'] = json_encode($existing_instructors);
+        }
+        
         $this->db->where('id', $id);
         $this->db->update('landing_pages', $data);
     }

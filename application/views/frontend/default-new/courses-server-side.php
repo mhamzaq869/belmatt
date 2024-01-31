@@ -17,9 +17,10 @@
                     <div class="col-xl-3">
                         <div class="form-group mt-5">
                         <label for="Select Course Title">Select Type</label>
-                            <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
-                                <option value="<?php echo 'classroom'; ?>" <?php if ($venue == 'classroom') echo 'selected'; ?>><?php echo get_phrase('classroom'); ?></option>
-                                <option value="<?php echo 'live-webinar'; ?>" <?php if ($venue == 'live-webinar') echo 'selected'; ?>><?php echo get_phrase('live-webinar'); ?></option>
+                            <select class="form-control select2" data-toggle="select2" name="type" id='type'>  
+                                <option value="<?php echo 'all'; ?>" <?php if ($type == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
+                                <option value="<?php echo 'classroom'; ?>" <?php if ($type == 'classroom') echo 'selected'; ?>><?php echo get_phrase('classroom'); ?></option>
+                                <option value="<?php echo 'live-webinar'; ?>" <?php if ($type == 'live-webinar') echo 'selected'; ?>><?php echo get_phrase('live-webinar'); ?></option>
                             </select>
                         </div>
                     </div> 
@@ -46,8 +47,6 @@
                                 <?php foreach ($courses as $key => $course): ?>
                                     <option value="<?php echo $course['id']; ?>" <?php if ($title == $course['id']) echo 'selected'; ?>><?php echo get_phrase($course['title']); ?></option>
                                 <?php endforeach; ?>
-
-                                
                             </select>
                         </div>
                     </div>

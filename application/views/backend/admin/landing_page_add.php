@@ -90,6 +90,7 @@
 								aria-controls="lecturers" aria-selected="false">Lecturers</a>
 						</li>
 					</ul>
+
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade show active" id="course-overview" role="tabpanel" aria-labelledby="course-overview-tab">
 							<div class="form-group pt-3">
@@ -117,8 +118,16 @@
 							</div>
 						</div>
 						<div class="tab-pane fade" id="lecturers" role="tabpanel" aria-labelledby="lecturers-tab">
-							<div class="form-group pt-3">
-								<textarea name="lecturers" class="landing-page"></textarea>
+							<div class="form-group pt-3"> 
+								<div class="col-md-12">
+									<label class="col-form-label" for="new_instructor"><?php echo get_phrase('add_new_instructor'); ?></label>
+									<select class="select2 form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose ..." name="lecturers[]">
+										<?php $instructors = $this->user_model->get_instructor()->result_array(); ?>
+										<?php foreach ($instructors as $key => $instructor) : ?>
+											<option value="<?php echo html_escape($instructor['id']); ?>"><?php echo html_escape($instructor['first_name'] . ' ' . $instructor['last_name']); ?> ( <?php echo html_escape($instructor['email']); ?> )</option>
+										<?php endforeach; ?>
+									</select>
+								</div> 
 							</div>
 						</div>
 					</div>
@@ -149,18 +158,62 @@
 							</div>
 						</div>
 					</div>
-
-
-					<div class="row">
-						<div class="col-md-12">
-							<h4>Dates <button type="button" id="addDateField" class="btn ml-2"><i class="fa fa-plus-circle"></i></button></h4>
-							<div id="dateFields">
-								<div class="d-flex">
-									<input type="date" class="form-control date-field" name="date[]" required>
-									<a type="button" href="#" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+					
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="banner"><?php echo get_phrase('e learning image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="banner" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="e_learning_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="e_learning_image" accept="image/*">
+									</div>
 								</div>
 							</div>
-							
+
+							<input type="text" class="form-control" name="e_learning_url" value="">
+						</div>
+						
+						<div class="col-md-4">
+							<label for="live-webinar"><?php echo get_phrase('live webinar image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="live-webinar" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="live_webinar_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="live_webinar_image" accept="image/*">
+									</div>
+								</div>
+							</div>
+
+							<input type="text" class="form-control" name="live_webinar_url" value="">
+						</div>
+
+						<div class="col-md-4">
+							<label for="classroom"><?php echo get_phrase('classroom image'); ?></label>
+							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
+								<div class="box" style="width: 100%;">
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
+									</div>
+									<div class="upload-options">
+										<label for="classroom" class="btn"> <i class="mdi mdi-camera"></i>
+											<?php echo get_phrase('choose_a_image'); ?>
+											<br> <small>(500 x 500)</small> </label>
+										<input id="classroom_image" style="visibility:hidden; position: absolute;" type="file"
+											class="image-upload" name="classroom_image" accept="image/*">
+									</div>
+								</div>
+							</div>
+							<input type="text" class="form-control" name="classroom_url" value="">
 						</div>
 					</div>
 

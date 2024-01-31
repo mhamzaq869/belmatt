@@ -247,7 +247,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="address d-none">
-                                                    <div class="form-group row mb-3">
+                                                    <div class="form-group row mb-3 address-country">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Country"><?php echo get_phrase('Country'); ?></label>
                                                         <div class="col-md-10">
@@ -256,7 +256,8 @@
                                                                 placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row mb-3">
+
+                                                    <div class="form-group row mb-3 address-state">
                                                         <label class="col-md-2 col-form-label"
                                                             for="State"><?php echo get_phrase('State'); ?></label>
                                                         <div class="col-md-10">
@@ -265,7 +266,8 @@
                                                                 placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row mb-3">
+
+                                                    <div class="form-group row mb-3 address-city">
                                                         <label class="col-md-2 col-form-label"
                                                             for="City"><?php echo get_phrase('City'); ?></label>
                                                         <div class="col-md-10">
@@ -274,7 +276,8 @@
                                                                 placeholder="<?php echo get_phrase('enter_city_name'); ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row mb-3">
+
+                                                    <div class="form-group row mb-3 address-adress">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Address"><?php echo get_phrase('Address'); ?></label>
                                                         <div class="col-md-10">
@@ -283,7 +286,8 @@
                                                                 placeholder="<?php echo get_phrase('enter_address'); ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row mb-3">
+
+                                                    <div class="form-group row mb-3 address-postal-code">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Postal Code"><?php echo get_phrase('Postal Code'); ?></label>
                                                         <div class="col-md-10">
@@ -292,13 +296,20 @@
                                                                 placeholder="<?php echo get_phrase('enter_postal_code'); ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row mb-3">
-                                                        <label class="col-md-2 col-form-label"
-                                                            for="Date Time"><?php echo get_phrase('Date Time'); ?></label>
+
+                                                    <div class="form-group row mb-3 address-dates">
+                                                        <label class="col-md-2 col-form-label pr-0 d-inline" for="Date Time">
+                                                            <?php echo get_phrase('Date Time'); ?>
+                                                            <button type="button" id="addDateField" class="btn p-0 ml-2">
+                                                                <i class="fa fa-plus-circle"></i>
+                                                            </button>
+                                                        </label>
                                                         <div class="col-md-10">
-                                                            <input type="datetime-local" class="form-control"
-                                                                id="course_date_time" name="datetime" min=""
-                                                                placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                            <div id="dateFields">
+                                                                <div class="d-flex">
+                                                                    <input type="datetime-local" class="form-control date-field" id="course_date_time" name="datetime[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -317,6 +328,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
+
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label"
                                                         for="enable_drip_content"><?php echo get_phrase('enable_drip_content'); ?></label>
@@ -327,7 +339,6 @@
                                                             data-off-label="Off"></label>
                                                     </div>
                                                 </div>
-
 
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label pt-1"
@@ -354,29 +365,7 @@
                                                                 for="status_upcoming"><?php echo get_phrase('Upcoming course'); ?></label>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="form-group row mb-3 dates d-none">
-                                                    <label class="col-md-2 col-form-label pt-1 d-inline"
-                                                        for="enable_drip_content">
-                                                        <?php echo get_phrase('Dates'); ?>
-                                                        <button type="button" id="addDateField" class="btn p-0 ml-2"><i
-                                                                class="fa fa-plus-circle"></i></button>
-                                                    </label>
-                                                    <div class="col-md-10 pt-1">
-                                                        <div id="dateFields">
-                                                            <div class="d-flex">
-                                                                <input type="date" class="form-control date-field"
-                                                                    name="date[]" required>
-                                                                <a type="button" href="#"
-                                                                    class="removeDateField btn btn-danger"><i
-                                                                        class="fa fa-minus-circle"
-                                                                        aria-hidden="true"></i></a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                                </div> 
 
                                                 <div class="form-group row mb-3">
                                                     <div class="offset-md-2 col-md-10">
@@ -388,8 +377,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div> <!-- end tab pane -->
@@ -620,6 +607,7 @@
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div> <!-- end tab-pane -->
+
                                     <div class="tab-pane" id="media">
                                         <div class="row justify-content-center">
 
@@ -662,6 +650,7 @@
 
                                         </div> <!-- end row -->
                                     </div>
+
                                     <div class="tab-pane" id="seo">
                                         <div class="row justify-content-center">
                                             <div class="col-xl-8">
@@ -689,6 +678,7 @@
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div>
+                                    
                                     <div class="tab-pane" id="finish">
                                         <div class="row">
                                             <div class="col-12">
@@ -825,16 +815,10 @@
             return $(el).val();
         }).get();
  
-        if (data.includes('classroom')) {
+        if (data.includes('classroom') || data.includes('live-webinar')) {
             $('.address').removeClass('d-none')
         } else {
             $('.address').addClass('d-none')
-        }
-
-        if (data.includes('classroom') || data.includes('live-webinar')) {
-            $('.dates').removeClass('d-none')
-        } else {
-            $('.dates').addClass('d-none')
         }
     });
 
@@ -845,16 +829,10 @@
             return $(el).val();
         }).get();
 
-        if (data.includes('classroom')) {
+        if (data.includes('classroom') || data.includes('live-webinar')) {
             $('.address').removeClass('d-none')
         } else {
             $('.address').addClass('d-none')
-        }
-
-        if (data.includes('classroom') || data.includes('live-webinar')) {
-            $('.dates').removeClass('d-none')
-        } else {
-            $('.dates').addClass('d-none')
         }
     });
 
@@ -864,7 +842,7 @@
         var addButton = $('#addDateField');
         var wrapper = $('#dateFields');
         var fieldHTML = '<div class="d-flex mt-2">' +
-            '<input type="date" class="form-control date-field" name="date[]" required>' +
+            '<input type="datetime-local" class="form-control date-field" name="datetime[]" required>' +
             '<a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>' +
             '</div>';
 

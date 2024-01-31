@@ -277,6 +277,7 @@ if($course_details['profession'] != null){
                                                         </select>
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?><span class="required">*</span></label>
                                                     <div class="col-md-10">
@@ -353,41 +354,63 @@ if($course_details['profession'] != null){
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="address <?php if (in_array('classroom',$courseType)): echo ''; else: echo 'd-none'; endif; ?> ">
+                                                   
+                                                <div class="address <?php if (in_array('classroom',$courseType) OR in_array('live-webinar',$courseType)): echo ''; else: echo 'd-none'; endif; ?> ">
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="Country"><?php echo get_phrase('Country'); ?></label>
                                                         <div class="col-md-10">
                                                             <input type="text" class="form-control" id="course_country" name = "country" value="<?php echo $course_details['country']; ?>" placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div> 
+                                                    
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="State"><?php echo get_phrase('State'); ?></label>
                                                         <div class="col-md-10">
                                                             <input type="text" class="form-control" id="course_state" name = "state" value="<?php echo $course_details['state']; ?>" placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div> 
+                                                    
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="City"><?php echo get_phrase('City'); ?></label>
                                                         <div class="col-md-10">
                                                             <input type="text" class="form-control" id="course_city" name = "city" value="<?php echo $course_details['city']; ?>" placeholder="<?php echo get_phrase('enter_city_name'); ?>">
                                                         </div>
                                                     </div> 
+                                                    
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="Address"><?php echo get_phrase('Address'); ?></label>
                                                         <div class="col-md-10">
                                                             <input type="text" class="form-control" id="course_address" name = "address" value="<?php echo $course_details['address']; ?>" placeholder="<?php echo get_phrase('enter_address'); ?>">
                                                         </div>
                                                     </div> 
+                                                    
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="Postal Code"><?php echo get_phrase('Postal Code'); ?></label>
                                                         <div class="col-md-10">
                                                             <input type="text" class="form-control" id="course_postal_code" name = "postal_code" value="<?php echo $course_details['postal_code']; ?>" placeholder="<?php echo get_phrase('enter_postal_code'); ?>">
                                                         </div>
                                                     </div>   
+                                                    
                                                     <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label" for="Date Time"><?php echo get_phrase('Date Time'); ?></label>
                                                         <div class="col-md-10">
-                                                            <input type="datetime-local" class="form-control" id="course_date_time" name = "datetime" value="<?php echo $course_details['datetime']; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                            <div id="dateFields">
+                                                                <?php $datetimes = json_decode($course_details['datetime']);
+                                                                    if(count($datetimes) > 0):
+                                                                        foreach($datetimes as $i => $datetime): ?>
+                                                                            <?php if($i == 0): ?>
+                                                                                <input type="datetime-local" class="form-control" id="course_date_time" name="datetime" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                            <?php elseif($i > 0): ?>
+                                                                                <div class="d-flex mt-2">
+                                                                                    <input type="datetime-local" class="form-control" id="course_date_time" name="datetime" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                    <a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                                                                                </div>
+                                                                            <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                <?php else: ?>
+                                                                            <input type="datetime-local" class="form-control" id="course_date_time" name="datetime" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                <?php endif; ?>
+                                                            </div>
                                                         </div>
                                                     </div>      
                                                 </div>
@@ -937,7 +960,31 @@ if($course_details['profession'] != null){
         }
     });
 
-    
+    $(document).ready(function() {
+        var maxFields = 5; // Maximum input fields allowed
+        var addButton = $('#addDateField');
+        var wrapper = $('#dateFields');
+        var fieldHTML = '<div class="d-flex mt-2">' +
+            '<input type="datetime-local" class="form-control date-field" name="datetime[]" required>' +
+            '<a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>' +
+            '</div>';
+
+        var x = 1; // Initial field counter
+        $(addButton).click(function() {
+            if (x < maxFields) {
+                x++;
+                $(wrapper).append(fieldHTML); // Add field HTML
+            }
+        });
+
+        // Remove field
+        $(wrapper).on('click', '.removeDateField', function(e) {
+            e.preventDefault();
+            $(this).parent('div').remove(); // Remove field HTML
+            x--; // Decrement field counter
+        });
+    });
+
     // Get the input element by its ID
     var datetimeInput = document.getElementById('course_date_time');
 

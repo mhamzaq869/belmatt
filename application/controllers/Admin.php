@@ -820,7 +820,7 @@ class Admin extends CI_Controller
         }
 
         $page_data['blogs'] = $this->crud_model->get_landing_pages();
-        $page_data['page_title'] = get_phrase('blog');
+        $page_data['page_title'] = get_phrase('landing_pages');
         $page_data['page_name'] = 'landing_pages';
         $this->load->view('backend/index', $page_data);
     } 
@@ -1428,6 +1428,7 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+
         $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         if ($course_details['status'] == 'draft') {
             $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_course'));
@@ -2197,6 +2198,51 @@ class Admin extends CI_Controller
         }
     }
 
+    // REMOVING INSTRUCTOR FROM LANDING PAGE
+    public function remove_an_instructor_landing_page($landing_id, $instructor_id)
+    {
+        // CHECK ACCESS PERMISSION
+        check_permission('landing_page');
+
+        $landing_details = $this->crud_model->get_landing_pages($landing_id)->row_array();
+
+        if ($landing_details['creator'] == $instructor_id) {
+            $this->session->set_flashdata('error_message', get_phrase('landing_creator_can_be_removed'));
+            redirect('admin/edit_landing_page/' . $landing_id);
+        }
+
+        if ($landing_details['lecturers']) {
+            $instructor_ids = json_decode($landing_details['lecturers']);
+
+            if (in_array($instructor_id, $instructor_ids)) {
+                if (count($instructor_ids) > 1) {
+                    if (($key = array_search($instructor_id, $instructor_ids)) !== false) {
+                        unset($instructor_ids[$key]);
+
+                        $data['lecturers'] = json_encode($instructor_ids);
+                        $this->db->where('id', $landing_id);
+                        $this->db->update('landing_pages', $data);
+
+                        $this->session->set_flashdata('flash_message', get_phrase('instructor_has_been_removed'));
+                        if ($this->session->userdata('lecturers') == $instructor_id) {
+                            redirect('admin/landing_pages/');
+                        } else {
+                            redirect('admin/edit_landing_page/' . $landing_id);
+                        }
+                    }
+                } else {
+                    $this->session->set_flashdata('error_message', get_phrase('a_course_should_have_at_least_one_instructor'));
+                    redirect('admin/edit_landing_page/' . $landing_id);
+                }
+            } else {
+                $this->session->set_flashdata('error_message', get_phrase('invalid_instructor_id'));
+                redirect('admin/edit_landing_page/' . $landing_id);
+            }
+        } else {
+            $this->session->set_flashdata('error_message', get_phrase('a_course_should_have_at_least_one_instructor'));
+            redirect('admin/edit_landing_page/' . $landing_id);
+        }
+    }
 
     /** Coupons functionality starts */
     public function coupons($param1 = "", $param2 = "")
