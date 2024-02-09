@@ -640,6 +640,7 @@ class Crud_model extends CI_Model
         }
     }
 
+
     public function get_lessons_org($type = "", $id = "")
     {
         $courseIds = []; 
@@ -665,7 +666,7 @@ class Crud_model extends CI_Model
     }
 
     public function add_course($param1 = "")
-    {   
+    {
         $faqs = array();
         if (!empty($this->input->post('faqs'))) :
             foreach (array_filter($this->input->post('faqs')) as $faq_key => $faq_title) {
@@ -694,7 +695,7 @@ class Crud_model extends CI_Model
         $data['is_free_course'] = $this->input->post('is_free_course');
         $data['profession'] = implode(',', $this->input->post('profession'));
         $data['type'] = implode(',', $this->input->post('type'));
-
+ 
         //Course type == 'classroom'
         if (in_array('classroom', $this->input->post('type')) OR in_array('live-webinar', $this->input->post('type'))) {
             $data['country'] = $this->input->post('country');
@@ -747,6 +748,7 @@ class Crud_model extends CI_Model
             $data['is_admin'] = 0;
         }
 
+
         if ($this->session->userdata('admin_login')) {
             if ($this->input->post('is_top_course') != 1) {
                 $data['is_top_course'] = 0;
@@ -767,7 +769,7 @@ class Crud_model extends CI_Model
 
         $course_id = $this->db->insert_id();
 
-
+        
         // Create folder if does not exist
         if (!file_exists('uploads/thumbnails/course_thumbnails')) {
             mkdir('uploads/thumbnails/course_thumbnails', 0777, true);
@@ -908,7 +910,7 @@ class Crud_model extends CI_Model
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
-            $data['datetime'] = $this->input->post('datetime');
+            $data['datetime'] = json_encode($this->input->post('datetime'));
         } else {
             $data['country'] = null;
             $data['state'] = null;
@@ -4644,7 +4646,7 @@ class Crud_model extends CI_Model
     //End Blog
 
 
-     //Start for admin panel
+    //Start for admin panel
     function get_landing_page_by_slug($slug = "")
     {
         $this->db->where('slug', $slug);

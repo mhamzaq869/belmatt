@@ -1,5 +1,17 @@
 <script type="text/javascript">
+<<<<<<< HEAD
   
+=======
+  function changeTitleOfImageUploader(photoElem) {
+    var fileName = $(photoElem).val().replace(/C:\\fakepath\\/i, '');
+    $(photoElem).siblings('label').text(ellipsis(fileName));
+    <?php $upload_max_filesize_kb = str_replace('m', '', strtolower(ini_get('upload_max_filesize'))) * 1024; ?>
+    if ('<?php echo $upload_max_filesize_kb * 1024; ?>' <= photoElem.files[0].size) {
+      error_notify('<?php echo get_phrase('Your server does not allow uploading files that large.') . ' ' . get_phrase("Your servers file upload limit is " . ($upload_max_filesize_kb / 1024) . 'MB'); ?>');
+    }
+  }
+
+>>>>>>> 783509eadf6f2951e0f38c0b741be5eaa55c6c61
   function set_js_flashdata(url) {
     $.ajax({
       url: url,
@@ -183,7 +195,11 @@
     }
   }
 
+<<<<<<< HEAD
   initSummerNote(['.landing-page']); 
 
  
+=======
+  
+>>>>>>> 783509eadf6f2951e0f38c0b741be5eaa55c6c61
 </script>

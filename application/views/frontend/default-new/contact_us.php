@@ -24,12 +24,11 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                             <div class="office-hour">
                                 <div class="icon">
-                                    <i class="fa-regular fa-clock"></i>
+                                    <i class="fa-regular fa-envelope"></i>
                                 </div>
                                 <div class="office-hour-text">
-                                    <h4>Office Hours</h4>
-                                    <p>Monday-Friday</p>
-                                    <p>8:00 am to 5:00 pm</p>
+                                    <h4>Email</h4>
+                                    <p>info@belmatt.co.uk</p>
                                 </div>
                             </div>
                             <div class="office-hour">
@@ -37,9 +36,8 @@
                                     <i class="fa-solid fa-house"></i>
                                 </div>
                                 <div class="office-hour-text">
-                                    <h4>Office</h4>
-                                    <p>629 12th St, Modesto,</p>
-                                    <p>CA 95354, United States</p>
+                                    <h4>Postal Address</h4>
+                                    <p>Suite 570 405 Kings Road, Chelsea, SW10 0BB, London, United Kingdom</p>
                                 </div>
                             </div>
                         </div>
@@ -49,9 +47,8 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
                                 <div class="office-hour-text">
-                                    <h4>Our Address</h4>
-                                    <p>M629 12th St, Modesto,</p>
-                                    <p>CA 95354, United States</p>
+                                    <h4>Teaching Vanue</h4>
+                                    <p> Room 21, 3rd floor, Chatfield Medical Centre,Chatfield Road, Battersea, SW11 3UJ.</p>
                                 </div>
                             </div>
                             <div class="office-hour">
@@ -59,10 +56,12 @@
                                     <i class="fa-solid fa-phone"></i>
                                 </div>
                                 <div class="office-hour-text">
-                                    <h4>Get In Touch</h4>
-                                    <p>+(111)65-458-856</p>
-                                    <p>+(111)65-458-856</p>
+                                    <h4>Phone</h4>
+                                    <p>+44 207 692 8709</p>
                                 </div>
+                            </div>
+                            <div class="office-hour">
+                                
                             </div>
                         </div>
                     </div>

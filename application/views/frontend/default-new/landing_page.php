@@ -66,91 +66,84 @@
         right: 0;
         color: white;
     }
+    
+    #myTabContent ul {
+         list-style: disc !important; 
+    }
 </style>
 
 <section class="wish-list-body ">
     <div class="container">
         <div class="row">
             <div class="col-lg-9 col-md-8 col-sm-12">
-                <div class="my-course-1-full-body skyblue">
-                    <?php $landing_page_url = 'uploads/landing-page/banner/'.$landing_page['banner']; ?>
-                    <?php
-                        if(file_exists($landing_page_url) && is_file($landing_page_url)):
-                            $landing_page_url = base_url($landing_page_url);
-                        else:
-                            $landing_page_url = base_url('uploads/landing-page/banner/placeholder.png');
-                        endif;
-                    ?>
-                    <img src="<?php echo $landing_page_url; ?>" alt="banner">
-                </div>
 
-                <div class="my-course-1-full-body text-white card-title p-5 text-center mt-0">
+                <div class="my-course-1-full-body text-white card-title p-5 text-center">
                     <h1 class="text-white">
                         <?php echo get_phrase($landing_page['title']); ?>
                     </h1>
                     <hr> <br>
-                    <p><?php echo get_phrase($landing_page['header']); ?>
+                    <p><?php echo htmlspecialchars_decode($landing_page['header']); ?>
                     </p>
                 </div>
 
                 <div class="my-course-1-full-body skyblue mt-0">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active px-1" id="course-overview-tab" data-toggle="tab"
+                            <a class="nav-link active px-2" id="course-overview-tab" data-toggle="tab"
                                 href="#course-overview" role="tab" aria-controls="course-overview"
-                                aria-selected="true">Course Overview</a>
+                                aria-selected="true"><b>Course Overview</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-1" id="prerequisites-tab" data-toggle="tab" href="#prerequisites"
-                                role="tab" aria-controls="prerequisites" aria-selected="false">Prerequisites</a>
+                            <a class="nav-link px-2" id="prerequisites-tab" data-toggle="tab" href="#prerequisites"
+                                role="tab" aria-controls="prerequisites" aria-selected="false"><b>Prerequisites</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-1" id="learn-tab" data-toggle="tab" href="#learn" role="tab"
-                                aria-controls="learn" aria-selected="false">What Will I Learn</a>
+                            <a class="nav-link px-2" id="learn-tab" data-toggle="tab" href="#learn" role="tab"
+                                aria-controls="learn" aria-selected="false"><b>What Will I Learn</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-1" id="assessment-tab" data-toggle="tab" href="#assessment" role="tab"
-                                aria-controls="assessment" aria-selected="false">Assessments</a>
+                            <a class="nav-link px-2" id="assessment-tab" data-toggle="tab" href="#assessment" role="tab"
+                                aria-controls="assessment" aria-selected="false"><b>Assessments</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-1" id="eligibility-tab" data-toggle="tab" href="#eligibility"
-                                role="tab" aria-controls="eligibility" aria-selected="false">Eligibility</a>
+                            <a class="nav-link px-2" id="eligibility-tab" data-toggle="tab" href="#eligibility"
+                                role="tab" aria-controls="eligibility" aria-selected="false"><b>Eligibility</b></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link px-1" id="lecturers-tab" data-toggle="tab" href="#lecturers" role="tab"
-                                aria-controls="lecturers" aria-selected="false">Lecturers</a>
+                            <a class="nav-link px-2" id="lecturers-tab" data-toggle="tab" href="#lecturers" role="tab"
+                                aria-controls="lecturers" aria-selected="false"><b>Lecturers</b></a>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="course-overview" role="tabpanel"
                             aria-labelledby="course-overview-tab">
-                            <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['course_overview']); ?>
+                            <div class="form-group pt-3 p-4">
+                                <?php echo htmlspecialchars_decode($landing_page['course_overview']); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="prerequisites" role="tabpanel"
                             aria-labelledby="prerequisites-tab">
-                            <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['prerequisites']); ?>
+                            <div class="form-group pt-3 p-4">
+                                <?php echo htmlspecialchars_decode($landing_page['prerequisites']); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="learn" role="tabpanel" aria-labelledby="learn-tab">
-                            <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['learn']); ?>
+                            <div class="form-group pt-3 p-4">
+                                <?php echo htmlspecialchars_decode($landing_page['learn']); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
-                            <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['assessment']); ?>
+                            <div class="form-group pt-3 p-4">
+                                <?php echo htmlspecialchars_decode($landing_page['assessment']); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="eligibility" role="tabpanel" aria-labelledby="eligibility-tab">
-                            <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['eligibility']); ?>
+                            <div class="form-group pt-3 p-4">
+                                <?php echo htmlspecialchars_decode($landing_page['eligibility']); ?>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="lecturers" role="tabpanel" aria-labelledby="lecturers-tab">
-                            <div class="form-group pt-3">
+                            <div class="form-group pt-3 p-4">
                                 <div class="instructor">
                                     <?php $multi_instructor_id_arr = json_decode($landing_page['lecturers']); ?>
                                     <?php foreach($multi_instructor_id_arr as $instructor_id): ?>
@@ -193,7 +186,7 @@
                     </div>
                 </div>
 
-                <div class="row mt-0">
+                <div class="row mt-0 mb-5">
                     <div class="col-4">
                         <?php $e_learning_image = 'uploads/landing-page/banner/'.$landing_page['e_learning_image']; ?>
                         <?php
@@ -203,7 +196,7 @@
                                 $e_learning_image = base_url('uploads/landing-page/banner/placeholder.png');
                             endif;
                         ?>
-                        <div class="my-course-1-full-body mt-3" style="background-image:url(<?php echo $landing_page_url; ?>);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
+                        <div class="my-course-1-full-body mt-3" style="background-image:url(<?php echo $e_learning_image; ?>);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
                             <a href="<?php echo base_url($landing_page['e_learning_url']); ?>">
                                 <div class="card-body css-label" >
                                     <div class="css-1ydmxns"></div>
@@ -255,7 +248,7 @@
             </div>
 
             <div class="col-lg-3 col-md-8 col-sm-12">
-                <div class="my-course-1-full-body purple">
+                <div class="my-course-1-full-body purple mb-5">
                     <div class="card capsule">
                         <div class="card-body">
                             Duration:

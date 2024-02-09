@@ -10,15 +10,17 @@
       <a class="link-cookie-policy" href="<?php echo site_url('home/cookie_policy'); ?>"><?php echo site_phrase('cookie_policy'); ?></a>
     </p>
   </div>
-  <div class="cookieButton">
-    <a onclick="cookieAccept();"><?php echo site_phrase('accept'); ?></a>
+  <div class="cookieButtons">
+    <button onclick="cookieAccept();"><?php echo site_phrase('accept'); ?></button>
+    <button onclick="cookieDecline();"><?php echo site_phrase('decline'); ?></button>
   </div>
 </div>
+
 <script>
   $(document).ready(function () {
     if (localStorage.getItem("accept_cookie_academy")) {
-      //localStorage.removeItem("accept_cookie_academy");
-    }else{
+      // localStorage.removeItem("accept_cookie_academy");
+    } else {
       $('#cookieConsentContainer').fadeIn(1000);
     }
   });
@@ -29,5 +31,9 @@
       localStorage.setItem("accept_cookie_time", "<?php echo date('m/d/Y'); ?>");
       $('#cookieConsentContainer').fadeOut(1200);
     }
+  }
+
+  function cookieDecline() {
+    $('#cookieConsentContainer').fadeOut(1200);
   }
 </script>

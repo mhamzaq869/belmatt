@@ -247,7 +247,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="address d-none">
-                                                    <div class="form-group row mb-3 address-country">
+                                                    <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Country"><?php echo get_phrase('Country'); ?></label>
                                                         <div class="col-md-10">
@@ -256,8 +256,7 @@
                                                                 placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div>
-
-                                                    <div class="form-group row mb-3 address-state">
+                                                    <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label"
                                                             for="State"><?php echo get_phrase('State'); ?></label>
                                                         <div class="col-md-10">
@@ -266,8 +265,7 @@
                                                                 placeholder="<?php echo get_phrase('enter_country_name'); ?>">
                                                         </div>
                                                     </div>
-
-                                                    <div class="form-group row mb-3 address-city">
+                                                    <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label"
                                                             for="City"><?php echo get_phrase('City'); ?></label>
                                                         <div class="col-md-10">
@@ -276,8 +274,7 @@
                                                                 placeholder="<?php echo get_phrase('enter_city_name'); ?>">
                                                         </div>
                                                     </div>
-
-                                                    <div class="form-group row mb-3 address-adress">
+                                                    <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Address"><?php echo get_phrase('Address'); ?></label>
                                                         <div class="col-md-10">
@@ -286,8 +283,7 @@
                                                                 placeholder="<?php echo get_phrase('enter_address'); ?>">
                                                         </div>
                                                     </div>
-
-                                                    <div class="form-group row mb-3 address-postal-code">
+                                                    <div class="form-group row mb-3">
                                                         <label class="col-md-2 col-form-label"
                                                             for="Postal Code"><?php echo get_phrase('Postal Code'); ?></label>
                                                         <div class="col-md-10">
@@ -296,7 +292,6 @@
                                                                 placeholder="<?php echo get_phrase('enter_postal_code'); ?>">
                                                         </div>
                                                     </div>
-
                                                     <div class="form-group row mb-3 address-dates">
                                                         <label class="col-md-2 col-form-label pr-0 d-inline" for="Date Time">
                                                             <?php echo get_phrase('Date Time'); ?>
@@ -328,7 +323,6 @@
                                                         </select>
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label"
                                                         for="enable_drip_content"><?php echo get_phrase('enable_drip_content'); ?></label>
@@ -339,6 +333,7 @@
                                                             data-off-label="Off"></label>
                                                     </div>
                                                 </div>
+
 
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label pt-1"
@@ -365,7 +360,7 @@
                                                                 for="status_upcoming"><?php echo get_phrase('Upcoming course'); ?></label>
                                                         </div>
                                                     </div>
-                                                </div> 
+                                                </div>
 
                                                 <div class="form-group row mb-3">
                                                     <div class="offset-md-2 col-md-10">
@@ -377,6 +372,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div> <!-- end tab pane -->
@@ -607,7 +604,6 @@
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div> <!-- end tab-pane -->
-
                                     <div class="tab-pane" id="media">
                                         <div class="row justify-content-center">
 
@@ -650,7 +646,6 @@
 
                                         </div> <!-- end row -->
                                     </div>
-
                                     <div class="tab-pane" id="seo">
                                         <div class="row justify-content-center">
                                             <div class="col-xl-8">
@@ -678,7 +673,6 @@
                                             </div> <!-- end col -->
                                         </div> <!-- end row -->
                                     </div>
-                                    
                                     <div class="tab-pane" id="finish">
                                         <div class="row">
                                             <div class="col-12">

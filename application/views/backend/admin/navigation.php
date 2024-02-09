@@ -490,9 +490,9 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span><?php echo get_phrase('themes'); ?></span>
 				</a>
 			</li>
-		<?php endif; ?> 
-
-		<?php if (has_permission('landing_pages')) : ?>
+		<?php endif; ?>
+    
+        <?php if (has_permission('landing_pages')) : ?>
 			<li class="side-nav-item  <?php if ($page_name == 'system_settings' || $page_name == 'frontend_settings' || $page_name == 'payment_settings' || $page_name == 'manage_language' || $page_name == 'about' || $page_name == 'themes' || $page_name == 'custom_page' || $page_name == 'data_center' || $page_name == 'notification_settings') : ?> active <?php endif; ?>">
 				<a href="javascript: void(0);" class="side-nav-link">
 					<i class="dripicons-blog"></i>

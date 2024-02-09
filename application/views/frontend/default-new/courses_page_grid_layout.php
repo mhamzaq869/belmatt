@@ -36,10 +36,10 @@
                                         <p>(<?php echo $number_of_ratings; ?> <?php echo get_phrase('Reviews') ?>)</p>
                                     </div>
                                     <div class="review-btn d-flex align-items-center">
-                                       <span class="compare-img checkPropagation" onclick="redirectTo('<?php echo base_url('home/compare?course-1='.slugify($course['title']).'&course-id-1='.$course['id']); ?>');">
-                                            <img src="<?php echo base_url('assets/frontend/default-new/image/compare.png') ?>">
-                                            <?php echo get_phrase('Compare'); ?>
-                                        </span>
+                                       <!--<span class="compare-img checkPropagation" onclick="redirectTo('<?php echo base_url('home/compare?course-1='.slugify($course['title']).'&course-id-1='.$course['id']); ?>');">-->
+                                       <!--     <img src="<?php echo base_url('assets/frontend/default-new/image/compare.png') ?>">-->
+                                       <!--     <?php echo get_phrase('Compare'); ?>-->
+                                       <!-- </span>-->
                                     </div>
                                 </div>
                                 <p class="ellipsis-line-2"><?php echo $course['short_description'] ?></p>

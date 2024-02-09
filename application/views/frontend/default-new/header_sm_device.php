@@ -37,7 +37,7 @@
           <li class="bg-light">
             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500 collapsed" data-bs-toggle="collapse" data-bs-target="#category-collapse" aria-expanded="false">
               <i class="fas fa-book me-2"></i>
-              <?php echo get_phrase('Categories'); ?>
+              <?php echo get_phrase('Courses'); ?>
             </button>
             <div class="collapse" id="category-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small bg-white">
@@ -97,6 +97,22 @@
               <a href="<?php echo site_url('course_bundles'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('Course Bundles'); ?></a>
             </li>
           <?php endif; ?>
+          
+          <li class="bg-light">
+              <a href="<?php echo site_url('/home/courses?type=e-learning'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('eLearning'); ?></a>
+            </li>
+            <li class="bg-light">
+              <a href="<?php echo site_url('/home/courses?type=live-webinar'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('Scheduled'); ?></a>
+            </li>
+            <li class="bg-light">
+              <a href="<?php echo site_url('/home/course_categories'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('Categories'); ?></a>
+            </li>
+            <li class="bg-light">
+              <a href="<?php echo site_url('/home/course_calendar'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('Calendar'); ?></a>
+            </li>
+            <li class="bg-light">
+              <a href="<?php echo site_url('/home/about_us'); ?>" class="btn btn-toggle-list d-inline-flex align-items-center rounded border-0 text-dark text-16px fw-500"> <i class="fas fa-cube me-2"></i> <?php echo get_phrase('About'); ?></a>
+            </li>
 
           <?php if($admin_login): ?>
             <li class="bg-light">

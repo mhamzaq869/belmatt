@@ -58,8 +58,8 @@ a:hover, a:focus {
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  width: auto;
+  height: 50px;
 }
 
 button {
@@ -250,7 +250,7 @@ select:visited {
   transition: all 0.3s;
 }
 .course-content-items .item.active {
-  background-color: #754ffe;
+  background-color: #194582;
 }
 .course-content-items .item.active .left .icon {
   background-color: #fff;
@@ -320,14 +320,14 @@ select:visited {
   transition: all 0.3s;
 }
 .ct-tabs-custom-one button.nav-link.active, .ct-tabs-custom-one button.nav-link:hover {
-  color: #754ffe;
+  color: #194582;
   border-color: transparent;
   background: transparent !important;
 }
 .ct-tabs-custom-one button.nav-link.active span, .ct-tabs-custom-one button.nav-link:hover span {
   opacity: 1;
   z-index: 1;
-  background-color: #754ffe;
+  background-color: #194582;
 }
 .ct-tabs-custom-one button.nav-link span {
   display: inline-block;
@@ -336,7 +336,7 @@ select:visited {
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: #754ffe;
+  background-color: #194582;
   z-index: 1;
   opacity: 0;
 }
@@ -482,7 +482,7 @@ select:visited {
 
 .s_search input:focus,
 .s_search input:hover {
-  border-color: #754ffe;
+  border-color: #194582;
 }
 
 .s_search span {
@@ -580,7 +580,7 @@ select:visited {
   font-size: 13px;
   font-weight: 500;
   line-height: 26px;
-  color: #754ffe;
+  color: #194582;
 }
 .forum-item .reaction-reply .item .icon {
   display: flex;
@@ -589,7 +589,7 @@ select:visited {
   fill: #737982;
 }
 .forum-item .reaction-reply .item:has(.no) .icon svg path {
-  fill: #754ffe;
+  fill: #194582;
 }
 
 .forum-form .f-subtitle {
@@ -630,7 +630,7 @@ select:visited {
 
 .forum-input:focus,
 .forum-input:hover {
-  border-color: #754ffe;
+  border-color: #194582;
 }
 
 textarea.forum-input {
@@ -641,7 +641,7 @@ textarea.forum-input {
   display: inline-block;
   padding: 14px 35px;
   border-radius: 10px;
-  background-color: #754ffe;
+  background-color: #194582;
   font-family: "Inter", sans-serif;
   font-size: 15px;
   font-weight: 500;

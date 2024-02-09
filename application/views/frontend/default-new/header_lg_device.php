@@ -83,24 +83,24 @@
           </li>
         </ul>
       <?php endif; ?>
+      
+      <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
+  <!-- New Menu Item: eLearning -->
+  <li class="nav-item">
+    <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="https://harrisarshad.com/bellmatt/home/courses?type=e-learning">
+      <span class="ms-2">eLearning</span>
+    </a>
+  </li>
 
-        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
-          <li class="nav-item">
-            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('home/course_categories'); ?>" id="navbarDropdown4">
-              <span class="ms-2"><?php echo get_phrase('Categories'); ?></span>
-            </a>
-          </li>
-        </ul>
+  <!-- New Menu Item: Live Webinar -->
+  <li class="nav-item">
+    <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="https://harrisarshad.com/bellmatt/home/courses?type=live-webinar">
+      <span class="ms-2">Scheduled</span>
+    </a>
+  </li>
+</ul>
 
-        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
-          <li class="nav-item">
-            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('home/course_calendar'); ?>" id="navbarDropdown5">
-              <span class="ms-2"><?php echo get_phrase('Training Course Calendar'); ?></span>
-            </a>
-          </li>
-        </ul>
-
-      <?php $custom_page_menus = $this->crud_model->get_custom_pages('', 'header'); ?>
+<?php $custom_page_menus = $this->crud_model->get_custom_pages('', 'header'); ?>
       <?php if($custom_page_menus->num_rows() == 1): ?>
         <?php $custom_page_menu = $custom_page_menus->row_array(); ?>
         <a class="text-dark fw-600 text-15px ms-3" href="<?php echo site_url('page/' . $custom_page_menu['page_url']); ?>"><?php echo $custom_page_menu['button_title']; ?></a>
@@ -123,6 +123,31 @@
           </li>
         </ul>
       <?php endif; ?>
+
+        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
+          <li class="nav-item">
+            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('/home/course_categories'); ?>" id="navbarDropdown4">
+              <span class="ms-2"><?php echo get_phrase('Categories'); ?></span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
+          <li class="nav-item">
+            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('/home/course_calendar'); ?>" id="navbarDropdown5">
+              <span class="ms-2"><?php echo get_phrase('Calendar'); ?></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav main-nav-wrap mb-2 mb-lg-0 ms-2">
+          <li class="nav-item">
+            <a class="nav-link header-dropdown bg-white text-dark fw-600 text-nowrap" href="<?php echo site_url('/home/about_us'); ?>" id="navbarDropdown5">
+              <span class="ms-2"><?php echo get_phrase('About'); ?></span>
+            </a>
+          </li>
+        </ul>
+
+      
 
       <form class="w-100" action="<?php echo site_url('home/courses'); ?>" method="get" style="max-width: 400px;">
         <div class="header-search py-0 px-2 w-100">

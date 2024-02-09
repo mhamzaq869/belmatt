@@ -240,13 +240,13 @@ class Home extends CI_Controller
     
     public function course_calendar()
     {
-        $page_data['type']         = isset($_GET['type']) ? $_GET['type'] : "all";
-        $page_data['venue']         = isset($_GET['venue']) ? $_GET['venue'] : "all";
-        $page_data['title']        = isset($_GET['title']) ? $_GET['title'] : "all";
-        
-        $page_data['page_name'] = "courses-server-side";
+        $page_data['type']  = isset($_GET['type']) ? $_GET['type'] : "all";
+        $page_data['venue'] = isset($_GET['venue']) ? $_GET['venue'] : "all";
+        $page_data['title'] = isset($_GET['title']) ? $_GET['title'] : "all";
+
+        $page_data['page_name']  = "courses-server-side";
         $page_data['page_title'] = site_phrase('training_course_calendar');
-        
+     
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
     }
 
@@ -278,7 +278,7 @@ class Home extends CI_Controller
             $sql = 'SELECT * FROM course WHERE '; 
 
             if (!empty($title) && $title != 'all') {
-                $category = explode(',', $title);
+                $category = explode('-', $title);
                 if($category){
                     if($category[0] == 'main'){
                         $sql .= " category_id = $category[1] AND"; 
@@ -311,7 +311,7 @@ class Home extends CI_Controller
             $sql = 'SELECT * FROM course WHERE ';
             
             if (!empty($title) && $title != 'all') {
-                $category = explode(',', $title);
+                $category = explode('-', $title);
                 if($category){
                     if($category[0] == 'main'){
                         $sql .= " category_id = $category[1] AND"; 
@@ -320,7 +320,8 @@ class Home extends CI_Controller
                     }
                 }
             } 
-
+    
+        
             $sql .= ' find_in_set("classroom", course.type)';
             if(isset($type) && $type == 'live-webinar' || $type == 'all'){
                 $sql .= 'OR find_in_set("live-webinar", course.type)';
@@ -335,7 +336,7 @@ class Home extends CI_Controller
                 $sql .= " AND city = '$venue[0]'";
                 $sql .= " AND address = '$venue[1]'"; 
             }
-             
+
             $query = $this->db->query($sql);
             $filtered_number_of_row = count($query->result_array()); 
             
@@ -343,12 +344,10 @@ class Home extends CI_Controller
             if (!empty($courses)) {
                 foreach ($courses as $key => $row) {
                     $price_badge = "badge-dark";
-                    
                     $price = 0;
-                    
+                
                     // Decode the JSON array in the 'datetime' column
                     $dates = json_decode($row['datetime']);
-    
            
                     foreach ($dates as $date) { 
                         if (strtotime($date) >= strtotime(date('Y-m-d'))) {
@@ -375,8 +374,6 @@ class Home extends CI_Controller
                             $data[] = $nestedData;
                         }
                     }
-                    
-                    
                 }
             }
 

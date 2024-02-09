@@ -1,6 +1,5 @@
 <?php
  $courses = $this->crud_model->get_course_by_type();
-
 ?>
 <!---------- Bread Crumb Area Start ---------->
 <?php include "breadcrumb.php"; ?>
@@ -45,25 +44,24 @@
                     <div class="col-xl-3">
                         <div class="form-group mt-5"> 
                             <label for="Select Course Title">Select Course</label>
-                            <select class="form-control select2" data-toggle="select2" name="title" id='title'>
-                                <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
-                               
+                            
                             <?php $categories = $this->crud_model->get_categories()->result_array(); ?>
-                            <select name="title" class="form-control select2" id="title">
-                                <option value="" <?php if (empty($selected_category)) echo 'selected'; ?>>Select Category</option>
+                            <select name="title" class="form-control select2" id="category" onchange="filterCourse()">
+                                <option value="" <?php if (empty($title)) echo 'selected'; ?>>Select Category</option>
                                 <?php foreach ($categories as $category): ?>
                                     <?php $course_number = $this->crud_model->get_active_course_by_category_id($category['id'], 'category_id')->num_rows(); ?>
-                                    <option value="main-<?php echo $category['id'] ?>" <?php if ($selected_category == $category['id']) echo 'selected'; ?>>
-                                        <?php echo $category['name']; ?> (<?php echo $course_number; ?>)
+                                    <option value="main-<?php echo $category['id'] ?>" <?php if ($title == 'main-'.$category['id']) echo 'selected'; ?>>
+                                        <?php echo $category['name']; ?>
                                     </option>
                                     <?php foreach ($this->crud_model->get_sub_categories($category['id']) as $sub_category): ?>
                                         <?php $course_number = $this->crud_model->get_active_course_by_category_id($sub_category['id'], 'sub_category_id')->num_rows(); ?>
-                                        <option value="sub-<?php echo $sub_category['id'] ?>" <?php if ($selected_category == $sub_category['id']) echo 'selected'; ?>>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sub_category['name']; ?> (<?php echo $course_number; ?>)
+                                        <option value="sub-<?php echo $sub_category['id'] ?>" <?php if ($title == 'sub-'.$sub_category['id']) echo 'selected'; ?>>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sub_category['name']; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endforeach; ?>
                             </select>
+
                         </div>
                     </div>
 
@@ -77,7 +75,7 @@
 
 
                 <div class="table-responsive-sm mt-4">
-                    <table id="course-datatable-server-side" class="table table-striped dt-responsive nowrap" width="100%" data-page-length='25'>
+                    <table id="course-datatable-server-side" class="table table-striped" width="100%" data-page-length='25'>
                         <thead>
                             <tr>
                                 <th><?php echo get_phrase('date'); ?></th>

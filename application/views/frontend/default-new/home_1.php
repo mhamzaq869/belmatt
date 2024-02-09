@@ -30,32 +30,95 @@
                 
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-12 order-md-2 order-sm-1 order-1 pt-0 pt-md-5 ">
-                <div id="tilt" style="background-image: url('<?php echo base_url("uploads/system/" . get_current_banner('banner_image')); ?>');"></div>
+                <!--<div id="tilt" style="background-image: url('<?php echo base_url("uploads/system/" . get_current_banner('banner_image')); ?>');"></div>-->
+                <style>
+
+@media only screen and (max-width: 600px) {
+  
+}
+.img-slider{
+    overflow: hidden;
+    display: block;
+    margin-top: 20px;
+    width: auto;
+    height:auto;
+    border: 1px ;
+    border-radius: 8px;
+    box-shadow: 10px 25px 30px rgba(164 164 233 / 29%);
+}
+.wrapper{
+    width: 100%;
+    display: flex;
+    animation: slide 10s infinite;
+}
+@keyframes slide{
+    0%{
+        transform: translateX(0);
+    }
+    25%{
+        transform: translateX(0);
+    }
+    30%{
+        transform: translateX(-100%);
+    }
+    50%{
+        transform: translateX(-100%);
+    }
+    55%{
+        transform: translateX(-200%);
+    }
+    75%{
+        transform: translateX(-200%);
+    }
+    80%{
+        transform: translateX(-300%);
+    }
+    100%{
+        transform: translateX(-300%);
+    }
+}
+img{
+    width: 100%;
+}
+          
+    </style>
+  </head>
+  <body>
+     <div class="img-slider">
+        <div class="wrapper">
+          <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/main2.jpg">
+          <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/main23.jpg">
+          <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/main24.jpg">
+          <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/main25.jpg">
+           <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/cover.png">
+            <img alt="" src="https://harrisarshad.com/bellmatt/uploads/thumbnails/images/image1.webp">
+        </div>
+    </div>
             </div>
         </div> 
         <div class="row">
             <div class="col-lg-6">
                 <div class="students-rating">
                     <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-3">
-                            <?php $all_students = $this->db->get_where('users', ['role_id !=' => 1]); ?>
-                            <h1><?php echo nice_number($all_students->num_rows()); ?>+</h1>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-2">
-                            <p><?php echo get_phrase('Happy') ?></p>
-                            <p><?php echo get_phrase('Students') ?></p>
-                        </div> 
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-2">
-                            <img src="<?php echo base_url('assets/frontend/default-new/image/h-1-ban-st.png')?>">
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-2">
-                            <?php $all_instructor = $this->db->get_where('users', ['is_instructor' => 1]); ?>
-                            <h1><?php echo nice_number($all_instructor->num_rows()); ?>+</h1>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-3">
-                            <p><?php echo get_phrase('Experienced') ?></p>
-                            <p><?php echo get_phrase('Instructors') ?></p>
-                        </div>
+                        <!--<div class="col-lg-3 col-md-3 col-sm-3 col-3">-->
+                        <!--    <?php $all_students = $this->db->get_where('users', ['role_id !=' => 1]); ?>-->
+                        <!--    <h1><?php echo nice_number($all_students->num_rows()); ?>+</h1>-->
+                        <!--</div>-->
+                        <!--<div class="col-lg-2 col-md-2 col-sm-2 col-2">-->
+                        <!--    <p><?php echo get_phrase('Happy') ?></p>-->
+                        <!--    <p><?php echo get_phrase('Students') ?></p>-->
+                        <!--</div> -->
+                        <!--<div class="col-lg-2 col-md-2 col-sm-2 col-2">-->
+                        <!--    <img src="<?php echo base_url('assets/frontend/default-new/image/h-1-ban-st.png')?>">-->
+                        <!--</div>-->
+                        <!--<div class="col-lg-2 col-md-2 col-sm-2 col-2">-->
+                        <!--    <?php $all_instructor = $this->db->get_where('users', ['is_instructor' => 1]); ?>-->
+                        <!--    <h1><?php echo nice_number($all_instructor->num_rows()); ?>+</h1>-->
+                        <!--</div>-->
+                        <!--<div class="col-lg-3 col-md-3 col-sm-3 col-3">-->
+                        <!--    <p><?php echo get_phrase('Experienced') ?></p>-->
+                        <!--    <p><?php echo get_phrase('Instructors') ?></p>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
@@ -108,55 +171,13 @@
         </div>
     </div>
 </section>
-<!---------- Banner Section End ---------------->
-
-<!-- Start Upcoming Courses -->
-<?php $upcoming_courses = $this->db->order_by('id', 'desc')->limit(6)->get_where('course', ['status' => 'upcoming']); ?>
-<?php if($upcoming_courses->num_rows() > 0): ?>
-    <section class="pt-110 mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4">
-            <div class="title-one pb-20">
-              <p class="subtitle text-uppercase"><?php echo get_phrase('Upcoming'); ?></p>
-              <h4 class="title"><?php echo get_phrase('Upcoming courses'); ?></h4>
-              <div class="bar"></div>
-            </div>
-            <p class="fz_15_m_24"><?php echo get_phrase('Discover a world of learning opportunities through our upcoming courses, where industry experts and thought leaders will guide you in acquiring new expertise, expanding your horizons, and reaching your full potential.') ?></p>
-          </div>
-          <div class="col-lg-8">
-            <!-- Items -->
-            <div class="row g-3">
-              <?php
-                foreach($upcoming_courses->result_array() as $upcoming_course):
-                ?>
-                <div class="col-lg-4">
-                  <a href="#" class="course-item-one">
-                    <div class="img-rating">
-                      <div class="img"><img src="<?php echo $this->crud_model->get_course_thumbnail_url($upcoming_course['id']); ?>" alt="" /></div>
-                      <!-- <p class="date">Sep<span>12</span></p> -->
-                    </div>
-                    <div class="content">
-                      <h4 class="title"><?php echo $upcoming_course['title']; ?></h4>
-                      <p class="info ellipsis-line-2 fw-400"><?php echo $upcoming_course['short_description']; ?></p>
-                    </div>
-                  </a>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-<?php endif; ?>
-<!-- End Upcoming Courses -->
 
 
 <!---------- Top courses Section start --------------->
 <section class="courses grid-view-body pt-50 pb-4">
     <div class="container">
-        <h1><span><?php echo site_phrase('top_courses'); ?></span></h1>
-        <p><?php echo site_phrase('These_are_the_most_popular_courses_among_Listen_Courses_learners_worldwide')?></p>
+        <!--<h1><span><?php echo site_phrase('top_courses'); ?></span></h1>-->
+        <!--<p><?php echo site_phrase('These_are_the_most_popular_courses_among_Listen_Courses_learners_worldwide')?></p>-->
         <div class="courses-card">
             <div class="course-group-slider">
                 <?php
@@ -195,13 +216,8 @@
                                     <div class="review-btn d-flex align-items-center">
                                        <span class="compare-img checkPropagation" onclick="redirectTo('<?php echo base_url('home/compare?course-1='.slugify($top_course['title']).'&course-id-1='.$top_course['id']); ?>');">
                                             <img src="<?php echo base_url('assets/frontend/default-new/image/compare.png') ?>">
-                                            <?php echo get_phrase('Compare'); ?>
-                                        </span>
-                                    </div>
-                                </div>
                                 <p class="ellipsis-line-2"><?php echo $top_course['short_description'] ?></p>
                                 <div class="courses-price-border">
-                                    <div class="courses-price">
                                         <div class="courses-price-left">
                                             <?php if($top_course['is_free_course']): ?>
                                                 <h5><?php echo get_phrase('Free'); ?></h5>
@@ -302,44 +318,205 @@
 </section>
 <!---------- Top courses Section End --------------->
 
-
-<!---------- Top Categories Start ------------->
-<section class="top-categories">
+<!-- New Section Start -->
+<section style="background-color: #ffffff; padding: 90px 0;">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3"></div>
+            <!-- Right Column -->
             <div class="col-lg-6">
-                <h1 class="text-center mt-4"><?php echo site_phrase('top_categories'); ?></h1>
-                <p class="text-center mt-4"><?php echo site_phrase('These_are_the_most_popular_courses_among_Listen_Courses_learners_worldwide')?></p>
-            </div>
-            <div class="col-lg-3"></div>
-        </div>
-        <div class="category-product mt-5">
-            <div class="row justify-content-center">
-                <?php $top_10_categories = $this->crud_model->get_top_categories(12, 'sub_category_id'); ?>
-                <?php foreach($top_10_categories as $top_10_category): ?>
-                <?php $category_details = $this->crud_model->get_category_details_by_id($top_10_category['sub_category_id'])->row_array(); ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                        <a href="<?php echo site_url('home/courses?category='.$category_details['slug']); ?>" class="category-product-body position-relative">
-                           <div class="cate-icon"  style="color: #<?php echo rand(100000, 999999); ?>">
-                                <i class="<?php echo $category_details['font_awesome_class']; ?>"></i>
+                <div class="row">
+                    <!-- Static Boxes -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/course/mandatory-training-for-doctors-and-ahps-ss0622dr/98" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-american-sign-language-interpreting"></i>
                             </div>
                             <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
-                            <h5 class="pt-0"> <?php echo $category_details['name']; ?></h5>
-                            <p class="hide-cat-text"><?php echo $top_10_category['course_number'].' '.site_phrase('courses'); ?></p>
-                         </a>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Mandatory Training for Doctors and AHPs</h5>
+                        </a>
                     </div>
-                <?php endforeach; ?>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/course/mandatory-training-for-healthcare-assistants-ss0622hca/100" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-tarp-droplet"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Mandatory Training for HCAs</h5>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/course/mandatory-training-for-nurses-ss2022n/102" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-first-aid"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Mandatory Training for Nurses</h5>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses?category=mental-health" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-female"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Mandatory Training for Mental Health</h5>
+                        </a>
+                    </div>
+                    
+                    <!-- Add more static boxes as needed -->
+                    
+                </div>
+            </div>
+            
+            <!-- Left Column -->
+            <div class="col-lg-6 ">
+                <h2 style="font-weight: 700; color: #1e293b; padding-bottom: 12px">Mandatory Training</h2>
+                <p>The mandatory training for health and social care is suitable for healthcare professionals and staff  requiring their yearly mandatory training. This course is delivered as a series of eLearning and self directed recorded presentations delivered by specialists in the field. Mandatory training for health and social care is fundamental for all staff working with patients, including those undertaking remote consultations.</p>
+                <br>
+                <p>You can enrol on a single learning unit or access all the mandatory training sessions as a bundle. This allows you the flexibility to choose which sessions you need.</p>
+                <br>
+                    <a href="https://harrisarshad.com/bellmatt/home/courses/mandatory-training-for-health-and-social-care" class="btn btn-primary" target="_blank">Learn more</a>
             </div>
         </div>
     </div>
 </section>
-<!---------- Top Categories end ------------->
+<!-- New Section End -->
+
+
+<!-- New Section Start -->
+<section style="background-color: #f8f7ff; padding: 90px 0;">
+    <div class="container">
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-6">
+                <h2 style="font-weight: 700; color: #1e293b; padding-bottom: 12px">Advanced Practice</h2>
+                <p>Our Advanced practice courses provide an inter-professional programme that allows you to focus on specific courses/workshops that are the core principles of advanced practice and include professionalism, leadership, inter-professional communication, and service development. The modules below have been identified as recommended courses for pharmacists new to general practice and primary care settings.</p>
+                <br>
+                                <p>The modules below have been identified as recommended courses for pharmacists new to general practice and primary care settings.</p>
+
+            </div>
+            
+            <!-- Right Column -->
+            <div class="col-lg-6">
+                <div class="row">
+                    <!-- Static Boxes -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/advanced-practice-minor-illness-course" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-disease"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Minor Illness</h5>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/advanced-practice-minor-injuries-courses" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-user-injured"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Minor Injuries</h5>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/paediatric-courses-for-urgent-and-primary-care" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Paediatrics</h5>
+                        </a>
+                    </div>
+                    
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/triage" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-tty"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Triage</h5>
+                        </a>
+                    </div>
+                    
+                    <!-- Add more static boxes as needed -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- New Section End -->
+
+<!-- New Section Start -->
+<section style="background-color: #ffffff; padding: 90px 0;">
+    <div class="container">
+        <div class="row">
+            <!-- Right Column -->
+            <div class="col-lg-6">
+                <div class="row">
+                    <!-- Static Boxes -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/general-practice" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-american-sign-language-interpreting"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Introduction to General Practice</h5>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/blood-results-interpretation" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-tarp-droplet"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Blood Results Interpretation</h5>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/chronic-disease-courses" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-first-aid"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Chronic Disease Management</h5>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <a href="/bellmatt/home/courses/mental-health-in-primary-care-" class="category-product-body position-relative" style="box-shadow: rgba(100, 100, 111, 0.24) 0px 7px 29px 0px; background-image: linear-gradient(to right, #5d184a, #662c91, #194582); border-radius: 10px; padding: 15px 20px; margin: 10px; transition: .5s; width: 100%; border: 1px solid #ffffff;">
+                            <div class="cate-icon" style="color: #ffffff;">
+                                <i class="fas fa-female"></i>
+                            </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0" style="color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; margin-top: 12px;">Mental Health in Primary Care</h5>
+                        </a>
+                    </div>
+                    
+                    <!-- Add more static boxes as needed -->
+                    
+                </div>
+            </div>
+            
+            <!-- Left Column -->
+            <div class="col-lg-6 ">
+                <h2 style="font-weight: 700; color: #1e293b; padding-bottom: 12px">General Practice</h2>
+                <p>Our General Practice healthcare course offers comprehensive training in primary care, focusing on foundational principles for healthcare professionals. Participants gain essential skills in preventive medicine, patient communication, and the management of common illnesses, emphasizing the importance of patient-centered care and continuity.</p>
+                <br>
+                <p>TheThe course equips healthcare professionals to excel in the dynamic field of general practice.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- New Section End -->
+
+
 
 <!---------- Latest courses Section start --------------->
 <section class="courses grid-view-body pb-4">
     <div class="container">
-        <h1 class="text-center"><span><?php echo site_phrase('top') . ' 10 ' . site_phrase('latest_courses'); ?></span></h1>
+        <h1 class="text-center"><span><?php echo site_phrase('Explore') . ' ' . site_phrase('learning'); ?></span></h1>
         <p class="text-center"><?php echo site_phrase('These_are_the_most_latest_courses_among_Listen_Courses_learners_worldwide')?></p>
         <div class="courses-card">
             <div class="course-group-slider ">
@@ -486,157 +663,105 @@
 </section>
 <!---------- Latest courses Section End --------------->
 
-
-
-<!---------  Expert Instructor Start ---------------->
-<?php $top_instructor_ids = $this->crud_model->get_top_instructor(10); ?>
-<?php if(count($top_instructor_ids) > 0): ?>
-<section class="expert-instructor top-categories pb-3">
+<!---------- Top Categories Start ------------->
+<section class="top-categories">
     <div class="container">
         <div class="row">
             <div class="col-lg-3"></div>
             <div class="col-lg-6">
-                <h1 class="text-center mt-4"><?php echo get_phrase('Top Instructors') ?></h1>
-                <p class="text-center mt-4 mb-4"><?php echo get_phrase('They efficiently serve large number of students on our platform') ?></p>
+                <h1 class="text-center mt-4"><?php echo site_phrase('explore_categories'); ?></h1>
+                <p class="text-center mt-4"><?php echo site_phrase('These_are_the_most_popular_courses_among_Listen_Courses_learners_worldwide')?></p>
             </div>
-            <div class="col-lg-3 "></div>
+            <div class="col-lg-3"></div>
         </div>
-        <div class="instructor-card">
+        <div class="category-product mt-5">
             <div class="row justify-content-center">
-                <?php foreach($top_instructor_ids as $top_instructor_id):
-                    $top_instructor = $this->user_model->get_all_user($top_instructor_id['creator'])->row_array();
-                    $social_links  = json_decode($instructor_details['social_links'], true); ?>
-                    <div class="col-lg-3 col-md-4 col-sm-6 ">
-                        <div class="instructor-card-body">
-                            <div class="instructor-card-img">
-                                <img src="<?php echo $this->user_model->get_user_image_url($top_instructor['id']); ?>">
+                <?php $top_10_categories = $this->crud_model->get_top_categories(12, 'sub_category_id'); ?>
+                <?php foreach($top_10_categories as $top_10_category): ?>
+                <?php $category_details = $this->crud_model->get_category_details_by_id($top_10_category['sub_category_id'])->row_array(); ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <a href="<?php echo site_url('home/courses?category='.$category_details['slug']); ?>" class="category-product-body position-relative">
+                           <div class="cate-icon"  style="color: #194582<?php echo rand(100000, 999999); ?>">
+                                <i class="<?php echo $category_details['font_awesome_class']; ?>"></i>
                             </div>
-                            <div class="instructor-card-text">
-                                <div class="icon">
-                                    <div class="icon-div-2">
-                                        <?php if($social_links['facebook']): ?>
-                                            <a class="" href="<?php echo $social_links['facebook']; ?>" target="_blank">
-                                                <i class="fa-brands fa-facebook-f"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if($social_links['twitter']): ?>
-                                            <a class="" href="<?php echo $social_links['twitter']; ?>" target="_blank">
-                                                <i class="fa-brands fa-twitter"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if($social_links['linkedin']): ?>
-                                            <a class="" href="<?php echo $social_links['linkedin']; ?>" target="_blank">
-                                                <i class="fa-brands fa-linkedin"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <a class="text-muted" href="<?php echo site_url('home/instructor_page/'.$top_instructor['id']); ?>">
-                                    <h3><?php echo $top_instructor['first_name'].' '.$top_instructor['last_name']; ?></h3>
-                                    <p class="ellipsis-line-2"><?php echo $top_instructor['title']; ?></p>
-                                </a>
-                            </div>
-                        </div>
+                            <span class="category-hide-icon"><i class="fa-solid fa-angle-right"></i></span>
+                            <h5 class="pt-0"> <?php echo $category_details['name']; ?></h5>
+                            <p class="hide-cat-text"><?php echo $top_10_category['course_number'].' '.site_phrase('courses'); ?></p>
+                         </a>
                     </div>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
 </section>
-<?php endif; ?>
+<!---------- Top Categories end ------------->
+
+
+
+<!-- New Full-Width Section with Trustmary Widget Start -->
+<section style="background-color: #f8f7ff; padding: 60px 0; width: 100%;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Include Trustmary Widget Script -->
+                <script src="https://widget.trustmary.com/6pwV9EcaL"></script>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- New Full-Width Section with Trustmary Widget End -->
+
+
 
 
 <?php $motivational_speechs = json_decode(get_frontend_settings('motivational_speech'), true); ?>
 <?php if(count($motivational_speechs) > 0): ?>
-<!---------  Motivetional Speech Start ---------------->
-<section class="expert-instructor top-categories pb-3">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3"></div>
-      <div class="col-lg-6">
-        <h1 class="text-center mt-4"><?php echo get_phrase('Think more clearly'); ?></h1>
-        <p class="text-center mt-4 mb-4"><?php echo get_phrase('Gather your thoughts, and make your decisions clearly') ?></p>
-      </div>
-      <div class="col-lg-3"></div>
-    </div>
-    <ul class="speech-items">
-        <?php $counter = 0; ?>
-        <?php foreach($motivational_speechs as $key => $motivational_speech): ?>
-        <?php $counter = $counter+1; ?>
-        <li>
-            <div class="speech-item">
-                <div class="row align-items-center">
-                    <div class="col-lg-4 col-md-5">
-                        <div class="speech-item-img">
-                            <img src="<?php echo site_url('uploads/system/motivations/'.$motivational_speech['image']) ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-md-7">
-                        <div class="speech-item-content">
-                            <p class="no"><?php echo $counter; ?></p>
-                            <div class="inner">
-                                <h4 class="title">
-                                    <?php echo $motivational_speech['title']; ?>
-                                </h4>
-                                <p class="info">
-                                    <?php echo nl2br($motivational_speech['description']); ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-  </div>
-</section>
-<!---------  Motivetional Speech end ---------------->
+
 <?php endif; ?>
 
-<?php $website_faqs = json_decode(get_frontend_settings('website_faqs'), true); ?>
-<?php if(count($website_faqs) > 0): ?>
+<!--<?php $website_faqs = json_decode(get_frontend_settings('website_faqs'), true); ?>-->
+<!--<?php if(count($website_faqs) > 0): ?>-->
 <!---------- Questions Section Start  -------------->
-<section class="faq">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8">
-                <h1 class="text-center mt-4"><?php echo get_phrase('Frequently Asked Questions') ?></h1>
-                <p class="text-center mt-4 mb-5"><?php echo get_phrase('Have something to know?') ?> <?php echo get_phrase('Check here if you have any questions about us.') ?></p>
-            </div>
-            <div class="col-lg-2"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="faq-accrodion mb-0">
-                    <div class="accordion" id="accordionFaq">
-                        <?php foreach($website_faqs as $key => $faq): ?>
-                            <?php if($key > 4) break; ?>
-                            <div class="accordion-item">
-                              <h2 class="accordion-header" id="<?php echo 'faqItemHeading'.$key; ?>">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo 'faqItempanel'.$key; ?>" aria-expanded="true" aria-controls="<?php echo 'faqItempanel'.$key; ?>">
-                                    <?php echo $faq['question']; ?>
-                                </button>
-                              </h2>
-                              <div id="<?php echo 'faqItempanel'.$key; ?>" class="accordion-collapse collapse" aria-labelledby="<?php echo 'faqItemHeading'.$key; ?>"  data-bs-parent="#accordionFaq">
-                                <div class="accordion-body">
-                                    <p><?php echo nl2br($faq['answer']); ?></p>
-                                </div>
-                              </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php if(count($website_faqs) > 5): ?>
-                        <a href="<?php echo site_url('home/faq') ?>" class="btn btn-primary mt-5"><?php echo get_phrase('See More'); ?></a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!--<section class="faq">-->
+<!--    <div class="container">-->
+<!--        <div class="row">-->
+<!--            <div class="col-lg-2"></div>-->
+<!--            <div class="col-lg-8">-->
+<!--                <h1 class="text-center mt-4"><?php echo get_phrase('Frequently Asked Questions') ?></h1>-->
+<!--                <p class="text-center mt-4 mb-5"><?php echo get_phrase('Have something to know?') ?> <?php echo get_phrase('Check here if you have any questions about us.') ?></p>-->
+<!--            </div>-->
+<!--            <div class="col-lg-2"></div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--            <div class="col-md-12">-->
+<!--                <div class="faq-accrodion mb-0">-->
+<!--                    <div class="accordion" id="accordionFaq">-->
+<!--                        <?php foreach($website_faqs as $key => $faq): ?>-->
+<!--                            <?php if($key > 4) break; ?>-->
+<!--                            <div class="accordion-item">-->
+<!--                              <h2 class="accordion-header" id="<?php echo 'faqItemHeading'.$key; ?>">-->
+<!--                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo 'faqItempanel'.$key; ?>" aria-expanded="true" aria-controls="<?php echo 'faqItempanel'.$key; ?>">-->
+<!--                                    <?php echo $faq['question']; ?>-->
+<!--                                </button>-->
+<!--                              </h2>-->
+<!--                              <div id="<?php echo 'faqItempanel'.$key; ?>" class="accordion-collapse collapse" aria-labelledby="<?php echo 'faqItemHeading'.$key; ?>"  data-bs-parent="#accordionFaq">-->
+<!--                                <div class="accordion-body">-->
+<!--                                    <p><?php echo nl2br($faq['answer']); ?></p>-->
+<!--                                </div>-->
+<!--                              </div>-->
+<!--                            </div>-->
+<!--                        <?php endforeach; ?>-->
+<!--                    </div>-->
+<!--                    <?php if(count($website_faqs) > 5): ?>-->
+<!--                        <a href="<?php echo site_url('home/faq') ?>" class="btn btn-primary mt-5"><?php echo get_phrase('See More'); ?></a>-->
+<!--                    <?php endif; ?>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
 <!---------- Questions Section End  -------------->
-<?php endif; ?>
+<!--<?php endif; ?>-->
 
 
 <!------------- Blog Section Start ------------>

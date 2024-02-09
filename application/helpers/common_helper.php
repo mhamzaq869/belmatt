@@ -100,7 +100,7 @@ if (!function_exists('has_org_permission')) {
 }
 
 if (!function_exists('has_sub_permission')) {
-    function has_sub_permission($permission_for = '', $parent = '', $admin_id = '')
+    function has_sub_permission($permission_for = '', $parent = '', $admin_id = '', )
     {
         $CI    = &get_instance();
         $CI->load->database();

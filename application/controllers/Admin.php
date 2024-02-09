@@ -802,7 +802,8 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('purchase_history');
         $this->load->view('backend/index', $page_data);
     }
-
+    
+    
     public function landing_pages($param1 = '', $param2 = '')
     {
         if($param1 == 'add'){
@@ -837,7 +838,7 @@ class Admin extends CI_Controller
         $page_data['page_name'] = 'landing_page_edit';
         $this->load->view('backend/index', $page_data);
     }
-
+    
     public function system_settings($param1 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -934,7 +935,6 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('frontend_settings');
         $this->load->view('backend/index', $page_data);
     }
-
     public function payment_settings($param1 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -959,7 +959,8 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('payment_settings');
         $this->load->view('backend/index', $page_data);
     }
- 
+
+
     public function notification_settings($param1 = "", $param2 = "", $param3 = "")
     {
         if ($param1 == 'smtp_settings') {
@@ -982,7 +983,8 @@ class Admin extends CI_Controller
         $page_data['page_name'] = 'notification_settings';
         $page_data['page_title'] = get_phrase('Notification settings');
         $this->load->view('backend/index', $page_data);
-    } 
+    }
+
 
     function edit_email_template($id = "", $param2 = ""){
         
@@ -1428,7 +1430,6 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-
         $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
         if ($course_details['status'] == 'draft') {
             $this->session->set_flashdata('error_message', get_phrase('you_do_not_have_right_to_access_this_course'));
@@ -2243,7 +2244,7 @@ class Admin extends CI_Controller
             redirect('admin/edit_landing_page/' . $landing_id);
         }
     }
-
+    
     /** Coupons functionality starts */
     public function coupons($param1 = "", $param2 = "")
     {
