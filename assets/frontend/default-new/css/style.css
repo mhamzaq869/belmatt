@@ -388,7 +388,7 @@ p{
 .sub-header{
     border-bottom: 1.5px solid var(--border-color);
     padding: 5px 0 9px 0;
-    background-image: linear-gradient(to right, #5d184a, #662c91, #194582);
+    background-color: #194582;
 }
 .menubar .logo img{
     width: auto;

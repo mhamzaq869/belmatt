@@ -491,6 +491,25 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 				</a>
 			</li>
 		<?php endif; ?>
+    
+        <?php if (has_permission('landing_pages')) : ?>
+			<li class="side-nav-item  <?php if ($page_name == 'system_settings' || $page_name == 'frontend_settings' || $page_name == 'payment_settings' || $page_name == 'manage_language' || $page_name == 'about' || $page_name == 'themes' || $page_name == 'custom_page' || $page_name == 'data_center' || $page_name == 'notification_settings') : ?> active <?php endif; ?>">
+				<a href="javascript: void(0);" class="side-nav-link">
+					<i class="dripicons-blog"></i>
+					<span> <?php echo get_phrase('landing_pages'); ?> </span>
+					<span class="menu-arrow"></span>
+				</a>
+				<ul class="side-nav-second-level" aria-expanded="false">
+					<li class="<?php if ($page_name == 'landing_pages') echo 'active'; ?>">
+						<a href="<?php echo site_url('admin/landing_pages'); ?>"><?php echo get_phrase('manage_landing_pages'); ?></a>
+					</li> 
+					
+					<li class="<?php if ($page_name == 'add_landing_page') echo 'active'; ?>">
+						<a href="<?php echo site_url('admin/add_landing_page'); ?>"><?php echo get_phrase('add_landing_page'); ?></a>
+					</li> 
+				</ul>
+			</li>
+		<?php endif; ?>
 
 
 		<?php if (has_permission('settings')) : ?>

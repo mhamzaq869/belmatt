@@ -802,7 +802,43 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('purchase_history');
         $this->load->view('backend/index', $page_data);
     }
+    
+    
+    public function landing_pages($param1 = '', $param2 = '')
+    {
+        if($param1 == 'add'){
+            $this->crud_model->add_landing_page();
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_added_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }elseif($param1 == 'update'){
+            $this->crud_model->update_landing_page($param2);
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_updated_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }elseif($param1 == 'delete'){
+            $this->crud_model->landing_page_delete($param2);
+            $this->session->set_flashdata('flash_message', get_phrase('landing_page_deleted_successfully'));
+            redirect(site_url('admin/landing_pages'), 'refresh');
+        }
 
+        $page_data['blogs'] = $this->crud_model->get_landing_pages();
+        $page_data['page_title'] = get_phrase('landing_pages');
+        $page_data['page_name'] = 'landing_pages';
+        $this->load->view('backend/index', $page_data);
+    } 
+
+    function add_landing_page(){
+        $page_data['page_title'] = get_phrase('add_landing_page');
+        $page_data['page_name'] = 'landing_page_add';
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function edit_landing_page($landing_page_id = ""){
+        $page_data['landing_page'] = $this->crud_model->get_landing_pages($landing_page_id)->row_array();
+        $page_data['page_title'] = get_phrase('edit_landing_page');
+        $page_data['page_name'] = 'landing_page_edit';
+        $this->load->view('backend/index', $page_data);
+    }
+    
     public function system_settings($param1 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -2163,7 +2199,52 @@ class Admin extends CI_Controller
         }
     }
 
+    // REMOVING INSTRUCTOR FROM LANDING PAGE
+    public function remove_an_instructor_landing_page($landing_id, $instructor_id)
+    {
+        // CHECK ACCESS PERMISSION
+        check_permission('landing_page');
 
+        $landing_details = $this->crud_model->get_landing_pages($landing_id)->row_array();
+
+        if ($landing_details['creator'] == $instructor_id) {
+            $this->session->set_flashdata('error_message', get_phrase('landing_creator_can_be_removed'));
+            redirect('admin/edit_landing_page/' . $landing_id);
+        }
+
+        if ($landing_details['lecturers']) {
+            $instructor_ids = json_decode($landing_details['lecturers']);
+
+            if (in_array($instructor_id, $instructor_ids)) {
+                if (count($instructor_ids) > 1) {
+                    if (($key = array_search($instructor_id, $instructor_ids)) !== false) {
+                        unset($instructor_ids[$key]);
+
+                        $data['lecturers'] = json_encode($instructor_ids);
+                        $this->db->where('id', $landing_id);
+                        $this->db->update('landing_pages', $data);
+
+                        $this->session->set_flashdata('flash_message', get_phrase('instructor_has_been_removed'));
+                        if ($this->session->userdata('lecturers') == $instructor_id) {
+                            redirect('admin/landing_pages/');
+                        } else {
+                            redirect('admin/edit_landing_page/' . $landing_id);
+                        }
+                    }
+                } else {
+                    $this->session->set_flashdata('error_message', get_phrase('a_course_should_have_at_least_one_instructor'));
+                    redirect('admin/edit_landing_page/' . $landing_id);
+                }
+            } else {
+                $this->session->set_flashdata('error_message', get_phrase('invalid_instructor_id'));
+                redirect('admin/edit_landing_page/' . $landing_id);
+            }
+        } else {
+            $this->session->set_flashdata('error_message', get_phrase('a_course_should_have_at_least_one_instructor'));
+            redirect('admin/edit_landing_page/' . $landing_id);
+        }
+    }
+    
     /** Coupons functionality starts */
     public function coupons($param1 = "", $param2 = "")
     {

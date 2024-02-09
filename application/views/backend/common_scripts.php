@@ -190,4 +190,6 @@
       $('#number_of_month').slideDown();
     }
   }
+
+  
 </script>
