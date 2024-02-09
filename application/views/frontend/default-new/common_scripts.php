@@ -203,6 +203,7 @@
             "dataType": "json",
             "type": "POST",
             "data": {
+              type: '<?php echo $type; ?>',
               venue: '<?php echo $venue; ?>',
               title: '<?php echo $title ?>',
             }

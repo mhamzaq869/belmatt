@@ -146,7 +146,7 @@ if($course_details['profession'] != null){
                                         </li>
                                     </ul>
                                 </div>
-
+ 
                                 <button type="button" class="scrollable-tab-btn-right"><i class="mdi mdi-arrow-right"></i></button>
 
                                 <div class="tab-content b-0 mb-0">
@@ -392,7 +392,11 @@ if($course_details['profession'] != null){
                                                     </div>   
                                                     
                                                     <div class="form-group row mb-3">
-                                                        <label class="col-md-2 col-form-label" for="Date Time"><?php echo get_phrase('Date Time'); ?></label>
+                                                        <label class="col-md-2 col-form-label pr-0 d-inline" for="Date Time"><?php echo get_phrase('Date Time'); ?>
+                                                            <button type="button" id="addDateField" class="btn p-0 ml-2">
+                                                                <i class="fa fa-plus-circle"></i>
+                                                            </button>
+                                                        </label>
                                                         <div class="col-md-10">
                                                             <div id="dateFields">
                                                                 <?php $datetimes = json_decode($course_details['datetime']);

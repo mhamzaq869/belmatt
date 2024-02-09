@@ -1,5 +1,6 @@
 <?php
  $courses = $this->crud_model->get_course_by_type();
+
 ?>
 <!---------- Bread Crumb Area Start ---------->
 <?php include "breadcrumb.php"; ?>
@@ -32,7 +33,9 @@
                             <select class="form-control select2" data-toggle="select2" name="venue" id='venue'>  
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                 <?php foreach ($courses as $key => $course): ?>
-                                    <option value="<?php echo $course['city'].','.$course['address']; ?>" <?php if ($venue == $course['city'].','.$course['address']) echo 'selected'; ?>><?php echo get_phrase($course['city']).' ('.get_phrase($course['address']).')'; ?></option>
+                                    <?php if($course['city'] != null && $course['address']): ?>
+                                        <option value="<?php echo $course['city'].','.$course['address']; ?>" <?php if ($venue == $course['city'].','.$course['address']) echo 'selected'; ?>><?php echo get_phrase($course['city']).' ('.get_phrase($course['address']).')'; ?></option>
+                                    <?php endif; ?>
                                 <?php endforeach; ?> 
                             </select>
                         </div>
@@ -44,8 +47,21 @@
                             <label for="Select Course Title">Select Course</label>
                             <select class="form-control select2" data-toggle="select2" name="title" id='title'>
                                 <option value="<?php echo 'all'; ?>" <?php if ($venue == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
-                                <?php foreach ($courses as $key => $course): ?>
-                                    <option value="<?php echo $course['id']; ?>" <?php if ($title == $course['id']) echo 'selected'; ?>><?php echo get_phrase($course['title']); ?></option>
+                               
+                            <?php $categories = $this->crud_model->get_categories()->result_array(); ?>
+                            <select name="title" class="form-control select2" id="title">
+                                <option value="" <?php if (empty($selected_category)) echo 'selected'; ?>>Select Category</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <?php $course_number = $this->crud_model->get_active_course_by_category_id($category['id'], 'category_id')->num_rows(); ?>
+                                    <option value="main-<?php echo $category['id'] ?>" <?php if ($selected_category == $category['id']) echo 'selected'; ?>>
+                                        <?php echo $category['name']; ?> (<?php echo $course_number; ?>)
+                                    </option>
+                                    <?php foreach ($this->crud_model->get_sub_categories($category['id']) as $sub_category): ?>
+                                        <?php $course_number = $this->crud_model->get_active_course_by_category_id($sub_category['id'], 'sub_category_id')->num_rows(); ?>
+                                        <option value="sub-<?php echo $sub_category['id'] ?>" <?php if ($selected_category == $sub_category['id']) echo 'selected'; ?>>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<?php echo $sub_category['name']; ?> (<?php echo $course_number; ?>)
+                                        </option>
+                                    <?php endforeach; ?>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -61,7 +77,6 @@
 
 
                 <div class="table-responsive-sm mt-4">
-                    <?php if (count($courses) > 0): ?>
                     <table id="course-datatable-server-side" class="table table-striped dt-responsive nowrap" width="100%" data-page-length='25'>
                         <thead>
                             <tr>
@@ -74,7 +89,6 @@
                             </tr>
                         </thead> 
                     </table>
-                    <?php endif; ?>
                     <?php if (count($courses) == 0): ?>
                         <div class="img-fluid w-100 text-center">
                         <img style="opacity: 1; width: 100px;" src="<?php echo base_url('assets/backend/images/file-search.svg'); ?>"><br>

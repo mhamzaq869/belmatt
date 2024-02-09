@@ -71,7 +71,7 @@
 <section class="wish-list-body ">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-12">
+            <div class="col-lg-9 col-md-8 col-sm-12">
                 <div class="my-course-1-full-body skyblue">
                     <?php $landing_page_url = 'uploads/landing-page/banner/'.$landing_page['banner']; ?>
                     <?php
@@ -81,7 +81,7 @@
                             $landing_page_url = base_url('uploads/landing-page/banner/placeholder.png');
                         endif;
                     ?>
-                    <img class="w-100" src="<?php echo $landing_page_url; ?>" alt="banner">
+                    <img src="<?php echo $landing_page_url; ?>" alt="banner">
                 </div>
 
                 <div class="my-course-1-full-body text-white card-title p-5 text-center mt-0">
@@ -151,7 +151,43 @@
                         </div>
                         <div class="tab-pane fade" id="lecturers" role="tabpanel" aria-labelledby="lecturers-tab">
                             <div class="form-group pt-3">
-                                <?php echo get_phrase($landing_page['lecturers']); ?>
+                                <div class="instructor">
+                                    <?php $multi_instructor_id_arr = json_decode($landing_page['lecturers']); ?>
+                                    <?php foreach($multi_instructor_id_arr as $instructor_id): ?>
+                                        <?php if($instructor_id > 0): ?>
+                                            <?php $instructor = $this->user_model->get_all_user($instructor_id)->row_array(); ?>
+                                            <div class="row g-3">
+                                                <div class="col-lg-3 col-md-4 col-sm-4 col-4">
+                                                    <div class="instructor-img">
+                                                        <img src="<?php echo $this->user_model->get_user_image_url($instructor['id']); ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-9 col-md-8 col-sm-8 col-8">
+                                                    <div class="instructor-text">
+                                                        <h2 class="text-black ms-0 fw-600"><?php echo $instructor['first_name'].' '.$instructor['last_name']; ?></h2>
+                                                        <p class="ms-0 text-15px font-inter-light ellipsis-line-2"><?php echo $instructor['title']; ?></p>
+                                                        <div class="ellipsis-line-2 font-inter-light"><?php echo strip_tags($instructor['biography']); ?></div>
+                                                    </div>
+                                                    <div class="instructor-icon mt-3">
+                                                        <a href="<?php echo site_url('home/instructor_page/'.$instructor_id) ?>" target="_blank"><i class="far fa-user" data-bs-toggle="tooltip" title="<?php echo get_phrase('Instructor Profile'); ?>"></i></a>
+                                                        <?php foreach(json_decode($instructor['social_links'], true) as $key => $social_link): ?>
+                                                            <?php if(!$social_link) continue; ?>
+                                                            <a href="<?php echo $social_link; ?>">
+                                                                <?php if($key == 'facebook'): ?>
+                                                                    <i class="fa-brands fa-facebook-f" data-bs-toggle="tooltip" title="<?php echo get_phrase('Facebook'); ?>"></i>
+                                                                <?php elseif($key == 'twitter'): ?>
+                                                                    <i class="fa-brands fa-twitter" data-bs-toggle="tooltip" title="<?php echo get_phrase('Twitter'); ?>"></i>
+                                                                <?php elseif($key == 'linkedin'): ?>
+                                                                        <i class="fa-brands fa-linkedin" data-bs-toggle="tooltip" title="<?php echo get_phrase('Linkedin'); ?>"></i></a>
+                                                                <?php endif; ?>
+                                                            </a>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,36 +195,66 @@
 
                 <div class="row mt-0">
                     <div class="col-4">
-                        <div class="my-course-1-full-body mt-3" style="background-image:url(https://belmatt.vercel.app/images/e-learning.jpg);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
-                            <div class="card-body css-label" >
-                                <div class="css-1ydmxns"></div>
-                                <div class="css-1dx0dqg">E-Learning</div>
-                            </div>
+                        <?php $e_learning_image = 'uploads/landing-page/banner/'.$landing_page['e_learning_image']; ?>
+                        <?php
+                            if(file_exists($e_learning_image) && is_file($e_learning_image)):
+                                $e_learning_image = base_url($e_learning_image);
+                            else:
+                                $e_learning_image = base_url('uploads/landing-page/banner/placeholder.png');
+                            endif;
+                        ?>
+                        <div class="my-course-1-full-body mt-3" style="background-image:url(<?php echo $landing_page_url; ?>);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
+                            <a href="<?php echo base_url($landing_page['e_learning_url']); ?>">
+                                <div class="card-body css-label" >
+                                    <div class="css-1ydmxns"></div>
+                                    <div class="css-1dx0dqg">E-Learning</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
 
                     <div class="col-4">
-                        <div class="my-course-1-full-body mt-3" style="background-image:url(https://belmatt.vercel.app/images/webinars.jpg);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
-                            <div class="card-body css-label" >
-                                <div class="css-1ydmxns"></div>
-                                <div class="css-1dx0dqg">Live Webinars</div>
-                            </div>
+                        <?php $live_webinar_image = 'uploads/landing-page/banner/'.$landing_page['live_webinar_image']; ?>
+                        <?php
+                            if(file_exists($live_webinar_image) && is_file($live_webinar_image)):
+                                $live_webinar_image = base_url($live_webinar_image);
+                            else:
+                                $live_webinar_image = base_url('uploads/landing-page/banner/placeholder.png');
+                            endif;
+                        ?>
+                        <div class="my-course-1-full-body mt-3" style="background-image:url(<?php echo $live_webinar_image; ?>);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
+                            <a href="<?php echo base_url($landing_page['live_webinar_url']); ?>">
+                                <div class="card-body css-label" >
+                                    <div class="css-1ydmxns"></div>
+                                    <div class="css-1dx0dqg">Live Webinars</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     
                     <div class="col-4">
-                        <div class="my-course-1-full-body mt-3" style="background-image:url(https://belmatt.vercel.app/images/classroom.jpg);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
-                            <div class="card-body css-label" >
-                                <div class="css-1ydmxns"></div>
-                                <div class="css-1dx0dqg">Classroom</div>
-                            </div>
+                        <?php $classroom_image = 'uploads/landing-page/banner/'.$landing_page['classroom_image']; ?>
+                        <?php
+                            if(file_exists($classroom_image) && is_file($classroom_image)):
+                                $classroom_image = base_url($classroom_image);
+                            else:
+                                $classroom_image = base_url('uploads/landing-page/banner/placeholder.png');
+                            endif;
+                        ?>
+                        <div class="my-course-1-full-body mt-3" style="background-image:url(<?php echo $classroom_image; ?>);background-repeat:no-repeat;background-position:center;background-size:cover;height:230px;position: relative;">
+                            <a href="<?php echo base_url($landing_page['classroom_url']); ?>">
+                                <div class="card-body css-label" >
+                                    <div class="css-1ydmxns"></div>
+                                    <div class="css-1dx0dqg">Classroom</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-8 col-sm-12">
+            <div class="col-lg-3 col-md-8 col-sm-12">
                 <div class="my-course-1-full-body purple">
                     <div class="card capsule">
                         <div class="card-body">
@@ -200,7 +266,7 @@
 
                     <div class="card capsule mt-2">
                         <div class="card-body">
-                            Course Code:
+                            Code:
                             <?php echo $landing_page['course_code']; ?>
                         </div>
                     </div>
@@ -225,3 +291,12 @@
         </div>
     </div>
 </section>
+
+<script>
+    $(document).ready(function() {
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
+</script>

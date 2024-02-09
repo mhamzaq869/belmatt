@@ -161,62 +161,51 @@
 					
 					<div class="row mb-3">
 						<div class="col-md-4">
-							<label for="banner"><?php echo get_phrase('e learning image'); ?></label>
+							<label for="e_learning_image"><?php echo get_phrase('e learning image'); ?></label>
 							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
 								<div class="box" style="width: 100%;">
-									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
-									</div>
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/thumbnail/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;"></div>
 									<div class="upload-options">
-										<label for="banner" class="btn"> <i class="mdi mdi-camera"></i>
-											<?php echo get_phrase('choose_a_image'); ?>
-											<br> <small>(500 x 500)</small> </label>
-										<input id="e_learning_image" style="visibility:hidden; position: absolute;" type="file"
-											class="image-upload" name="e_learning_image" accept="image/*">
+										<label for="e_learning_image" class="btn"> <i class="mdi mdi-camera"></i> <?php echo get_phrase('choose_a_image'); ?> <br> <small>(500 x 500)</small> </label>
+										<input id="e_learning_image" style="visibility:hidden; position: absolute;" type="file" class="image-upload" name="e_learning_image" accept="image/*">
 									</div>
 								</div>
-							</div>
+							</div> 
 
 							<input type="text" class="form-control" name="e_learning_url" value="">
 						</div>
 						
-						<div class="col-md-4">
-							<label for="live-webinar"><?php echo get_phrase('live webinar image'); ?></label>
+						<div class="col-md-4"> 
+							<label for="live_webinar_image"><?php echo get_phrase('live webinar image'); ?></label>
 							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
 								<div class="box" style="width: 100%;">
-									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
-									</div>
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/thumbnail/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;"></div>
 									<div class="upload-options">
-										<label for="live-webinar" class="btn"> <i class="mdi mdi-camera"></i>
-											<?php echo get_phrase('choose_a_image'); ?>
-											<br> <small>(500 x 500)</small> </label>
-										<input id="live_webinar_image" style="visibility:hidden; position: absolute;" type="file"
-											class="image-upload" name="live_webinar_image" accept="image/*">
+										<label for="live_webinar_image" class="btn"> <i class="mdi mdi-camera"></i> <?php echo get_phrase('choose_a_image'); ?> <br> <small>(500 x 500)</small> </label>
+										<input id="live_webinar_image" style="visibility:hidden; position: absolute;" type="file" class="image-upload" name="live_webinar_image" accept="image/*">
 									</div>
 								</div>
-							</div>
+							</div> 
 
 							<input type="text" class="form-control" name="live_webinar_url" value="">
 						</div>
 
-						<div class="col-md-4">
-							<label for="classroom"><?php echo get_phrase('classroom image'); ?></label>
+						<div class="col-md-4"> 
+							<label for="classroom_image"><?php echo get_phrase('classroom image'); ?></label>
 							<div class="wrapper-image-preview" style="margin-left: -12px; margin-right: 12px;">
 								<div class="box" style="width: 100%;">
-									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/banner/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;">
-									</div>
+									<div class="js--image-preview" style="background-image: url('<?php echo base_url('uploads/blog/thumbnail/placeholder.png') ?>'); background-color: #F5F5F5; background-size: cover; background-position: center;"></div>
 									<div class="upload-options">
-										<label for="classroom" class="btn"> <i class="mdi mdi-camera"></i>
-											<?php echo get_phrase('choose_a_image'); ?>
-											<br> <small>(500 x 500)</small> </label>
-										<input id="classroom_image" style="visibility:hidden; position: absolute;" type="file"
-											class="image-upload" name="classroom_image" accept="image/*">
+										<label for="classroom_image" class="btn"> <i class="mdi mdi-camera"></i> <?php echo get_phrase('choose_a_image'); ?> <br> <small>(500 x 500)</small> </label>
+										<input id="classroom_image" style="visibility:hidden; position: absolute;" type="file" class="image-upload" name="classroom_image" accept="image/*">
 									</div>
 								</div>
-							</div>
+							</div> 
+
 							<input type="text" class="form-control" name="classroom_url" value="">
 						</div>
 					</div>
-
+ 
 					<div class="form-group mt-4">
 						<button class="btn btn-success"><?php echo get_phrase('add'); ?></button>
 					</div>
@@ -225,4 +214,8 @@
 		</div>
 	</div>
 </div>
- 
+
+<script>
+	  
+
+</script>

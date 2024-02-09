@@ -262,14 +262,14 @@ class Home extends CI_Controller
             $type = $this->input->post('type'); 
             $venue = $this->input->post('venue'); 
             $title = $this->input->post('title');
-
+         
             $limit = htmlspecialchars_($this->input->post('length'));
 
             $total_row_sql = 'SELECT * FROM course WHERE find_in_set("classroom", course.type) OR find_in_set("live-webinar", course.type)';
-            if(isset($type)){
-                $total_row_sql .= 'OR find_in_set("live-webinar", course.type)';
+            if(isset($type) && $type == 'live-webinar' || $type == 'all'){
+                $total_row_sql .= ' OR find_in_set("live-webinar", course.type)';
             }
-            $total_row_sql .= 'AND status="active" AND datetime >= CURDATE()';
+            $total_row_sql .= ' AND status="active"';
 
             $total_row_query = $this->db->query($total_row_sql);
             $total_number_of_row = count($total_row_query->result_array());
@@ -278,14 +278,21 @@ class Home extends CI_Controller
             $sql = 'SELECT * FROM course WHERE '; 
 
             if (!empty($title) && $title != 'all') {
-                $sql .= " id = $title AND"; 
+                $category = explode(',', $title);
+                if($category){
+                    if($category[0] == 'main'){
+                        $sql .= " category_id = $category[1] AND"; 
+                    }elseif($category[0] == 'sub'){
+                        $sql .= " sub_category_id = $category[1] AND"; 
+                    }
+                }
             } 
 
             $sql .= ' find_in_set("classroom", course.type)';
-            if(isset($type)){
+            if(isset($type) && $type == 'live-webinar' || $type == 'all'){
                 $sql .= 'OR find_in_set("live-webinar", course.type)';
             }
-            $sql .= '& status="active" AND datetime >= CURDATE()';
+            $sql .= '& status="active"';
 
             if (!empty($venue) && $venue != 'all') {
                 $venue = explode(',', $venue);
@@ -304,14 +311,21 @@ class Home extends CI_Controller
             $sql = 'SELECT * FROM course WHERE ';
             
             if (!empty($title) && $title != 'all') {
-                $sql .= " id = $title AND"; 
+                $category = explode(',', $title);
+                if($category){
+                    if($category[0] == 'main'){
+                        $sql .= " category_id = $category[1] AND"; 
+                    }elseif($category[0] == 'sub'){
+                        $sql .= " sub_category_id = $category[1] AND"; 
+                    }
+                }
             } 
 
             $sql .= ' find_in_set("classroom", course.type)';
-            if(isset($type)){
+            if(isset($type) && $type == 'live-webinar' || $type == 'all'){
                 $sql .= 'OR find_in_set("live-webinar", course.type)';
             }
-            $sql .= '& status="active" AND datetime >= CURDATE()';
+            $sql .= '& status="active"';
 
             if (!empty($venue) && $venue != 'all') {
                 if(!is_array($venue)){
@@ -321,43 +335,45 @@ class Home extends CI_Controller
                 $sql .= " AND city = '$venue[0]'";
                 $sql .= " AND address = '$venue[1]'"; 
             }
- 
+             
             $query = $this->db->query($sql);
             $filtered_number_of_row = count($query->result_array()); 
-           
+            
             // Fetch the data and format it as JSON
             if (!empty($courses)) {
                 foreach ($courses as $key => $row) {
                     $price_badge = "badge-dark";
-
+                    
                     $price = 0;
                     
                     // Decode the JSON array in the 'datetime' column
                     $dates = json_decode($row['datetime']);
-
+    
+           
                     foreach ($dates as $date) { 
-
-                        if ($row['is_free_course'] == null) {
-                            if ($row['discount_flag'] == 1) {
-                                $price = currency($row['discounted_price']);
-                            } else {
-                                $price = currency($row['price']);
+                        if (strtotime($date) >= strtotime(date('Y-m-d'))) {
+                            if ($row['is_free_course'] == null) {
+                                if ($row['discount_flag'] == 1) {
+                                    $price = currency($row['discounted_price']);
+                                } else {
+                                    $price = currency($row['price']);
+                                }
+                            } elseif ($row['is_free_course'] == 1) { 
+                                $price = get_phrase('free');
                             }
-                        } elseif ($row['is_free_course'] == 1) { 
-                            $price = get_phrase('free');
+        
+                            $price_field = '<p class="text-12">' . $price . '</p>';
+                            $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
+        
+                            $nestedData['date'] = date('D jS M Y', strtotime($date));
+                            $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
+                            $nestedData['venue'] = '<span>' . $row['city'] .' ('. $row['address'] .')</span>';
+                            $nestedData['time'] = '<span>' . date('g:i A', strtotime($date)) . '</span>';
+                            $nestedData['price'] = $price_field; 
+                            $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
+        
+                            $data[] = $nestedData;
                         }
-    
-                        $price_field = '<p class="text-12">' . $price . '</p>';
-                        $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
-    
-                        $nestedData['date'] = date('D jS M Y', strtotime($date));
-                        $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
-                        $nestedData['venue'] = '<span>' . ucfirst($row['city']) .' ('. $row['address'] .')</span>';
-                        $nestedData['time'] = '<span>' . date('g:i A', strtotime($date)) . '</span>';
-                        $nestedData['price'] = $price_field; 
-                        $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
-    
-                        $data[] = $nestedData;
                     }
                     
                     

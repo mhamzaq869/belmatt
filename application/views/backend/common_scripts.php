@@ -1,13 +1,5 @@
 <script type="text/javascript">
-  function changeTitleOfImageUploader(photoElem) {
-    var fileName = $(photoElem).val().replace(/C:\\fakepath\\/i, '');
-    $(photoElem).siblings('label').text(ellipsis(fileName));
-    <?php $upload_max_filesize_kb = str_replace('m', '', strtolower(ini_get('upload_max_filesize'))) * 1024; ?>
-    if ('<?php echo $upload_max_filesize_kb * 1024; ?>' <= photoElem.files[0].size) {
-      error_notify('<?php echo get_phrase('Your server does not allow uploading files that large.') . ' ' . get_phrase("Your servers file upload limit is " . ($upload_max_filesize_kb / 1024) . 'MB'); ?>');
-    }
-  }
-
+  
   function set_js_flashdata(url) {
     $.ajax({
       url: url,
@@ -191,15 +183,7 @@
     }
   }
 
+  initSummerNote(['.landing-page']); 
 
-  
-$('.landing-page').summernote({
-    placeholder: 'Write something...',
-    height: 230,
-    callbacks: {
-      onInit: function (o) {
-        $(o.editor).find('.custom-control-description').addClass('custom-control-label').parent().removeAttr('for');
-      },
-    },
-  });
+ 
 </script>
