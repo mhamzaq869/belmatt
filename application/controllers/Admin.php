@@ -186,16 +186,16 @@ class Admin extends CI_Controller
         }
     }
 
-    public function users($param1 = "", $param2 = "")
+    public function users($param1 = "", $param2 = "", $param3 = "")
     {
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-
+       
         // CHECK ACCESS PERMISSION
         check_permission('user');
         check_permission('student');
-
+        
         if ($param1 == "add") {
             $this->user_model->add_user();
             redirect(site_url('admin/users'), 'refresh');
@@ -205,6 +205,9 @@ class Admin extends CI_Controller
         } elseif ($param1 == "delete") {
             $this->user_model->delete_user($param2);
             redirect(site_url('admin/users'), 'refresh');
+        } elseif ($param1 == "status") {
+            $this->user_model->update_user_status($param2, $param3);
+            redirect(site_url('admin/organizations'), 'refresh');
         }
 
         $page_data['page_name'] = 'users';
@@ -287,7 +290,16 @@ class Admin extends CI_Controller
             $photo = '<img src="'.$this->user_model->get_user_image_url($student['id']).'" alt="" height="50" width="50" class="img-fluid rounded-circle img-thumbnail">';
 
             //user name
-            if($student['status'] != 1){ $status = '<small><p>'.get_phrase('status').'<span class="badge badge-danger-lighten">'.get_phrase('unverified').'</span></p></small>';}else{$status = '';}
+            if($student['status'] != 1){ 
+                $status = '<small><p><span class="badge badge-danger-lighten">'.get_phrase('unapproved').'</span></p></small>';
+                $statusBtnText = 'Approve';
+                $updateStatus = 1;
+            } else{
+                $status = '<small><p><span class="badge badge-success-lighten">'.get_phrase('approved').'</span></p></small>';
+                $statusBtnText = 'Disapprove';
+                $updateStatus = 0;
+            }
+            
             $name = '<a href="'.site_url('admin/organizations/students/' . $student['id']).'">'.$student['first_name'].' '.$student['last_name'].$status.'</a>';
 
             //user email
@@ -308,6 +320,7 @@ class Admin extends CI_Controller
                                 <i class="mdi mdi-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="'.site_url('admin/users/status/'. $student['id']. '/' . $updateStatus).'">'.$statusBtnText.'</a></li>
                                 <li><a class="dropdown-item" href="'.site_url('admin/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
                                 <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
                             </ul>
@@ -319,6 +332,7 @@ class Admin extends CI_Controller
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
             $nestedData['phone'] = $student['phone']; 
+            $nestedData['status'] = $status; 
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
             $data[] = $nestedData;
         endforeach;
@@ -391,14 +405,64 @@ class Admin extends CI_Controller
             //enrolled courses
             $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
             $enrolled_courses_title = '<ul>';
+
+            $date = '';
+            $progress = '';
+
             foreach ($enrolled_courses->result_array() as $enrolled_course) :
                 $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();
-                    $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+                $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+
+                $lessons = $this->crud_model->get_lessons('course', $course_details['id']);
+                $total_lesson = $lessons->num_rows();
+
+                $watch_history = $this->db->where('course_id', $course_details['id'])->where('student_id', $student['id'])->get('watch_histories')->row_array();
+                $completed_lesson_arr = isset($watch_history['completed_lesson']) ? json_decode($watch_history['completed_lesson'], true) : [];
+                $completed_lesson = is_array($completed_lesson_arr) ? $completed_lesson_arr : [];
+            
+                $date_updated = isset($watch_history['date_updated']) ? date('d M Y, H:i a', $watch_history['date_updated']) : get_phrase('Not started yet');
+                $completed_date = isset($enrolled_course['completed_date']) ? date('d M Y', $enrolled_course['completed_date']) : get_phrase('Not completed yet');
+                $course_progress = isset($watch_history['course_progress']) ? $watch_history['course_progress'] : 0;
+                
+                $date .= '<p class="my-0"><b>'. get_phrase('Enrolled from') . '-</b>'. date('d M Y', $enrolled_course['date_added']) . '</p>';
+                $date .= '<p class="my-0"><b>'. get_phrase('last seen on') . '-</b>'. $date_updated . '</p>';
+                $date .= '<p class="my-0"><b>'. get_phrase('Completed on') . '-</b>'. $completed_date . '</p>';
+                
+                $total_watched_duration = 0; //seconds
+                $watched_durations = $this->db->get_where('watched_duration', ['watched_student_id' => $enrolled_course['user_id'], 'watched_course_id' => $course_details['id']]);
+                foreach($watched_durations->result_array() as $watched_duration) {
+                    $total_watched_duration += array_sum(json_decode($watched_duration['watched_counter'], true));
+                }
+
+                $progress .= '<div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: '. $course_progress .'%;"
+                                    aria-valuenow="'. $course_progress .'"
+                                    aria-valuemin="0" aria-valuemax="100">'. $course_progress .'%
+                                </div>
+                            </div>
+                            <p class="my-0 mt-1">-'. get_phrase('Completed lesson'). count($completed_lesson).' '.get_phrase('out of'). $total_lesson . '</p>
+                            <p class="my-0 mt-1">-'. get_phrase('Watched duration').'- <b>'.seconds_to_time_format($total_watched_duration). '</b></p>';
             endforeach;
             $enrolled_courses_title .= '</ul>';
 
+            if(addon_status('certificate')):
+                $certificate = '<a href="'. site_url('admin/student_certificate/'.$enrolled_course['user_id'].'/'.$course_details['id']). '"
+                                    target="_blank" class="btn btn-light cursor-pointer" data-toggle="tooltip"
+                                    title="'. get_phrase('Certificate'). '">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </a>';
+            else:
+                $certificate = '';
+            endif;
 
-            $action = '<div class="dropright dropright">
+            $action = '<a href="javascript:;" onclick="showLargeModal('. site_url('admin/student_academic_quiz_result/'.$course_details['id'].'/'.$enrolled_course['user_id']) .', '. get_phrase('Quiz results') .')"
+                        class="btn btn-light cursor-pointer" data-toggle="tooltip" 
+                        title="'. get_phrase('Quiz results'). '">
+                            <i class="far fa-address-card"></i>
+                        </a>
+                        '. $certificate .'
+                        <div class="dropright dropright">
                             <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-vertical"></i>
                             </button>
@@ -414,6 +478,8 @@ class Admin extends CI_Controller
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
             $nestedData['phone'] = $student['phone']; 
+            $nestedData['date'] = $date; 
+            $nestedData['progress'] = $progress; 
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
             $data[] = $nestedData;
         endforeach;
@@ -483,6 +549,7 @@ class Admin extends CI_Controller
             //user email
             $email = $student['email'];
 
+            
             //enrolled courses
             $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
             $enrolled_courses_title = '<ul>';

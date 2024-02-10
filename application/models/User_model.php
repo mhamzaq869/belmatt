@@ -165,7 +165,7 @@ class User_model extends CI_Model
             }
             $data['date_added'] = strtotime(date("Y-m-d H:i:s"));
             $data['wishlist'] = json_encode(array());
-            $data['status'] = 1;
+            $data['status'] = 0;
             $data['image'] = md5(rand(10000, 10000000));
   
 
@@ -387,6 +387,13 @@ class User_model extends CI_Model
         $this->db->where('id', $user_id);
         $this->db->delete('users');
         $this->session->set_flashdata('flash_message', get_phrase('user_deleted_successfully'));
+    }
+    
+    public function update_user_status($user_id = "", $status = 1)
+    {
+        $this->db->where('id', $user_id); 
+        $this->db->update('users', ['status' => $status]);
+        $this->session->set_flashdata('flash_message', get_phrase('User status updated successfully'));
     }
 
     public function unlock_screen_by_password($password = "")

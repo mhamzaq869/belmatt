@@ -21,7 +21,8 @@
                 <th><?php echo get_phrase('photo'); ?></th>
                 <th><?php echo get_phrase('name'); ?></th>
                 <th><?php echo get_phrase('email'); ?></th>
-                <th><?php echo get_phrase('Phone'); ?></th> 
+                <th><?php echo get_phrase('phone'); ?></th> 
+                <th><?php echo get_phrase('status'); ?></th> 
                 <th><?php echo get_phrase('actions'); ?></th>
               </tr>
             </thead>
@@ -50,6 +51,7 @@
         { "data": "name" },
         { "data": "email" },
         { "data": "phone" }, 
+        { "data": "status" }, 
         { "data": "action" }
       ]   
     });
