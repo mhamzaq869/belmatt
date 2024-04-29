@@ -416,7 +416,6 @@ if($course_details['profession'] != null){
                                                                 
                                                                 <?php else: ?>
                                                                     <input type="datetime-local" class="form-control" id="course_date_time" name="datetime[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
-
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>

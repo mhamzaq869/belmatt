@@ -39,14 +39,14 @@ if (!empty($course_details['type'])) {
                                         </p>
                                     </div>
 
-                                    <div class="info-tag">
-                                        <i class="fa-regular fa-clock text-15px mt-7px"></i>
-                                        <p class="text-15px mt-1"><?php echo $course_duration; ?></p>
-                                    </div>
-                                    <div class="info-tag">
-                                        <i class="fa-regular fa-user text-15px mt-7px"></i>
-                                        <p class="text-15px mt-1"><?php echo $number_of_enrolments ?> <?php echo get_phrase('Enrolled'); ?></p>
-                                    </div>
+                                    <!--<div class="info-tag">-->
+                                    <!--    <i class="fa-regular fa-clock text-15px mt-7px"></i>-->
+                                    <!--    <p class="text-15px mt-1"><?php echo $course_duration; ?></p>-->
+                                    <!--</div>-->
+                                    <!--<div class="info-tag">-->
+                                    <!--    <i class="fa-regular fa-user text-15px mt-7px"></i>-->
+                                    <!--    <p class="text-15px mt-1"><?php echo $number_of_enrolments ?> <?php echo get_phrase('Enrolled'); ?></p>-->
+                                    <!--</div>-->
 
                                 <!--    <div class="info-tag">-->
                                 <!--        <div class="icon">-->
@@ -65,11 +65,11 @@ if (!empty($course_details['type'])) {
 
 
                                 <!--</div>-->
-                                <div class="col-12 course-heading-info mb-3">
-                                    <div class="info-tag">
-                                        <i class="fas fa-language text-15px mt-8px"></i>
-                                        <p class="text-15px mt-1"><?php echo ucfirst($course_details['language']); ?></p>
-                                    </div>
+                                <!--<div class="col-12 course-heading-info mb-3">-->
+                                <!--    <div class="info-tag">-->
+                                <!--        <i class="fas fa-language text-15px mt-8px"></i>-->
+                                <!--        <p class="text-15px mt-1"><?php echo ucfirst($course_details['language']); ?></p>-->
+                                <!--    </div>-->
 
                                     <div class="info-tag">
                                         <p><i class="far fa-calendar-alt text-15px mt-7px"></i></p>

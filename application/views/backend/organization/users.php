@@ -25,7 +25,7 @@
               </div>
             </div> 
  
-          <table class="table table-striped table-centered w-100" id="server_side_users_data">
+          <table class="table table-striped table-centered w-100 display nowrap" id="server_side_users_data">
             <thead>
               <tr>
                 <th>#</th>
@@ -34,6 +34,8 @@
                 <th><?php echo get_phrase('username'); ?></th>
                 <th><?php echo get_phrase('email'); ?></th> 
                 <th><?php echo get_phrase('enrolled_courses'); ?></th>
+                <th><?php echo get_phrase('date'); ?></th> 
+                <th><?php echo get_phrase('progress'); ?></th> 
                 <th><?php echo get_phrase('actions'); ?></th>
               </tr>
             </thead>
@@ -62,8 +64,9 @@
         { "data": "name" },
         { "data": "username" },
         { "data": "email" },
-        // { "data": "phone" },
         { "data": "enrolled_courses" },
+        { "data": "date" }, 
+        { "data": "progress" }, 
         { "data": "action" }
       ]   
     });

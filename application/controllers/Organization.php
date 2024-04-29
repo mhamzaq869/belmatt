@@ -324,19 +324,68 @@ class Organization extends CI_Controller
             //enrolled courses
             $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
             $enrolled_courses_title = '<ul>';
+
+            $date = '';
+            $progress = '';
             foreach ($enrolled_courses->result_array() as $enrolled_course) :
                 $course_details = $this->crud_model->get_course_by_id($enrolled_course['course_id'])->row_array();
-                    $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+                $enrolled_courses_title .= '<li>'.$course_details['title'].'</li>';
+
+                $lessons = $this->crud_model->get_lessons('course', $course_details['id']);
+                $total_lesson = $lessons->num_rows();
+
+                $watch_history = $this->db->where('course_id', $course_details['id'])->where('student_id', $student['id'])->get('watch_histories')->row_array();
+                $completed_lesson_arr = isset($watch_history['completed_lesson']) ? json_decode($watch_history['completed_lesson'], true) : [];
+                $completed_lesson = is_array($completed_lesson_arr) ? $completed_lesson_arr : [];
+            
+                $date_updated = isset($watch_history['date_updated']) ? date('d M Y, H:i a', $watch_history['date_updated']) : get_phrase('Not started yet');
+                $completed_date = isset($enrolled_course['completed_date']) ? date('d M Y', $enrolled_course['completed_date']) : get_phrase('Not completed yet');
+                $course_progress = isset($watch_history['course_progress']) ? $watch_history['course_progress'] : 0;
+                
+                $date .= '<p class="my-0"><b>'. get_phrase('Enrolled from') . '-</b>'. date('d M Y', $enrolled_course['date_added']) . '</p>';
+                $date .= '<p class="my-0"><b>'. get_phrase('last seen on') . '-</b>'. $date_updated . '</p>';
+                $date .= '<p class="my-0"><b>'. get_phrase('Completed on') . '-</b>'. $completed_date . '</p>';
+                
+                $total_watched_duration = 0; //seconds
+                $watched_durations = $this->db->get_where('watched_duration', ['watched_student_id' => $enrolled_course['user_id'], 'watched_course_id' => $course_details['id']]);
+                foreach($watched_durations->result_array() as $watched_duration) {
+                    $total_watched_duration += array_sum(json_decode($watched_duration['watched_counter'], true));
+                }
+
+                $progress .= '<div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: '. $course_progress .'%;"
+                                    aria-valuenow="'. $course_progress .'"
+                                    aria-valuemin="0" aria-valuemax="100">'. $course_progress .'%
+                                </div>
+                            </div>
+                            <p class="my-0 mt-1">-'. get_phrase('Completed lesson'). count($completed_lesson).' '.get_phrase('out of'). $total_lesson . '</p>
+                            <p class="my-0 mt-1">-'. get_phrase('Watched duration').'- <b>'.seconds_to_time_format($total_watched_duration). '</b></p>';
             endforeach;
             $enrolled_courses_title .= '</ul>';
 
+            if(addon_status('certificate')):
+                $certificate = '<a href="'. site_url('admin/student_certificate/'.$enrolled_course['user_id'].'/'.$course_details['id']). '"
+                                    target="_blank" class="btn btn-light cursor-pointer" data-toggle="tooltip"
+                                    title="'. get_phrase('Certificate'). '">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </a>';
+            else:
+                $certificate = '';
+            endif;
 
-            $action = '<div class="dropright dropright">
+            $action = '<a href="javascript:;" onclick="showLargeModal('. site_url('admin/student_academic_quiz_result/'.$course_details['id'].'/'.$enrolled_course['user_id']) .', '. get_phrase('Quiz results') .')"
+                        class="btn btn-light cursor-pointer" data-toggle="tooltip" title="'. get_phrase('Quiz results'). '">
+                            <i class="far fa-address-card"></i>
+                        </a>
+                        '. $certificate .'
+                        <div class="dropright dropright">
                             <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="'.site_url('organization/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li> 
+                                <li><a class="dropdown-item" href="'.site_url('admin/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
                             </ul>
                         </div>';
 
@@ -347,6 +396,8 @@ class Organization extends CI_Controller
             $nestedData['username'] = $username;
             $nestedData['email'] = $email;
             // $nestedData['phone'] = $student['phone'];
+            $nestedData['date'] = $date; 
+            $nestedData['progress'] = $progress; 
             $nestedData['enrolled_courses'] = $enrolled_courses_title;
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
             $data[] = $nestedData;

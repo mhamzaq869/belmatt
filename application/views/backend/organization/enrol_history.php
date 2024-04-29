@@ -73,8 +73,16 @@
                                       </td>
                                       <td><strong><a href="<?php echo site_url('organization/enrol_course/'.$course_data['id']); ?>"><?php echo $course_data['title']; ?></a></strong></td>
                                       <td><?php echo date('D, d M Y', $enrol['date_added']); ?></td>
+                                      <td><?php 
+                                            if($enrol['expiry_date'] != null):
+                                                echo date('D, d M Y', $enrol['expiry_date']); 
+                                            else:
+                                                echo "No expiry";
+                                            endif;
+                                        ?>
+                                      </td>
                                      
-                                      <td> <small class="text-muted"><b> <?php echo get_phrase('Enrollments'); ?> </b>: <?php echo $enroll_history->num_rows(); ?></small></td>
+                                      <!-- <td> <small class="text-muted"><b> <?php echo get_phrase('Enrollments'); ?> </b>: <?php echo $enroll_history->num_rows(); ?></small></td> -->
                                       <td> <span class="badge <?php echo $status_badge; ?> "><?php echo get_phrase($course_data['status']);  ?></span></td>
                                        
                                   </tr>
@@ -82,7 +90,7 @@
                           </tbody>
                       </table>
                   <?php endif; ?>
-                  <?php if (count($enrol_history->num_rows()) == 0): ?>
+                  <?php if ($enrol_history->num_rows() == 0): ?>
                       <div class="img-fluid w-100 text-center">
                         <img style="opacity: 1; width: 100px;" src="<?php echo base_url('assets/backend/images/file-search.svg'); ?>"><br>
                         <?php echo get_phrase('no_data_found'); ?>
