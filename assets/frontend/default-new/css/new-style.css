@@ -724,6 +724,14 @@ font-family: 'Secular One', sans-serif; */
   max-width: 280px;
   padding-bottom: 40px;
 }
+.footer_copyright {
+  background-color: #5e676b;
+}
+.copyright_text_link, .copyright_text_link:hover {
+  text-decoration: none;
+  color: #ffff;
+
+}
 .kitchen-social{
   display: flex;
   align-items: center;

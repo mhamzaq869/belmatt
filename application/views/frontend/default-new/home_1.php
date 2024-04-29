@@ -381,9 +381,9 @@ img{
                                                 <h5><?php echo currency($latest_course['price']); ?></h5>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="courses-price-right ">
+                                        <!-- <div class="courses-price-right ">
                                             <p class="m-0"><i class="fa-regular fa-clock p-0 text-15px"></i> <?php echo $course_duration; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                              </div>
@@ -575,9 +575,9 @@ img{
                                         <img class="rounded-circle" src="<?php echo $this->user_model->get_user_image_url($user_details['id']); ?>">
                                         <h5><?php echo $user_details['first_name'].' '.$user_details['last_name']; ?></h5>
                                     </div>
-                                    <div class="courses-price-right ">
+                                    <!-- <div class="courses-price-right ">
                                         <p><?php echo get_past_time($latest_blog['added_date']); ?></p>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                            </div>

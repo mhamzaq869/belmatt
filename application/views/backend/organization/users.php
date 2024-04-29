@@ -33,6 +33,7 @@
                 <th><?php echo get_phrase('name'); ?></th>
                 <th><?php echo get_phrase('username'); ?></th>
                 <th><?php echo get_phrase('email'); ?></th> 
+                <th><?php echo get_phrase('organisation'); ?></th> 
                 <th><?php echo get_phrase('enrolled_courses'); ?></th>
                 <th><?php echo get_phrase('date'); ?></th> 
                 <th><?php echo get_phrase('progress'); ?></th> 
@@ -64,6 +65,7 @@
         { "data": "name" },
         { "data": "username" },
         { "data": "email" },
+        { "data": "organisation" },
         { "data": "enrolled_courses" },
         { "data": "date" }, 
         { "data": "progress" }, 

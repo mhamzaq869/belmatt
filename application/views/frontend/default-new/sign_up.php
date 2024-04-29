@@ -30,12 +30,12 @@
                             </div>
                         </div>
                         <div class="mb-4">
-    <h5><?php echo get_phrase('Organisations'); ?></h5>
-    <div class="position-relative">
-        <i class="fa-solid fa-building"></i>
-        <input class="form-control" id="organisations" type="text" name="organisations" placeholder="<?php echo get_phrase('Enter your organisation'); ?>" required>
-    </div>
-</div>
+                            <h5><?php echo get_phrase('Organisations'); ?></h5>
+                            <div class="position-relative">
+                                <i class="fa-solid fa-building"></i>
+                                <input class="form-control" id="organisations" type="text" name="organisation" placeholder="<?php echo get_phrase('Enter your organisation'); ?>" required>
+                            </div>
+                        </div>
                         <div class="mb-4">
                             <h5><?php echo get_phrase('Your email'); ?></h5>
                             <div class="position-relative">

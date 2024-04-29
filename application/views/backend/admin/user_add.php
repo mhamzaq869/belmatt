@@ -1,3 +1,8 @@
+
+<?php
+    $organisation =  $this->db->where('role_id', 4)->get('users')->result_array();   
+?>
+
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">
@@ -69,6 +74,20 @@
                                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
                                             </div>
                                         </div>
+
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="level"><?php echo get_phrase('organisation'); ?></label>
+                                            <div class="col-md-9">
+                                                <select class="form-control select2" data-toggle="select2" name="organisation" id="organisation">
+                                                    <?php foreach($organisation as $org):?>
+                                                        <?php if($org['organisation'] != null): ?>
+                                                            <option value="<?php echo $org['id']; ?>"> <?php echo get_phrase($org['organisation']); ?> </option>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('biography'); ?></label>
                                             <div class="col-md-9">

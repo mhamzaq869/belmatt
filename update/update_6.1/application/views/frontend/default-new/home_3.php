@@ -237,9 +237,9 @@
                                                 <h5><?php echo currency($top_course['price']); ?></h5>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="courses-price-right ">
+                                        <!-- <div class="courses-price-right ">
                                             <p class="m-0"> <i class="fa-regular fa-clock p-0 text-15px"></i> <?php echo $course_duration; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                              </div>
@@ -388,9 +388,9 @@
                                                 <h5><?php echo currency($latest_course['price']); ?></h5>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="courses-price-right ">
+                                        <!-- <div class="courses-price-right ">
                                             <p class="m-0"><i class="fa-regular fa-clock p-0 text-15px"></i> <?php echo $course_duration; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                              </div>

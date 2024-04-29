@@ -54,10 +54,10 @@
                                     <h5><?php echo currency($course['price']); ?></h5>
                                 <?php endif; ?>
                             </div>
-                            <div class="courses-price-right ">
+                            <!-- <div class="courses-price-right ">
                                 <p class="me-2"><i class="fa-regular fa-list-alt p-0 text-15px"></i> <?php echo $lessons->num_rows().' '.get_phrase('lessons'); ?></p>
                                 <p><i class="fa-regular fa-clock text-15px p-0"></i> <?php echo $course_duration; ?></p>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

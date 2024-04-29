@@ -150,10 +150,10 @@ $total_students = $this->db->get('enrol')->num_rows();
 				                                                <h5><?php echo currency($course['price']); ?></h5>
 				                                            <?php endif; ?>
 				                                        </div>
-				                                        <div class="courses-price-right ">
+				                                        <!-- <div class="courses-price-right ">
 				                                            <i class="fa-regular fa-clock"></i>
 				                                            <p class="m-0"><?php echo $course_duration; ?></p>
-				                                        </div>
+				                                        </div> -->
 				                                    </div>
 				                                </div>
 				                             </div>

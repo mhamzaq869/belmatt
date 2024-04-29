@@ -62,17 +62,15 @@
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                <i class="mdi mdi-currency-cny"></i>
-                                                <span
-                                                    class=""><?php echo get_phrase('pricing'); ?></span>
+                                            <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> 
+                                                <span class="font-weight-bold"><?php echo currency_code_and_symbol(); ?></span>
+                                                <span class=""><?php echo get_phrase('pricing'); ?></span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a href="#media" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                                 <i class="mdi mdi-library-video"></i>
-                                                <span
-                                                    class=""><?php echo get_phrase('media'); ?></span>
+                                                <span class=""><?php echo get_phrase('media'); ?></span>
                                             </a>
                                         </li>
                                         <li class="nav-item">
@@ -202,6 +200,21 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <!-- Add "course code" Filter -->
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="course_code"><?php echo get_phrase('course_code'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <input name="course_code" id="course_code" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="cpd_hours"><?php echo get_phrase('CPD_hours'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <input name="cpd_hours" id="cpd_hours" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                
                                                 <!-- Add "Profession" Filter -->
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label"

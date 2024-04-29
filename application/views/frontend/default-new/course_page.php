@@ -203,6 +203,21 @@ if (!empty($course_details['type'])) {
                         </div>
                         <div class="enrol">
                             <div class="icon">
+                                <img src="<?php echo base_url('assets/frontend/default-new/image/book-open-cover.png') ?>">
+                                <h4><?php echo get_phrase('Course Code') ?></h4>
+                            </div>
+                            <h5><?php echo $course_details['course_code']; ?></h5>
+                        </div>
+                        <div class="enrol">
+                            <div class="icon">
+                                <img src="<?php echo base_url('assets/frontend/default-new/image/icon/clock-6.svg') ?>">
+                                <h4><?php echo get_phrase('CPD Hours') ?></h4>
+                            </div>
+                            <h5><?php echo $course_details['cpd_hours']; ?></h5>
+                        </div>
+                        
+                        <div class="enrol">
+                            <div class="icon">
                                 <img src="<?php echo base_url('assets/frontend/default-new/image/c-enrold-1.png') ?>">
                                 <h4><?php echo get_phrase('Lectures') ?></h4>
                             </div>
@@ -396,10 +411,10 @@ if (!empty($course_details['type'])) {
                                                 <h5><?php echo currency($course['price']); ?></h5>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="courses-price-right ">
+                                        <!-- <div class="courses-price-right ">
                                             <i class="fa-regular fa-clock"></i>
                                             <p class="m-0"><?php echo $course_duration; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

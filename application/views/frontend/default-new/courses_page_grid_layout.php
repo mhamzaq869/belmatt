@@ -55,9 +55,9 @@
                                                 <h5><?php echo currency($course['price']); ?></h5>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="courses-price-right ">
+                                        <!-- <div class="courses-price-right ">
                                             <p class="m-0"><i class="fa-regular fa-clock text-15px p-0"></i> <?php echo $course_duration; ?></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                              </div>

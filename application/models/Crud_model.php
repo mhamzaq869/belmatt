@@ -694,6 +694,8 @@ class Crud_model extends CI_Model
         $data['level'] = $this->input->post('level');
         $data['is_free_course'] = $this->input->post('is_free_course');
         $data['profession'] = implode(',', $this->input->post('profession'));
+        $data['course_code'] = $this->input->post('course_code');
+        $data['cpd_hours'] =  $this->input->post('cpd_hours');
         $data['type'] = implode(',', $this->input->post('type'));
  
         //Course type == 'classroom'
@@ -896,6 +898,8 @@ class Crud_model extends CI_Model
         $data['outcomes'] = $outcomes;
         $data['faqs'] = json_encode($faqs);
         $data['language'] = $this->input->post('language_made_in');
+        $data['course_code'] = $this->input->post('course_code');
+        $data['cpd_hours'] =  $this->input->post('cpd_hours');
         $data['sub_category_id'] = $this->input->post('sub_category_id');
         $category_details = $this->get_category_details_by_id($this->input->post('sub_category_id'))->row_array();
         $data['category_id'] = $category_details['parent'];

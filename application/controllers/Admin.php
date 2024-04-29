@@ -193,7 +193,7 @@ class Admin extends CI_Controller
         }
        
         // CHECK ACCESS PERMISSION
-        check_permission('user');
+        check_permission('user'); 
         check_permission('student');
         
         if ($param1 == "add") {
@@ -237,14 +237,13 @@ class Admin extends CI_Controller
             $this->load->view('backend/index', $page_data);
         }
  
-    }
-
+    } 
 
     function server_side_organizations_data(){
 
         $data = array();
         //mentioned all with colum of database table that related with html table
-        $columns = array('id','id','first_name','email','phone','id', 'id');
+        $columns = array('id','id','first_name','email','organisation','phone','id', 'id');
 
         $limit = htmlspecialchars_($this->input->post('length'));
         $start = htmlspecialchars_($this->input->post('start'));
@@ -304,6 +303,9 @@ class Admin extends CI_Controller
 
             //user email
             $email = $student['email'];
+ 
+            //user organisation
+            $organisation = $student['organisation'] ?? '';
 
             //enrolled courses
             $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
@@ -331,6 +333,7 @@ class Admin extends CI_Controller
             $nestedData['photo'] = $photo;
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
+            $nestedData['organisation'] = $organisation;
             $nestedData['phone'] = $student['phone']; 
             $nestedData['status'] = $status; 
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
@@ -350,7 +353,7 @@ class Admin extends CI_Controller
 
         $data = array();
         //mentioned all with colum of database table that related with html table
-        $columns = array('id','id','first_name','email','phone','id', 'id');
+        $columns = array('id','id','first_name','email', 'organisation','phone','id', 'id');
 
         $limit = htmlspecialchars_($this->input->post('length'));
         $start = htmlspecialchars_($this->input->post('start'));
@@ -401,6 +404,9 @@ class Admin extends CI_Controller
 
             //user email
             $email = $student['email'];
+
+            //user organisation
+            $organisation = $student['organisation'] ?? '';
 
             //enrolled courses
             $enrolled_courses = $this->crud_model->enrol_history_by_user_id($student['id']);
@@ -477,6 +483,7 @@ class Admin extends CI_Controller
             $nestedData['photo'] = $photo;
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
+            $nestedData['organisation'] = $organisation;
             $nestedData['phone'] = $student['phone']; 
             $nestedData['date'] = $date; 
             $nestedData['progress'] = $progress; 
@@ -497,7 +504,7 @@ class Admin extends CI_Controller
 
         $data = array();
         //mentioned all with colum of database table that related with html table
-        $columns = array('id','id','first_name','email','phone','id', 'id');
+        $columns = array('id','id','first_name','email','organisation','phone','id', 'id');
 
         $limit = htmlspecialchars_($this->input->post('length'));
         $start = htmlspecialchars_($this->input->post('start'));
@@ -505,7 +512,7 @@ class Admin extends CI_Controller
         $column_index = $columns[$this->input->post('order')[0]['column']];
 
         $dir = $this->input->post('order')[0]['dir'];
-        $total_number_of_row = $this->db->where('role_id !=', 1)->get('users')->num_rows();
+        $total_number_of_row = $this->db->where('role_id', 2)->where('is_instructor', 0)->get('users')->num_rows();
 
         $filtered_number_of_row = $total_number_of_row;
         $search = $this->input->post('search')['value'];
@@ -515,14 +522,17 @@ class Admin extends CI_Controller
             $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
             $this->db->where('role_id',2);
+            $this->db->where('is_instructor', 0);
             $students = $this->db->get('users')->result_array();
         }else{
             $this->db->select('*');
             $this->db->like('first_name',$search);
             $this->db->or_like('last_name',$search);
             $this->db->or_like('email',$search);
+            $this->db->or_like('organisation',$search);
             $this->db->or_like('phone',$search);
             $this->db->where('role_id',2);
+            $this->db->where('is_instructor',0);
             $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
             $students = $this->db->get('users')->result_array();
@@ -532,8 +542,10 @@ class Admin extends CI_Controller
             $this->db->like('first_name',$search);
             $this->db->or_like('last_name',$search);
             $this->db->or_like('email',$search);
+            $this->db->or_like('organisation',$search);
             $this->db->or_like('phone',$search);
             $this->db->where('role_id',2);
+            $this->db->where('is_instructor',0);
             $filtered_number_of_row = $this->db->get('users')->num_rows();
         }
 
@@ -548,6 +560,9 @@ class Admin extends CI_Controller
 
             //user email
             $email = $student['email'];
+
+            //user organisation
+            $organisation = $student['organisation'] ?? '';
 
             
             //enrolled courses
@@ -569,12 +584,12 @@ class Admin extends CI_Controller
                                 <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
                             </ul>
                         </div>';
-
-
+ 
             $nestedData['key'] = ++$key;
             $nestedData['photo'] = $photo;
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
+            $nestedData['organisation'] = $organisation;
             $nestedData['phone'] = $student['phone'];
             $nestedData['enrolled_courses'] = $enrolled_courses_title;
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
@@ -724,7 +739,7 @@ class Admin extends CI_Controller
         check_permission('student');
 
         if ($param1 == 'add_user_form') {
-            $page_data['page_name'] = 'user_add';
+            $page_data['page_name'] = 'user_add'; 
             $page_data['page_title'] = get_phrase('student_add');
             $this->load->view('backend/index', $page_data);
         } elseif ($param1 == 'edit_user_form') {

@@ -1,5 +1,6 @@
 <?php
     $user_data = $this->db->get_where('users', array('id' => $user_id))->row_array();
+    $organisation =  $this->db->where('role_id', 4)->get('users')->result_array();   
     $social_links = json_decode($user_data['social_links'], true);
     $payment_keys = json_decode($user_data['payment_keys'], true);
     $paypal_keys = $payment_keys['paypal'];
@@ -77,6 +78,21 @@
                                                 <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user_data['last_name']; ?>" required>
                                             </div>
                                         </div>
+
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="level"><?php echo get_phrase('organisation'); ?></label>
+                                            <div class="col-md-9">
+                                                <select class="form-control select2" data-toggle="select2" name="organisation" id="organisation">
+                                                    <option value="" > <?php echo get_phrase('select organisation'); ?> </option>
+                                                    <?php foreach($organisation as $org):?>
+                                                        <?php if($org['organisation'] != null): ?>
+                                                            <option value="<?php echo $org['id']; ?>" <?php echo $org['organisation'] === $user_data['organisation'] ? 'selected' : ''; ?>> <?php echo get_phrase($org['organisation']); ?> </option>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row mb-3">
                                             <label class="col-md-3 col-form-label" for="linkedin_link"><?php echo get_phrase('biography'); ?></label>
                                             <div class="col-md-9">

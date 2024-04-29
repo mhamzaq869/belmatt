@@ -138,8 +138,9 @@ class Login extends CI_Controller
         $data['last_name']  = html_escape($this->input->post('last_name'));
         $data['email']  = html_escape($this->input->post('email'));
         $data['password']  = sha1($this->input->post('password'));
+        $data['organisation']  = $this->input->post('organisation');
 
-        if (empty($data['first_name']) || empty($data['last_name']) || empty($data['email']) || empty($data['password'])) {
+        if (empty($data['first_name']) || empty($data['last_name']) || empty($data['organisation']) || empty($data['email']) || empty($data['password'])) {
             $this->session->set_flashdata('error_message', site_phrase('your_sign_up_form_is_empty') . '. ' . site_phrase('fill_out_the_form with_your_valid_data'));
             redirect(site_url('sign_up'), 'refresh');
         }
@@ -147,10 +148,10 @@ class Login extends CI_Controller
         $verification_code =  rand(100000, 200000);
         $data['verification_code'] = $verification_code;
 
-        if (get_settings('student_email_verification') == 'enable') {
-            $data['status'] = 0;
-        } else {
-            $data['status'] = 1;
+        if (get_settings('student_email_verification') == 'enable') { 
+            $data['status'] = 0; 
+        } else { 
+            $data['status'] = 1; 
         }
 
         $data['wishlist'] = json_encode(array());
@@ -165,7 +166,7 @@ class Login extends CI_Controller
             $data['role_id']  = 2;
         }else if($this->input->post('signupType')  == 'organization'){
             $data['role_id']  = 4;
-            $data['status']  = 1;
+            $data['status']  = 0;
         }
 
         $data['payment_keys'] = json_encode(array());

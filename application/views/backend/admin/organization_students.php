@@ -21,6 +21,7 @@
                 <th><?php echo get_phrase('photo'); ?></th>
                 <th><?php echo get_phrase('name'); ?></th>
                 <th><?php echo get_phrase('email'); ?></th>
+                <th><?php echo get_phrase('organisation'); ?></th>
                 <th><?php echo get_phrase('phone'); ?></th> 
                 <th><?php echo get_phrase('date'); ?></th> 
                 <th><?php echo get_phrase('progress'); ?></th> 
@@ -51,6 +52,7 @@
         { "data": "photo" },
         { "data": "name" },
         { "data": "email" },
+        { "data": "organisation" },
         { "data": "phone" }, 
         { "data": "date" }, 
         { "data": "progress" }, 

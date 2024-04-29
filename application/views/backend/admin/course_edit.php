@@ -122,7 +122,7 @@ if($course_details['profession'] != null){
                                         </li>
                                         <li class="nav-item">
                                             <a href="#pricing" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
-                                                <i class="mdi mdi-currency-cny"></i>
+                                                <?php echo currency_code_and_symbol(); ?>
                                                 <span class=""><?php echo get_phrase('pricing'); ?></span>
                                             </a>
                                         </li>
@@ -321,6 +321,22 @@ if($course_details['profession'] != null){
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <!-- Add "course code" Filter -->
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="course_code"><?php echo get_phrase('course_code'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <input name="course_code" id="course_code" class="form-control" value="<?php echo $course_details['course_code']; ?>" />
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group row mb-3">
+                                                    <label class="col-md-2 col-form-label" for="cpd_hours"><?php echo get_phrase('CPD_hours'); ?></label>
+                                                    <div class="col-md-10">
+                                                        <input name="cpd_hours" id="cpd_hours" class="form-control" value="<?php echo $course_details['cpd_hours']; ?>" />
+                                                    </div>
+                                                </div>
+
                                                  <!-- Add "Profession" Filter -->
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="profession"><?php echo get_phrase('profession'); ?></label>

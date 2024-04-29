@@ -43,9 +43,9 @@
                                                         <img class="rounded-circle" src="<?php echo $this->user_model->get_user_image_url($user_details['id']); ?>">
                                                         <h5><?php echo $user_details['first_name'].' '.$user_details['last_name']; ?></h5>
                                                     </div>
-                                                    <div class="courses-price-right ">
+                                                    <!-- <div class="courses-price-right ">
                                                         <p><?php echo get_past_time($blog['added_date']); ?></p>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                        </div>

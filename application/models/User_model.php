@@ -26,6 +26,15 @@ class User_model extends CI_Model
         return $this->db->get('users');
     } 
     
+    public function get_organization($user_id = 0)
+    {
+        if ($user_id > 0) {
+            $this->db->where('id', $user_id);
+        }
+        $this->db->where('role_id', 4);
+        return $this->db->get('users');
+    } 
+    
     public function get_org_user($user_id = 0)
     {
         if ($user_id > 0) {
@@ -88,9 +97,15 @@ class User_model extends CI_Model
         if ($validity == false) {
             $this->session->set_flashdata('error_message', get_phrase('email_duplication'));
         } else {
+            $organisation = $this->get_organization($this->input->post('organisation'))->row_array();
+            
           //  $data['unique_identifier'] = 0;
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
+
+            $data['organization_id'] = $organisation['id'];
+            $data['organisation'] = $organisation['organisation'];
+
             $data['email'] = html_escape($this->input->post('email'));
             $data['password'] = sha1(html_escape($this->input->post('password')));
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
@@ -323,8 +338,13 @@ class User_model extends CI_Model
     { // Admin does this editing
         $validity = $this->check_duplication('on_update', $this->input->post('email'), $user_id);
         if ($validity) {
+            $organisation = $this->get_organization($this->input->post('organisation'))->row_array();
+
             $data['first_name'] = html_escape($this->input->post('first_name'));
             $data['last_name'] = html_escape($this->input->post('last_name'));
+            
+            $data['organization_id'] = $organisation['id'];
+            $data['organisation'] = $organisation['organisation'];
 
             if (isset($_POST['email'])) {
                 $data['email'] = html_escape($this->input->post('email'));
