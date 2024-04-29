@@ -1,7 +1,4 @@
 <script type="text/javascript">
-<<<<<<< HEAD
-  
-=======
   function changeTitleOfImageUploader(photoElem) {
     var fileName = $(photoElem).val().replace(/C:\\fakepath\\/i, '');
     $(photoElem).siblings('label').text(ellipsis(fileName));
@@ -11,7 +8,6 @@
     }
   }
 
->>>>>>> 783509eadf6f2951e0f38c0b741be5eaa55c6c61
   function set_js_flashdata(url) {
     $.ajax({
       url: url,
@@ -195,11 +191,5 @@
     }
   }
 
-<<<<<<< HEAD
-  initSummerNote(['.landing-page']); 
-
- 
-=======
   
->>>>>>> 783509eadf6f2951e0f38c0b741be5eaa55c6c61
 </script>
