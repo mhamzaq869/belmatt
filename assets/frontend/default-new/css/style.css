@@ -2171,9 +2171,10 @@ p{
     background-color: var(--bg-white);
 }
   .student .student-body-1{
-    background-image: url("../image/Group 18132.png");
+    /*background-image: url("../image/Group 18132.png");*/
     background-size: cover;
     border-radius: 7px;
+    background: #194582;
   }
   .student .student-body-2{
     background-image: url("../image/Group 18131.png");
@@ -2211,8 +2212,8 @@ p{
     top: -30px;
   }
   .student .man{
-    width: 165px;
-    height: 230px;
+    width: auto;
+    height: 270px;
     margin-top: -56px;
   }
 /* slik logo */

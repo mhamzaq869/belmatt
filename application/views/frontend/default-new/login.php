@@ -7,7 +7,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-7 col-md-6 col-sm-12 col-12 text-center">
-                    <img width="65%" src="<?php echo site_url('assets/frontend/default-new/image/login-security.gif') ?>">
+                    <img width="65%" src="<?php echo site_url('assets/frontend/default-new/image/belmattlogo.png') ?>">
                 </div>
                 <div class="col-lg-5 col-md-6 col-sm-12 col-12 ">
                     <div class="sing-up-right">

@@ -63,8 +63,7 @@
                                 for="payment_document"><?php echo get_phrase('document_of_your_payment'); ?>
                                 (jpg, pdf, txt, png, docx)
                             </label>
-                            <input type="file" class="form-control mb-3" id="payment_document" name="payment_document"
-                                required>
+                            <input type="file" class="form-control mb-3" id="payment_document" name="payment_document">
                         </div>
 
                         <button type="button" class="btn btn-primary"

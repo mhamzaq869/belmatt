@@ -9,12 +9,12 @@
                     <div class="row w-100">
                         <div class="col-auto accordion-item-title"><?php echo $section['title']; ?></div>
                         <div class="col-auto ms-auto pe-0">
-                            <span class="ms-auto me-2 pe-2 border-end text-14px text-muted fw-400">
-                                <?php echo $this->crud_model->get_lessons('section', $section['id'])->num_rows() . ' ' . site_phrase('lessons'); ?>
-                            </span>
-                            <span class="me-0 text-14px text-muted fw-400">
-                                <?php echo $this->crud_model->get_total_duration_of_lesson_by_section_id($section['id']); ?>
-                            </span>
+                            <!--<span class="ms-auto me-2 pe-2 border-end text-14px text-muted fw-400">-->
+                            <!--    <?php echo $this->crud_model->get_lessons('section', $section['id'])->num_rows() . ' ' . site_phrase('lessons'); ?>-->
+                            <!--</span>-->
+                            <!--<span class="me-0 text-14px text-muted fw-400">-->
+                            <!--    <?php echo $this->crud_model->get_total_duration_of_lesson_by_section_id($section['id']); ?>-->
+                            <!--</span>-->
                         </div>
                     </div>
                 </button>
@@ -37,7 +37,7 @@
                                         </div>
                                     <?php endif; ?>
 
-                                    <div class="lecture-info" style="width: 60px"><?php echo $lesson['duration']; ?></div>
+                                    <!--<div class="lecture-info" style="width: 60px"><?php echo $lesson['duration']; ?></div>-->
                                 </a>
                             </li>
                         <?php endforeach; ?>
