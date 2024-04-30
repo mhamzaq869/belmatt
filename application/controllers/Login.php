@@ -352,9 +352,11 @@ class Login extends CI_Controller
             $user_details = $user_details->row_array();
 
 
-            $updater = array(
-                'status' => 1
-            );
+            if($user_details['role'] != 4){
+                $updater = array(
+                    'status' => 1
+                );
+            }
             $this->db->where('id', $user_details['id']);
             $this->db->update('users', $updater);
 
