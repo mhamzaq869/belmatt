@@ -1,17 +1,47 @@
 <style>
-  ul.style_2 {
+  .style_2 {
       padding: 0;
       list-style: none;
       font-size: 0;
   }
 
-  ul.style_2 li {
+   .style_2 li {
       display: inline-block;
       width: 50%;
       margin-bottom: 5px;
   }
+  .style_2 li a:after {
+    display: block;
+    position: absolute;
+    width: 4px;
+    left: 0;
+    margin-top: -2px;
+    background-color: #fff;
+}
 
+.style_2 li a:after {
+    height: 4px;
+    z-index: 10;
+    top: 50%;
+    content: "";
+    border-radius: 50%;
+}
 
+ul.style_2 li a {
+    position: relative;
+    padding-left: 15px;
+    font-size: 14px;
+    text-decoration: none !important;
+    color: #fff;
+    display: block;
+}
+
+ul.style_2 li a {  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    padding-right: 5px;
+}
 </style>
 <!--------- footer Section Start--------------->
 <section class="footer">
@@ -62,6 +92,9 @@
         <h1> <?php echo site_phrase('quick_links'); ?> </h1>
         <ul class="style_2">
           <li>
+            <a href="<?php echo site_url('home/about_us'); ?>"><?php echo ucwords(site_phrase('about_us')); ?></a>
+          </li>
+          <li>
             <a href="<?php echo site_url('blog'); ?>"><?php echo ucwords(site_phrase('blog')); ?></a>
           </li>
           <li>
@@ -72,22 +105,19 @@
           </li>
           <li>
             <a href="<?php echo site_url('home/contact_us'); ?>"><?php echo ucwords(site_phrase('contact_us')); ?></a>
-          </li>
-          <li>
-            <a href="<?php echo site_url('home/about_us'); ?>"><?php echo ucwords(site_phrase('about_us')); ?></a>
-          </li>
-          <li>
-            <a href="<?php echo site_url('home/privacy_policy'); ?>"><?php echo ucwords(site_phrase('privacy_policy')); ?></a>
-          </li>
-          <li>
-            <a href="<?php echo site_url('home/terms_and_condition'); ?>"><?php echo ucwords(site_phrase('terms_and_condition')); ?></a>
-          </li>
+          </li> 
           <li>
             <a href="<?php echo site_url('home/faq'); ?>"><?php echo ucwords(site_phrase('FAQs')); ?></a>
           </li>
           <li>
             <a href="<?php echo site_url('home/refund_policy'); ?>"><?php echo ucwords(site_phrase('refund_policy')); ?></a>
           </li>
+          <li>
+            <a href="<?php echo site_url('home/privacy_policy'); ?>"><?php echo ucwords(site_phrase('privacy_policy')); ?></a>
+          </li>
+          <li>
+            <a href="<?php echo site_url('home/terms_and_condition'); ?>"><?php echo ucwords(site_phrase('terms_and_condition')); ?></a>
+          </li>  
           <?php $custom_page_menus = $this->crud_model->get_custom_pages('', 'footer'); ?>
           <?php foreach($custom_page_menus->result_array() as $custom_page_menu): ?>
             <li><a href="<?php echo site_url('page/'.$custom_page_menu['page_url']); ?>"><?php echo ucwords($custom_page_menu['button_title']); ?></a> </li>
@@ -103,8 +133,9 @@
       </div>
 
       <div class="col-lg-5 col-md-12 col-sm-12 col-12 mb-5"> 
-        <p>©2024 All Rights Reserved.</p>
-        <a class="copyright_text_link" href="<?php echo get_settings('footer_link'); ?>">
+        <h1 class="text-white">Belmatt Course Brochure</h1>
+        <p class="py-0">©2024 All Rights Reserved.</p>
+        <a class="copyright_text_link py-0" href="<?php echo get_settings('footer_link'); ?>">
           Belmatt Healthcare Training Ltd
         </a>
       </div>
