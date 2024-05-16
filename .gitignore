@@ -17,3 +17,5 @@ application/logs/*
 !application/logs/.htaccess
 /vendor/
 /uploads/lesson_files/*
+/application/config/database.php
+/index.php

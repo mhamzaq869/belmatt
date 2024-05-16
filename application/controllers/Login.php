@@ -120,12 +120,6 @@ class Login extends CI_Controller
     }
 
 
-
-
-
-
-
-
     public function register()
     {
 
@@ -351,12 +345,16 @@ class Login extends CI_Controller
         if ($user_details->num_rows() > 0) {
             $user_details = $user_details->row_array();
 
-
-            if($user_details['role'] != 4){
+            if($user_details['role_id'] != 4){
                 $updater = array(
                     'status' => 1
                 );
+            }else{
+                $updater = array(
+                    'status' => 0
+                );
             }
+
             $this->db->where('id', $user_details['id']);
             $this->db->update('users', $updater);
 

@@ -1032,11 +1032,13 @@ class User_model extends CI_Model
                 }
                 redirect(site_url('home'), 'refresh');
             }else if ($row->role_id == 4) { 
+                $this->session->set_userdata('admin_login', '1');
                 $this->session->set_userdata('organization_login', '1');
                 $this->session->set_userdata('role', get_user_role('user_role', $row->id));
                 redirect(site_url('organization/dashboard'), 'refresh');
             }else if ($row->role_id == $staffRoleId) { 
                 $this->session->set_userdata('organization_login', '1');
+                $this->session->set_userdata('admin_login', '1');
                 $this->session->set_userdata('role', get_user_role('user_role', $row->organization_id));
                 $this->session->set_userdata('organization_id', $row->organization_id);
 

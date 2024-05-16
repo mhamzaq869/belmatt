@@ -55,7 +55,7 @@ function continue_verify() {
     var verification_code = $('#verification_code').val();
     $.ajax({
         type: 'post',
-        url: '<?php echo site_url('login/verify_email_address/'); ?>',
+        url: '<?php echo site_url('login/verify_email_address'); ?>',
         data: {verification_code : verification_code, email : email},
         success: function(response){
             if(response){

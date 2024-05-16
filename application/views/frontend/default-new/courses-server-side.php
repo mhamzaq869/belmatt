@@ -1,5 +1,5 @@
 <?php
- $courses = $this->crud_model->get_course_by_type();
+ $courses = $this->crud_model->get_course_by_type(); 
 ?>
 <!---------- Bread Crumb Area Start ---------->
 <?php include "breadcrumb.php"; ?>

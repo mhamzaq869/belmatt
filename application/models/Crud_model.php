@@ -705,13 +705,15 @@ class Crud_model extends CI_Model
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
-            $data['datetime'] = json_encode($this->input->post('datetime'));
+            $data['datetime_from'] = json_encode($this->input->post('datetime_from'));
+            $data['datetime_to'] = json_encode($this->input->post('datetime_to'));
         } else {
             $data['country'] = null;
             $data['state'] = null;
             $data['city'] = null;
             $data['address'] = null;
-            $data['datetime'] = null;
+            $data['datetime_from'] = null;
+            $data['datetime_to'] = null;
         }
 
         //Course expiry period
@@ -914,14 +916,16 @@ class Crud_model extends CI_Model
             $data['city'] = $this->input->post('city');
             $data['address'] = $this->input->post('address');
             $data['postal_code'] = $this->input->post('postal_code');
-            $data['datetime'] = json_encode($this->input->post('datetime'));
+            $data['datetime_from'] = json_encode($this->input->post('datetime_from'));
+            $data['datetime_to'] = json_encode($this->input->post('datetime_to'));
         } else {
             $data['country'] = null;
             $data['state'] = null;
             $data['city'] = null;
             $data['address'] = null;
             $data['postal_code'] = null;
-            $data['datetime'] = null;
+            $data['datetime_from'] = json_encode($this->input->post('datetime_from'));
+            $data['datetime_to'] = json_encode($this->input->post('datetime_to'));
         }
 
         //Course expiry period

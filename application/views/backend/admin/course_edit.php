@@ -413,26 +413,70 @@ if($course_details['profession'] != null){
                                                         </label>
                                                         <div class="col-md-10">
                                                             <div id="dateFields">
-                                                                <?php if($course_details['datetime'] != null):
-                                                                        $datetimes = json_decode($course_details['datetime']);
-                                                                        if(count($datetimes) > 0):
-                                                                            foreach($datetimes as $i => $datetime): ?>
-                                                                                <?php if($i == 0): ?>
-                                                                                    <input type="datetime-local" class="form-control" id="course_date_time" name="datetime[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
-                                                                                <?php elseif($i > 0): ?>
-                                                                                    <div class="d-flex mt-2">
-                                                                                        <input type="datetime-local" class="form-control" id="course_date_time" name="datetime" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
-                                                                                        <a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
-                                                                                    </div>
-                                                                                <?php endif; ?>
-                                                                        <?php endforeach; ?>
-                                                                    <?php else: ?>
-                                                                            <input type="datetime-local" class="form-control" id="course_date_time" name="datetime[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
-                                                                    <?php endif; ?>
                                                                 
-                                                                <?php else: ?>
-                                                                    <input type="datetime-local" class="form-control" id="course_date_time" name="datetime[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
-                                                                <?php endif; ?>
+                                                                    <?php if($course_details['datetime_from'] != null):
+                                                                            $datetimes_from = json_decode($course_details['datetime_from']);
+                                                                            $datetimes_to = json_decode($course_details['datetime_to']);
+                                                                            if(count($datetimes_from) > 0):
+                                                                                foreach($datetimes_from as $i => $datetime): ?>
+                                                                                    <?php if($i == 0): ?>
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-5">
+                                                                                                <div class="d-flex">
+                                                                                                    <input type="datetime-local" class="form-control" id="course_date_time" name="datetime_from[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-5">
+                                                                                                <div class="d-flex">
+                                                                                                    <input type="datetime-local" class="form-control" id="course_date_time_to" name="datetime_to[]" value="<?php echo $datetimes_to[$i]; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <?php elseif($i > 0): ?>
+                                                                                        <div class="row mt-1">
+                                                                                            <div class="col-md-5">
+                                                                                                <div class="d-flex">
+                                                                                                    <input type="datetime-local" class="form-control" id="course_date_time" name="datetime_from[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-md-5">
+                                                                                                <div class="d-flex">
+                                                                                                    <input type="datetime-local" class="form-control" id="course_date_time_to" name="datetime_to[]" value="<?php echo $datetimes_to[$i]; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                                                                                        </div>
+                                                                                    <?php endif; ?>
+                                                                            <?php endforeach; ?>
+                                                                        <?php else: ?>
+                                                                            <div class="row mt-1">
+                                                                                <div class="col-md-5">
+                                                                                    <div class="d-flex">
+                                                                                        <input type="datetime-local" class="form-control" id="course_date_time_from" name="datetime_from[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-5">
+                                                                                    <div class="d-flex">
+                                                                                        <input type="datetime-local" class="form-control" id="course_date_time_to" name="datetime_to[]" value="<?php echo $datetimes_to[$i]; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php endif; ?>
+                                                                    
+                                                                    <?php else: ?>
+                                                                        <div class="row mt-1">
+                                                                            <div class="col-md-5">
+                                                                                <div class="d-flex">
+                                                                                    <input type="datetime-local" class="form-control" id="course_date_time_from" name="datetime_from[]" value="<?php echo $datetime; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-5">
+                                                                                <div class="d-flex">
+                                                                                    <input type="datetime-local" class="form-control" id="course_date_time_to" name="datetime_to[]" value="<?php echo $datetimes_to[$i]; ?>" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php endif; ?>
                                                             </div>
                                                         </div>
                                                     </div>      
@@ -962,7 +1006,7 @@ if($course_details['profession'] != null){
             return $(el).val();
         }).get();
 
-        if (data.includes('classroom')) {
+        if (data.includes('classroom') || data.includes('live-webinar')) {
             $('.address').removeClass('d-none')
         } else {
             $('.address').addClass('d-none')
@@ -976,7 +1020,7 @@ if($course_details['profession'] != null){
             return $(el).val();
         }).get();
 
-        if (data.includes('classroom')) {
+        if (data.includes('classroom') || data.includes('live-webinar')) {
             $('.address').removeClass('d-none')
         } else {
             $('.address').addClass('d-none')
@@ -987,10 +1031,19 @@ if($course_details['profession'] != null){
         var maxFields = 5; // Maximum input fields allowed
         var addButton = $('#addDateField');
         var wrapper = $('#dateFields');
-        var fieldHTML = '<div class="d-flex mt-2">' +
-            '<input type="datetime-local" class="form-control date-field" name="datetime[]" required>' +
-            '<a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>' +
-            '</div>';
+        var fieldHTML = `<div class="row mt-1">
+                            <div class="col-md-5">
+                                <div class="d-flex">
+                                    <input type="datetime-local" class="form-control date-field" name="datetime_from[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="d-flex">
+                                    <input type="datetime-local" class="form-control date-field" name="datetime_to[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                </div>
+                            </div>
+                            <a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                        </div>` 
 
         var x = 1; // Initial field counter
         $(addButton).click(function() {

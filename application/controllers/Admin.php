@@ -243,7 +243,7 @@ class Admin extends CI_Controller
 
         $data = array();
         //mentioned all with colum of database table that related with html table
-        $columns = array('id','id','first_name','email','organisation','phone','id', 'id');
+        $columns = array('id','id','first_name','email','organisation','status','id', 'id');
 
         $limit = htmlspecialchars_($this->input->post('length'));
         $start = htmlspecialchars_($this->input->post('start'));
@@ -258,19 +258,19 @@ class Admin extends CI_Controller
 
         if(empty($search)) {
             $this->db->select('*');
+            $this->db->where('role_id',4);
             $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
-            $this->db->where('role_id',4);
             $students = $this->db->get('users')->result_array();
+           
         }else{
             $this->db->select('*');
             $this->db->like('first_name',$search);
             $this->db->or_like('last_name',$search);
-            $this->db->or_like('email',$search);
-            $this->db->or_like('phone',$search);
+            $this->db->or_like('email',$search); 
             $this->db->where('role_id',4);
-            $this->db->limit($limit,$start);
             $this->db->order_by($column_index,$dir);
+            $this->db->limit($limit,$start); 
             $students = $this->db->get('users')->result_array();
 
 
@@ -283,6 +283,7 @@ class Admin extends CI_Controller
             $filtered_number_of_row = $this->db->get('users')->num_rows();
         }
 
+       
         foreach($students as $key => $student):
 
             //photo
@@ -333,8 +334,7 @@ class Admin extends CI_Controller
             $nestedData['photo'] = $photo;
             $nestedData['name'] = $name;
             $nestedData['email'] = $email;
-            $nestedData['organisation'] = $organisation;
-            $nestedData['phone'] = $student['phone']; 
+            $nestedData['organisation'] = $organisation; 
             $nestedData['status'] = $status; 
             $nestedData['action'] = $action.'<script>$("a, i").tooltip();</script>';
             $data[] = $nestedData;

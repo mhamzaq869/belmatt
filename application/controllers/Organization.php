@@ -385,7 +385,6 @@ class Organization extends CI_Controller
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="'.site_url('admin/user_form/edit_user_form/' . $student['id']).'">'.get_phrase('edit').'</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="confirm_modal(&#39;'.site_url('admin/users/delete/'. $student['id']).'&#39;);">'.get_phrase('delete').'</a></li>
                             </ul>
                         </div>';
 
@@ -395,7 +394,8 @@ class Organization extends CI_Controller
             $nestedData['name'] = $name;
             $nestedData['username'] = $username;
             $nestedData['email'] = $email;
-            // $nestedData['phone'] = $student['phone'];
+            $nestedData['phone'] = $student['phone'];
+            $nestedData['organisation'] = $student['organisation'];
             $nestedData['date'] = $date; 
             $nestedData['progress'] = $progress; 
             $nestedData['enrolled_courses'] = $enrolled_courses_title;

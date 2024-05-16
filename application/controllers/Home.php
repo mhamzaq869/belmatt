@@ -344,34 +344,38 @@ class Home extends CI_Controller
             if (!empty($courses)) {
                 foreach ($courses as $key => $row) {
                     $price_badge = "badge-dark";
-                    $price = 0;
-                
+                    $price = 0; 
+
                     // Decode the JSON array in the 'datetime' column
-                    $dates = json_decode($row['datetime']);
-           
-                    foreach ($dates as $date) { 
-                        if (strtotime($date) >= strtotime(date('Y-m-d'))) {
-                            if ($row['is_free_course'] == null) {
-                                if ($row['discount_flag'] == 1) {
-                                    $price = currency($row['discounted_price']);
-                                } else {
-                                    $price = currency($row['price']);
+                    $dates = json_decode($row['datetime_from']);
+                    $dates_to = json_decode($row['datetime_to']);
+                    
+                    foreach ($dates as $i => $date) {    
+                        // Check if both $dates and $dates_to are not null and valid arrays
+                        if (is_array($dates) && !empty($dates) && is_array($dates_to) && !empty($dates_to)) {
+                            if (strtotime(date('Y-m-d h:i:s')) >= strtotime($date) && strtotime(date('Y-m-d h:i:s')) <= strtotime($dates_to[$i])) {
+                                if ($row['is_free_course'] == null) {
+                                    if ($row['discount_flag'] == 1) {
+                                        $price = currency($row['discounted_price']);
+                                    } else {
+                                        $price = currency($row['price']);
+                                    }
+                                } elseif ($row['is_free_course'] == 1) { 
+                                    $price = get_phrase('free');
                                 }
-                            } elseif ($row['is_free_course'] == 1) { 
-                                $price = get_phrase('free');
+            
+                                $price_field = '<p class="text-12">' . $price . '</p>';
+                                $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
+            
+                                $nestedData['date'] = date('D jS M Y', strtotime($date));
+                                $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
+                                $nestedData['venue'] = '<span>' . $row['city'] .' ('. $row['address'] .')</span>';
+                                $nestedData['time'] = '<span>' . date('g:i A', strtotime($date)) . '</span>';
+                                $nestedData['price'] = $price_field; 
+                                $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
+            
+                                $data[] = $nestedData;
                             }
-        
-                            $price_field = '<p class="text-12">' . $price . '</p>';
-                            $addToCartUrl = "actionTo('".site_url('home/handle_cart_items/'. $row['id'])."')"; 
-        
-                            $nestedData['date'] = date('D jS M Y', strtotime($date));
-                            $nestedData['title'] = '<strong><a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '">' . $row['title'] . '</a></strong><br>';
-                            $nestedData['venue'] = '<span>' . $row['city'] .' ('. $row['address'] .')</span>';
-                            $nestedData['time'] = '<span>' . date('g:i A', strtotime($date)) . '</span>';
-                            $nestedData['price'] = $price_field; 
-                            $nestedData['book'] = '<a href="' . site_url('home/course/' . rawurlencode(slugify($row['title'])) . '/' . $row['id']) . '" class="btn btn-sm btn-primary btn-block" style="padding:8px 28px !important;">Book Now</a>';
-        
-                            $data[] = $nestedData;
                         }
                     }
                 }

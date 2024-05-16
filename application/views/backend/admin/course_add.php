@@ -314,11 +314,22 @@
                                                         </label>
                                                         <div class="col-md-10">
                                                             <div id="dateFields">
-                                                                <div class="d-flex">
-                                                                    <input type="datetime-local" class="form-control date-field" id="course_date_time" name="datetime[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                <div class="row">
+                                                                    <div class="col-md-5">
+                                                                        <label class="col-form-label pr-0 d-inline" for="Date Time">From:</label>
+                                                                        <div class="d-flex">
+                                                                            <input type="datetime-local" class="form-control date-field" id="course_date_time_from" name="datetime_from[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <label class="col-form-label pr-0 d-inline" for="Date Time">To:</label>
+                                                                        <div class="d-flex">
+                                                                            <input type="datetime-local" class="form-control date-field" id="course_date_time_to" name="datetime_to[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mb-3">
@@ -847,11 +858,20 @@
     $(document).ready(function() {
         var maxFields = 5; // Maximum input fields allowed
         var addButton = $('#addDateField');
-        var wrapper = $('#dateFields');
-        var fieldHTML = '<div class="d-flex mt-2">' +
-            '<input type="datetime-local" class="form-control date-field" name="datetime[]" required>' +
-            '<a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>' +
-            '</div>';
+        var wrapper = $('#dateFields'); 
+        var fieldHTML = `<div class="row mt-1">
+                            <div class="col-md-5">
+                                <div class="d-flex">
+                                    <input type="datetime-local" class="form-control date-field" name="datetime_from[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="d-flex">
+                                    <input type="datetime-local" class="form-control date-field" name="datetime_to[]" min="" placeholder="<?php echo get_phrase('enter_date_time'); ?>">
+                                </div>
+                            </div>
+                            <a href="#" type="button" class="removeDateField btn btn-danger"><i class="fa fa-minus-circle" aria-hidden="true"></i></a>
+                        </div>` 
 
         var x = 1; // Initial field counter
         $(addButton).click(function() {
